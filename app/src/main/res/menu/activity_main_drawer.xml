@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@android:drawable/ic_menu_rotate"
+            android:title="Beranda" />
+        <item
+            android:id="@+id/nav_activities"
+            android:icon="@android:drawable/ic_menu_my_calendar"
+            android:title="Kegiatan Saya" />
+        <item
+            android:id="@+id/nav_group"
+            android:icon="@android:drawable/ic_menu_view"
+            android:title="Grup" />
+        <item
+            android:id="@+id/nav_invitation"
+            android:icon="@android:drawable/ic_dialog_email"
+            android:title="Undangan" />
+        <item
+            android:id="@+id/nav_member"
+            android:icon="@android:drawable/ic_menu_myplaces"
+            android:title="Member" />
+    </group>
+
+    <item android:title="Konfigurasi">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Akun" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Help" />
+        </menu>
+    </item>
+
+</menu>
