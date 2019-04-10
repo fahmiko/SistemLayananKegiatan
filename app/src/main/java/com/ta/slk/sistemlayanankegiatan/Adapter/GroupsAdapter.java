@@ -14,25 +14,25 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.MyViewHolder> {
     private Context context;
-    private List<InvtActivities> myList;
+    private List<Groups> myList;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        private TextView title,admin,date;
-        private ImageView image;
+        private TextView name;
+        private CircleImageView image;
         public MyViewHolder(View v) {
             super(v);
-            title = itemView.findViewById(R.id.main_title);
-            admin = itemView.findViewById(R.id.main_admin);
-            date = itemView.findViewById(R.id.main_tgl);
-            image = itemView.findViewById(R.id.main_img_card);
+            name = itemView.findViewById(R.id.name_group);
+            image = itemView.findViewById(R.id.image_group);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public GroupsAdapter(List<InvtActivities> myList, Context context) {
+    public GroupsAdapter(List<Groups> myList, Context context) {
         this.myList = myList;
         this.context = context;
     }
@@ -43,18 +43,16 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.MyViewHold
                                                          int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_activities, parent, false);
+                .inflate(R.layout.list_group, parent, false);
         return new MyViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(GroupsAdapter.MyViewHolder holder, final int position) {
-        holder.title.setText(myList.get(position).getNameActivities());
-        holder.admin.setText(myList.get(position).getCreatedBy());
-        holder.date.setText(myList.get(position).getDate());
-        if (myList.get(position).getPicture() != null) {
+        holder.name.setText(myList.get(position).getName());
+        if (myList.get(position).getPhotoGroup() != null) {
             Glide.with(holder.itemView.getContext()).load(ApiClient.BASE_URL+"uploads/"+myList.get
-                    (position).getPicture())
+                    (position).getPhotoGroup())
                     .into(holder.image);
         }
     }

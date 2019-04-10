@@ -5,6 +5,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -13,6 +14,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import com.ta.slk.sistemlayanankegiatan.Method.Preferences;
+import com.ta.slk.sistemlayanankegiatan.Model.Groups;
 
 public class Menu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public void getMenu(){
@@ -69,7 +73,8 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
         if (id == R.id.nav_home) {
             // Handle the camera action
         } else if (id == R.id.nav_group) {
-
+            Intent intent = new Intent(getApplicationContext(), GroupActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_activities) {
 
         } else if (id == R.id.nav_invitation) {
@@ -77,8 +82,11 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(intent);
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.logout) {
+            Preferences pr = new Preferences(getApplicationContext());
+            pr.logout();
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -19,7 +19,6 @@ import retrofit2.Response;
 import java.util.List;
 
 public class Invitation extends AppCompatActivity {
-
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;

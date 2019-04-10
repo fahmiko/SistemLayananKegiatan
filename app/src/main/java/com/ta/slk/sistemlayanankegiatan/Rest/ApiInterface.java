@@ -22,6 +22,17 @@ public interface ApiInterface {
             @Field("action") String action
     );
 
+    @FormUrlEncoded
+    @POST("Rest_slkg/allbyid")
+    Call<GetGroups> getGroupsById(
+            @Field("user_id") String user_id,
+            @Field("action") String action
+    );
 
-
+    @FormUrlEncoded
+    @POST("Rest_slkg/login")
+    Call<GetUsers> getLoginUser(
+            @Field("username") String username,
+            @Field("password") String password
+    );
 }

@@ -1,12 +1,10 @@
 package com.ta.slk.sistemlayanankegiatan;
 
 import android.Manifest;
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -14,19 +12,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingService;
+import com.ta.slk.sistemlayanankegiatan.Method.Preferences;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
 import com.ta.slk.sistemlayanankegiatan.Rest.*;
 import com.ta.slk.sistemlayanankegiatan.Adapter.*;
 
 import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,7 +35,12 @@ public class MainActivity extends Menu{
         setContentView(R.layout.activity_main);
 
         getMenu();
-        final Context mContext = getApplicationContext();
+        Preferences pr = new Preferences(getApplicationContext());
+        if(pr.checkSavedCredetential()==false){
+            Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+            startActivity(intent);
+        }
+//        final Context mContext = getApplicationContext();
 //        mRecyclerView = findViewById(R.id.recycler_activities);
 //        mLayoutManager = new LinearLayoutManager(mContext);
 //        mRecyclerView.setLayoutManager(mLayoutManager);
@@ -51,7 +48,13 @@ public class MainActivity extends Menu{
         internet_permission();
     }
 
-
+    @Override
+    public void onBackPressed() {
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
+    }
 
     private void LoadData(){
         mApiInterface = ApiClient.getClient().create(ApiInterface.class);

@@ -3,6 +3,6 @@
     <color name="colorPrimary">#0093d1</color>
     <color name="colorPrimaryDark">#006495</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="mateGreen">#00FF00</color>
-    <color name="mateRed">#FF0000</color>
+    <color name="mateGreen">#2ECC71</color>
+    <color name="mateRed">#CB4335</color>
 </resources>
