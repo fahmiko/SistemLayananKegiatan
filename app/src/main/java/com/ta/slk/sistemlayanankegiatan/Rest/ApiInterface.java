@@ -30,6 +30,13 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("Rest_slkg/allbyid")
+    Call<GetActivities> getActiviesById(
+            @Field("user_id") String user_id,
+            @Field("action") String action
+    );
+
+    @FormUrlEncoded
     @POST("Rest_slkg/login")
     Call<GetUsers> getLoginUser(
             @Field("username") String username,

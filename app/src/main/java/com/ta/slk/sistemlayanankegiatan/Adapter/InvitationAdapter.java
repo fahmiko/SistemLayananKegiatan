@@ -1,6 +1,5 @@
 package com.ta.slk.sistemlayanankegiatan.Adapter;
 import com.bumptech.glide.Glide;
-import com.ta.slk.sistemlayanankegiatan.Invitation;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
 import android.content.Context;
 import com.ta.slk.sistemlayanankegiatan.R;

@@ -73,12 +73,16 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
         if (id == R.id.nav_home) {
             // Handle the camera action
         } else if (id == R.id.nav_group) {
-            Intent intent = new Intent(getApplicationContext(), GroupActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ContentActivity.class);
+            intent.putExtra("action","groups");
             startActivity(intent);
         } else if (id == R.id.nav_activities) {
-
+            Intent intent = new Intent(getApplicationContext(),ContentActivity.class);
+            intent.putExtra("action","my_activities");
+            startActivity(intent);
         } else if (id == R.id.nav_invitation) {
-            Intent intent = new Intent(getApplicationContext(),Invitation.class);
+            Intent intent = new Intent(getApplicationContext(),ContentActivity.class);
+            intent.putExtra("action","invitation");
             startActivity(intent);
         } else if (id == R.id.nav_share) {
 

@@ -23,9 +23,9 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
         private ImageView image;
         public MyViewHolder(View v) {
             super(v);
-            title = itemView.findViewById(R.id.inv_title);
-            admin = itemView.findViewById(R.id.inv_admin);
-            date = itemView.findViewById(R.id.inv_tgl);
+            title = itemView.findViewById(R.id.main_title);
+            admin = itemView.findViewById(R.id.main_admin);
+            date = itemView.findViewById(R.id.main_tgl);
             image = itemView.findViewById(R.id.main_img_card);
         }
     }
@@ -42,7 +42,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
                                            int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_invitation, parent, false);
+                .inflate(R.layout.list_activities, parent, false);
         return new MyViewHolder(v);
     }
 
