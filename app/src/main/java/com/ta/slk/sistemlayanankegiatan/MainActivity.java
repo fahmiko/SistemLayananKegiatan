@@ -3,15 +3,25 @@ package com.ta.slk.sistemlayanankegiatan;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.ta.slk.sistemlayanankegiatan.Method.Preferences;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
 import com.ta.slk.sistemlayanankegiatan.Rest.*;
@@ -29,23 +39,26 @@ public class MainActivity extends Menu{
     RecyclerView.LayoutManager mLayoutManager;
     private List<Activities> listActivities;
     ApiInterface mApiInterface;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         getMenu();
+        SharedPreferences prefs = getSharedPreferences("login", MODE_PRIVATE);
+        Log.d("pref", "pref: "+prefs.getString("username",""));
         Preferences pr = new Preferences(getApplicationContext());
         if(pr.checkSavedCredetential()==false){
             Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
             startActivity(intent);
+            Log.d("TAGING", "Kembali ke home");
         }
 //        final Context mContext = getApplicationContext();
 //        mRecyclerView = findViewById(R.id.recycler_activities);
 //        mLayoutManager = new LinearLayoutManager(mContext);
 //        mRecyclerView.setLayoutManager(mLayoutManager);
 //        LoadData();
-        internet_permission();
     }
 
     @Override

@@ -42,4 +42,23 @@ public interface ApiInterface {
             @Field("username") String username,
             @Field("password") String password
     );
+
+    @FormUrlEncoded
+    @POST("Rest_slkg/loginnip")
+    Call<GetUsers> getLoginNip(
+            @Field("nip") String nip,
+            @Field("device_token") String device_token
+    );
+
+    @Multipart
+    @POST("Rest_slkg/activity")
+    Call<PostData> postActivity(
+            @Part MultipartBody.Part file,
+            @Part("name") RequestBody name,
+            @Part("created_by") RequestBody created_by,
+            @Part("location") RequestBody location,
+            @Part("contact") RequestBody contact,
+            @Part("date") RequestBody date,
+            @Part("description") RequestBody description
+    );
 }

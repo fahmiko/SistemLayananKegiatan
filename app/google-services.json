@@ -21,6 +21,10 @@
             "package_name": "com.ta.slk.sistemlayanankegiatan",
             "certificate_hash": "0a931f56f1bb26fe9a074e5a09a2ed537d835719"
           }
+        },
+        {
+          "client_id": "723284484808-vdokpcjoajbajmm7spqstdu2mfcc50u2.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [

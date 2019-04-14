@@ -1,9 +1,19 @@
 package com.ta.slk.sistemlayanankegiatan;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,6 +22,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.ta.slk.sistemlayanankegiatan.Method.Preferences;
 import com.ta.slk.sistemlayanankegiatan.Model.GetUsers;
 import com.ta.slk.sistemlayanankegiatan.Model.Users;
@@ -24,15 +37,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity{
     EditText username,password;
-    Button btn_login;
+    Button btn_login,btn_login_other;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         username = findViewById(R.id.username);
-        password = findViewById(R.id.password);
         btn_login = findViewById(R.id.btn_login);
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
                 Login();
             }
         });
-
     }
 
     @Override
@@ -53,7 +64,9 @@ public class LoginActivity extends AppCompatActivity {
 
     public void Login(){
         ApiInterface mApiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<GetUsers> mLoginCall = mApiInterface.getLoginUser(username.getText().toString(),password.getText().toString());
+        SharedPreferences sf = getSharedPreferences("device_token",MODE_PRIVATE);
+
+        Call<GetUsers> mLoginCall = mApiInterface.getLoginNip(username.getText().toString(),sf.getString("device_token",""));
         mLoginCall.enqueue(new Callback<GetUsers>() {
             @Override
             public void onResponse(Call<GetUsers> call, retrofit2.Response<GetUsers> response) {
@@ -78,19 +91,4 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-
-//    private void auth(){
-//        OkHttpClient okHttpClient = new OkHttpClient().newBuilder().addInterceptor(new Interceptor() {
-//            @Override
-//            public Response intercept(Chain chain) throws IOException {
-//                Request originalRequest = chain.request();
-//                Request.Builder builder = originalRequest.newBuilder().header("Token", "token here");
-//                Request newRequest = builder.build();
-//                return chain.proceed(newRequest);
-//            }
-//        }).build();
-//        okHttpClient.authenticator().
-//
-//    }
-
 }

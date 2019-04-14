@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddInvitation">
+
+    <ImageView
+        android:id="@+id/img_inv"
+        android:src="@drawable/polinema_logo"
+        android:layout_width="match_parent"
+        android:layout_height="150dp" />
+    <View
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/img_inv"
+        android:layout_marginTop="2sp"
+        android:background="@color/cardview_dark_background"
+        android:layout_height="1sp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_image"
+        android:layout_below="@id/img_inv"
+        app:backgroundTint="@color/cardview_dark_background"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="-26dp"
+        android:src="@android:drawable/ic_menu_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/fab_image"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/name_act"
+            android:hint="Nama Acara"
+            android:text="Rapat JTI"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/name_day"
+            android:layout_below="@+id/name_act"
+            android:hint="Tanggal/Jam"
+            android:clickable="true"
+            android:editable="false"
+            android:focusable="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/name_location"
+            android:hint="Lokasi"
+            android:text="POLINEMA"
+            android:layout_below="@id/name_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/name_description"
+            android:layout_below="@+id/name_location"
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:minLines="6"
+            android:text="Pemilihan Kajur"
+            android:gravity="top|left"
+            android:hint="Deskripsi"
+            android:maxLines="10"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:scrollbars="vertical"
+        />
+        <EditText
+            android:id="@+id/contact_person"
+            android:layout_below="@id/name_description"
+            android:text="081927283917"
+            android:hint="Contact Person"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_add"
+            android:text="BUAT UNDANGAN"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/contact_person"
+            android:textColor="@color/cardview_light_background"
+            android:background="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+</RelativeLayout>

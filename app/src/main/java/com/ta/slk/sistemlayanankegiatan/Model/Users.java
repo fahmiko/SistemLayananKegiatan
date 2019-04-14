@@ -44,6 +44,9 @@ public class Users {
     @SerializedName("photo_profile")
     @Expose
     private String photoProfile;
+    @SerializedName("device_token")
+    @Expose
+    private String deviceToken;
 
     public String getIdUser() {
         return idUser;
@@ -147,5 +150,13 @@ public class Users {
 
     public void setPhotoProfile(String photoProfile) {
         this.photoProfile = photoProfile;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

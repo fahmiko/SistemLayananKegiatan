@@ -1,6 +1,9 @@
 package com.ta.slk.sistemlayanankegiatan;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -11,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ta.slk.sistemlayanankegiatan.Adapter.*;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
@@ -28,6 +32,8 @@ public class ContentActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
+    SwipeRefreshLayout refreshLayout;
+    FloatingActionButton floatingActionButton;
     // Variabel untuk menampung hasil intent
     String user_level;
     String request;
@@ -45,7 +51,23 @@ public class ContentActivity extends AppCompatActivity {
 
         instanceComponents();
         loadData(request);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData(request);
+            }
+        });
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),AddInvitation.class);
+                startActivity(intent);
+            }
+        });
+
     }
+
+
 
     private void loadData(String action) {
         if (action.equals("groups")) {
@@ -58,7 +80,12 @@ public class ContentActivity extends AppCompatActivity {
     }
 
     private void instanceComponents(){
-        getSupportActionBar().setTitle("Grup");
+        refreshLayout = findViewById(R.id.swipe_refresh);
+        floatingActionButton = findViewById(R.id.fab_add);
+
+//        floatingActionButton.setVisibility(View.INVISIBLE);
+
+        getSupportActionBar().setTitle(request);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().show();
 
@@ -85,7 +112,7 @@ public class ContentActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GetInvtActivities> call, Throwable t) {
-
+                Toast.makeText(getApplicationContext(),"Cek koneksi Internet",Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -105,7 +132,7 @@ public class ContentActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GetActivities> call, Throwable t) {
-
+                Toast.makeText(getApplicationContext(),"Cek koneksi Internet",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -124,7 +151,7 @@ public class ContentActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GetGroups> call, Throwable t) {
-
+                Toast.makeText(getApplicationContext(),"Cek koneksi Internet",Toast.LENGTH_SHORT).show();
             }
         });
     }

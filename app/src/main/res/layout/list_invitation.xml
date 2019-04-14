@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_marginBottom="-1dp"
-    >
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        card_view:cardBackgroundColor="@color/cardview_light_background"
-        card_view:cardElevation="5dp"
-        card_view:cardUseCompatPadding="true">
+    android:layout_margin="5dp"
+    android:layout_marginBottom="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -25,11 +16,15 @@
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:src="@color/colorAccent"/>
+
             <RelativeLayout
+                android:id="@+id/layout_detail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toRightOf="@+id/inv_img_card"
-                android:layout_margin="5pt">
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="15pt"
+                android:layout_marginEnd="5pt"
+                android:layout_toRightOf="@+id/inv_img_card">
 
                 <TextView
                     android:id="@+id/inv_title"
@@ -40,41 +35,27 @@
 
                 <TextView
                     android:id="@+id/inv_admin"
-                    android:layout_below="@id/inv_title"
-                    android:text="By Admin Jurusan"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/inv_title"
+                    android:text="By Admin Jurusan" />
 
                 <TextView
                     android:id="@+id/inv_tgl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_below="@id/inv_admin"
                     android:text="20 Mei 2018 19:00"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <Button
-                    android:id="@+id/btn_accept"
-                    android:layout_marginTop="2pt"
-                    android:layout_below="@id/inv_tgl"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TERIMA"
-                    android:textColor="@color/cardview_light_background"
-                    android:background="@color/mateGreen"/>
-                <Button
-                    android:layout_marginTop="2pt"
-                    android:layout_below="@id/inv_tgl"
-                    android:layout_toEndOf="@+id/btn_accept"
-                    android:layout_marginLeft="2pt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TOLAK"
-                    android:textColor="@color/cardview_light_background"
-                    android:background="@color/mateRed"/>
-
+                    android:textStyle="bold" />
             </RelativeLayout>
         </RelativeLayout>
-    </android.support.v7.widget.CardView>
+    <View
+        android:layout_marginLeft="130dp"
+        android:layout_below="@id/layout_detail"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="-20dp"
+        android:background="@color/common_google_signin_btn_text_light_default" />
 
-</RelativeLayout>
+
+</LinearLayout>

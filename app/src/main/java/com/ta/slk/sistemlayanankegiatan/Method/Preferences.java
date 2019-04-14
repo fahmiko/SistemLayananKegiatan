@@ -10,6 +10,13 @@ public class Preferences {
         this.context = context;
     }
 
+    public void saveDeviceToken(String token){
+        SharedPreferences sf = context.getSharedPreferences("device_token",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sf.edit();
+        editor.putString("device_token", token);
+        editor.apply();
+    }
+
     public void saveCredentials(String id, String name, String username, String password, String photo){
         SharedPreferences sf = context.getSharedPreferences("login",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sf.edit();
@@ -41,10 +48,4 @@ public class Preferences {
             return true;
         }
     }
-
-    public String getToken(){
-        return "1234";
-    }
-
-
 }
