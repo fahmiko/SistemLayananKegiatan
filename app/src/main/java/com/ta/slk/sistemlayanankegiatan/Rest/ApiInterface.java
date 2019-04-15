@@ -1,6 +1,9 @@
 package com.ta.slk.sistemlayanankegiatan.Rest;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -14,6 +17,19 @@ import retrofit2.http.Part;
 public interface ApiInterface {
     @GET("Rest_slkg/activities")
     Call<GetActivities> getActivities();
+
+    @GET("Rest_slkg/groups")
+    Call<GetGroups> getGroups();
+
+    @GET("Rest_slkg/users")
+    Call<GetUsers> getUsers();
+
+    @FormUrlEncoded
+    @POST("Rest_slkg/sendinvitation")
+    Call<PostData> sendInvitation(
+            @Field("id[]") ArrayList<Integer> id,
+            @Field("action") String action
+    );
 
     @FormUrlEncoded
     @POST("Rest_slkg/allbyid")

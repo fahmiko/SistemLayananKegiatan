@@ -1,5 +1,7 @@
 package com.ta.slk.sistemlayanankegiatan;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +18,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.abdeveloper.library.MultiSelectDialog;
+import com.abdeveloper.library.MultiSelectModel;
 import com.ta.slk.sistemlayanankegiatan.Adapter.*;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
 import com.ta.slk.sistemlayanankegiatan.Rest.*;
@@ -25,15 +29,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ContentActivity extends AppCompatActivity {
+public class ContentActivity extends AppCompatActivity{
     // Variabel untuk recyclerview
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
     SwipeRefreshLayout refreshLayout;
     FloatingActionButton floatingActionButton;
+    MultiSelectDialog multiSelectDialog;
     // Variabel untuk menampung hasil intent
     String user_level;
     String request;
@@ -57,14 +63,6 @@ public class ContentActivity extends AppCompatActivity {
                 loadData(request);
             }
         });
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),AddInvitation.class);
-                startActivity(intent);
-            }
-        });
-
     }
 
 
@@ -81,7 +79,6 @@ public class ContentActivity extends AppCompatActivity {
 
     private void instanceComponents(){
         refreshLayout = findViewById(R.id.swipe_refresh);
-        floatingActionButton = findViewById(R.id.fab_add);
 
 //        floatingActionButton.setVisibility(View.INVISIBLE);
 
