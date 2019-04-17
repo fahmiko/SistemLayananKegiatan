@@ -17,8 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/PrimaryTheme">
-        <activity android:name=".AdminContent"></activity>
-        <activity android:name=".AddInvitation" />
+        <activity android:name=".CommentActivity"></activity>
+        <activity android:name=".AdminContent" />
+        <activity android:name=".AddInvitation"
+            android:windowSoftInputMode="adjustResize"/>
 
         <service
             android:name=".Service.MyFirebaseMessagingService"
