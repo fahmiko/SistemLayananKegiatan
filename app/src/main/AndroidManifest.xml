@@ -17,10 +17,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/PrimaryTheme">
-        <activity android:name=".CommentActivity"></activity>
+        <activity
+            android:name=".DetailActivity"
+            android:label="@string/title_activity_detail"
+            android:theme="@style/PrimaryTheme.NoActionBar"></activity>
+        <activity android:name=".CommentActivity" />
         <activity android:name=".AdminContent" />
-        <activity android:name=".AddInvitation"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".AddInvitation"
+            android:windowSoftInputMode="adjustResize" />
 
         <service
             android:name=".Service.MyFirebaseMessagingService"
@@ -31,10 +36,6 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".DetailActivity"
-            android:label="@string/title_activity_detail"
-            android:theme="@style/PrimaryTheme.NoActionBar" />
         <activity android:name=".ContentActivity" />
         <activity
             android:name=".LoginActivity"

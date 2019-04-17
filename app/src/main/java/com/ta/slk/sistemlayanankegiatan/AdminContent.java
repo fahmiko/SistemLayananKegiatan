@@ -9,10 +9,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class AdminContent extends AppCompatActivity {
     private BottomNavigationView mNavigationView;
@@ -35,6 +40,7 @@ public class AdminContent extends AppCompatActivity {
         membersFragment = new MembersFragment();
 
         setFragment(activitiesFragment);
+//        getTimeAgo();
 
         mNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -80,5 +86,20 @@ public class AdminContent extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void getTimeAgo() {
+        String input = "1970-01-09 17:11:23.104";
+        SimpleDateFormat parser = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy");
+        Date date = null;
+        try {
+            date = parser.parse(input);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = formatter.format(date);
+
+        Log.d("date", formattedDate.toString());
     }
 }

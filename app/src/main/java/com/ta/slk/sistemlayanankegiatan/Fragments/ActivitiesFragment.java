@@ -1,6 +1,8 @@
 package com.ta.slk.sistemlayanankegiatan.Fragments;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,7 +19,10 @@ import android.util.Log;
 
 import com.abdeveloper.library.MultiSelectDialog;
 import com.abdeveloper.library.MultiSelectModel;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.ta.slk.sistemlayanankegiatan.Adapter.*;
+import com.ta.slk.sistemlayanankegiatan.DetailActivity;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
 import com.ta.slk.sistemlayanankegiatan.Rest.*;
 import com.ta.slk.sistemlayanankegiatan.Method.*;
@@ -50,6 +55,7 @@ public class ActivitiesFragment extends Fragment {
         // Required empty public constructor
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,7 +85,16 @@ public class ActivitiesFragment extends Fragment {
                 mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(view.getContext(), mRecyclerView, new ClickListenner() {
                     @Override
                     public void onClick(View v, int position) {
-
+                        Bundle bundle = new Bundle();
+                        Intent intent = new Intent(v.getContext(), DetailActivity.class);
+                        bundle.putString("id_activity",listActivities.get(position).getIdActivity());
+                        bundle.putString("name",listActivities.get(position).getNameActivities());
+                        bundle.putString("contact",listActivities.get(position).getContactPerson());
+                        bundle.putString("date",listActivities.get(position).getDate());
+                        bundle.putString("picture",listActivities.get(position).getPicture());
+                        bundle.putString("place",listActivities.get(position).getPlace());
+                        intent.putExtra("activity",bundle);
+                        startActivity(intent);
                     }
 
                     @Override
