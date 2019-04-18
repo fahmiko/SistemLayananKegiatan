@@ -18,10 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/PrimaryTheme">
         <activity
+            android:name=".UserInvitation"
+            android:label="@string/title_activity_user_invitation"
+            android:theme="@style/PrimaryTheme.NoActionBar"></activity>
+        <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
-            android:theme="@style/PrimaryTheme.NoActionBar"></activity>
-        <activity android:name=".CommentActivity" />
+            android:theme="@style/PrimaryTheme.NoActionBar" />
         <activity android:name=".AdminContent" />
         <activity
             android:name=".AddInvitation"

@@ -17,7 +17,7 @@ public class Preferences {
         editor.apply();
     }
 
-    public void saveCredentials(String id, String name, String username, String password, String photo){
+    public void saveCredentials(String id, String name, String username, String password, String photo,String id_member){
         SharedPreferences sf = context.getSharedPreferences("login",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sf.edit();
         editor.putString("id_user",id);
@@ -25,6 +25,7 @@ public class Preferences {
         editor.putString("username",username);
         editor.putString("password",password);
         editor.putString("photo",photo);
+        editor.putString("id_member",id_member);
 
         editor.apply();
     }

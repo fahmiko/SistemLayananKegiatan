@@ -76,8 +76,9 @@ public class LoginActivity extends AppCompatActivity{
                     String password = response.body().getResult().get(0).getPassword();
                     String name = response.body().getResult().get(0).getName();
                     String photo = response.body().getResult().get(0).getPhotoProfile();
+                    String id_member = response.body().getResult().get(0).getIdMember();
                     Preferences pr = new Preferences(getApplicationContext());
-                    pr.saveCredentials(id_user,name,username,password,photo);
+                    pr.saveCredentials(id_user,name,username,password,photo, id_member);
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);
                 }

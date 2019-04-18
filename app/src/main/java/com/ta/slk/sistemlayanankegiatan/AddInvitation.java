@@ -22,6 +22,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.ta.slk.sistemlayanankegiatan.Model.PostData;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
@@ -204,6 +206,8 @@ public class AddInvitation extends AppCompatActivity {
                     requestFile);
         }
 
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
         RequestBody reqName = MultipartBody.create(MediaType.parse("multipart/form-data"),
                 (name.getText().toString().isEmpty())?"":name.getText().toString());
         RequestBody reqCreated = MultipartBody.create(MediaType.parse("multipart/form-data"),
@@ -216,21 +220,23 @@ public class AddInvitation extends AppCompatActivity {
                 (description.getText().toString().isEmpty())?"":description.getText().toString());
         RequestBody reqContact = MultipartBody.create(MediaType.parse("multipart/form-data"),
                 (contact.getText().toString().isEmpty())?"":contact.getText().toString());
+        RequestBody reqKey = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                reference.push().getKey());
 
         Call<PostData> mPostActivity;
-        mPostActivity = mApiInterface.postActivity(body,reqName,reqCreated,reqLocation,reqContact,reqDate,reqDesription);
+        mPostActivity = mApiInterface.postActivity(body,reqName,reqCreated,reqLocation,reqContact,reqDate,reqDesription,reqKey);
         mPostActivity.enqueue(new Callback<PostData>() {
             @Override
             public void onResponse(Call<PostData> call, Response<PostData> response) {
                 if(response.body().getStatus().equals("success")){
-                    finish();
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                    reference.setValue(response.body().getMessage());
                 }
-                Log.d("msg", "onResponse: "+response.body().getMessage());
             }
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
-
+                
             }
         });
 

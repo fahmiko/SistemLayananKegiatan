@@ -86,9 +86,8 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
             intent.putExtra("action","invitation");
             startActivity(intent);
         } else if (id == R.id.nav_share) {
-            Intent intent = new Intent(getApplicationContext(),CommentActivity.class);
+            Intent intent = new Intent(getApplicationContext(),UserInvitation.class);
             startActivity(intent);
-
         } else if (id == R.id.logout) {
             Preferences pr = new Preferences(getApplicationContext());
             pr.logout();

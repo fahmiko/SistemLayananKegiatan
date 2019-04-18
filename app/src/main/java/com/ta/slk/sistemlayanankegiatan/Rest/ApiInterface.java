@@ -12,6 +12,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 
 public interface ApiInterface {
@@ -28,6 +29,7 @@ public interface ApiInterface {
     @POST("Rest_slkg/sendinvitation")
     Call<PostData> sendInvitation(
             @Field("id[]") ArrayList<Integer> id,
+            @Field("id_activity") String id_activity,
             @Field("action") String action
     );
 
@@ -66,6 +68,22 @@ public interface ApiInterface {
             @Field("device_token") String device_token
     );
 
+    @FormUrlEncoded
+    @POST("Rest_slkg/invitation")
+    Call<GetInvtActivities> getActivityStatus(
+            @Field("id_member") String id,
+            @Field("status") String status
+    );
+
+    @FormUrlEncoded
+    @PUT("Rest_slkg/invitation")
+    Call<PostData> putInvitationStatus(
+            @Field("id_activity") String id_activity,
+            @Field("id_member") String id_member,
+            @Field("status") String status
+    );
+
+
     @Multipart
     @POST("Rest_slkg/activity")
     Call<PostData> postActivity(
@@ -75,6 +93,7 @@ public interface ApiInterface {
             @Part("location") RequestBody location,
             @Part("contact") RequestBody contact,
             @Part("date") RequestBody date,
-            @Part("description") RequestBody description
+            @Part("description") RequestBody description,
+            @Part("comment_key") RequestBody key
     );
 }

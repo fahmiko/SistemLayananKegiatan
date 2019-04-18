@@ -59,9 +59,20 @@ public class Activities {
     @SerializedName("status")
     @Expose
     private String status;
+    @SerializedName("comment_key")
+    @Expose
+    private String commentKey;
 
     public String getIdActivity() {
         return idActivity;
+    }
+
+    public String getCommentKey() {
+        return commentKey;
+    }
+
+    public void setCommentKey(String commentKey) {
+        this.commentKey = commentKey;
     }
 
     public void setIdActivity(String idActivity) {

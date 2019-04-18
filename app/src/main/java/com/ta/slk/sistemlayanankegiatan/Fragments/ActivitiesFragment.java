@@ -46,6 +46,7 @@ public class ActivitiesFragment extends Fragment {
     SwipeRefreshLayout refreshLayout;
     FloatingActionButton floatingActionButton;
     MultiSelectDialog multiSelectDialog;
+    private String id_activity;
 
     List<Groups> listGroups;
     List<Activities> listActivities;
@@ -88,6 +89,7 @@ public class ActivitiesFragment extends Fragment {
                         Bundle bundle = new Bundle();
                         Intent intent = new Intent(v.getContext(), DetailActivity.class);
                         bundle.putString("id_activity",listActivities.get(position).getIdActivity());
+                        bundle.putString("comment_key",listActivities.get(position).getCommentKey());
                         bundle.putString("name",listActivities.get(position).getNameActivities());
                         bundle.putString("contact",listActivities.get(position).getContactPerson());
                         bundle.putString("date",listActivities.get(position).getDate());
@@ -99,6 +101,7 @@ public class ActivitiesFragment extends Fragment {
 
                     @Override
                     public void onLongClick(View v, int position) {
+                        id_activity = listActivities.get(position).getIdActivity();
                         final CharSequence[] dialogitem = {"Buka","Kirim Grup","Kirim Pribadi","Edit","Hapus"};
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                         builder.setTitle("Pilih Menu");
@@ -207,7 +210,7 @@ public class ActivitiesFragment extends Fragment {
     private void sendInvitation(ArrayList<Integer> list, String action){
         Log.d("size", "sendInvitation: "+list.size());
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<PostData> postDataCall = apiInterface.sendInvitation(list,action);
+        Call<PostData> postDataCall = apiInterface.sendInvitation(list,id_activity,action);
         postDataCall.enqueue(new Callback<PostData>() {
             @Override
             public void onResponse(Call<PostData> call, Response<PostData> response) {
