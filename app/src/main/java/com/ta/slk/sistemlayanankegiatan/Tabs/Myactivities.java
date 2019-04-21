@@ -1,6 +1,5 @@
-package com.ta.slk.sistemlayanankegiatan;
+package com.ta.slk.sistemlayanankegiatan.Tabs;
 
-import android.os.CpuUsageInfo;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -21,11 +20,11 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
-import com.ta.slk.sistemlayanankegiatan.Fragments.ActivitiesFragment;
-import com.ta.slk.sistemlayanankegiatan.Fragments.CommentFragment;
-import com.ta.slk.sistemlayanankegiatan.Fragments.DetailFragment;
+import com.ta.slk.sistemlayanankegiatan.Fragments.FinishActivities;
+import com.ta.slk.sistemlayanankegiatan.Fragments.UpcomingActivities;
+import com.ta.slk.sistemlayanankegiatan.R;
 
-public class DetailActivity extends AppCompatActivity {
+public class Myactivities extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -41,14 +40,11 @@ public class DetailActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private Bundle activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
-
-        activity = getIntent().getBundleExtra("activity");
+        setContentView(R.layout.activity_myactivities);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,13 +60,14 @@ public class DetailActivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_myactivities, menu);
         return true;
     }
 
@@ -129,13 +126,11 @@ public class DetailActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    DetailFragment detail = new DetailFragment();
-                    detail.setArguments(activity);
-                    return detail;
+                    UpcomingActivities activities = new UpcomingActivities();
+                    return activities;
                 case 1:
-                    CommentFragment comment = new CommentFragment();
-                    comment.setArguments(activity);
-                    return comment;
+                    FinishActivities activities1 = new FinishActivities();
+                    return activities1;
                     default:
                         return null;
             }
@@ -146,9 +141,9 @@ public class DetailActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position){
                 case 0:
-                    return "Detail";
+                    return "PENDING";
                 case 1:
-                    return "Komentar";
+                    return "FINISH";
                     default:
                         return null;
             }
@@ -159,10 +154,5 @@ public class DetailActivity extends AppCompatActivity {
             // Show 3 total pages.
             return 2;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 }

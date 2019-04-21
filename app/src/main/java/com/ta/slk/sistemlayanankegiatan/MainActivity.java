@@ -29,6 +29,9 @@ import com.ta.slk.sistemlayanankegiatan.Model.*;
 import com.ta.slk.sistemlayanankegiatan.Rest.*;
 import com.ta.slk.sistemlayanankegiatan.Adapter.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -47,6 +50,10 @@ public class MainActivity extends Menu{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getMenu();
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd:MM:YY | HH:mm");
+//        String currentDateandTime = sdf.format(new Date());
+//        Toast.makeText(getApplicationContext(),"DateTime "+currentDateandTime,Toast.LENGTH_LONG).show();
+
         SharedPreferences sf = getApplicationContext().getSharedPreferences("login",MODE_PRIVATE);
         if(sf.getString("id_member","").equals("")){
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.ta.slk.sistemlayanankegiatan.Adapter.InvitationAdapter;
@@ -37,6 +39,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UserInvitation extends Fragment {
+    SwipeRefreshLayout refreshLayout;
+    ProgressBar progressBar;
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
@@ -45,8 +49,19 @@ public class UserInvitation extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_invitation,container,false);
+        final View view = inflater.inflate(R.layout.fragment_user_invitation,container,false);
+
         recyclerView = view.findViewById(R.id.recycler_content);
+        refreshLayout = view.findViewById(R.id.swipe_refresh);
+        progressBar = view.findViewById(R.id.progress_bar);
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData(view);
+            }
+        });
+
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
         refreshData(view);
@@ -75,6 +90,8 @@ public class UserInvitation extends Fragment {
                 activitiesList = response.body().getResult();
                 adapter = new InvitationAdapter(activitiesList,view.getContext());
                 recyclerView.setAdapter(adapter);
+                progressBar.setVisibility(View.GONE);
+                refreshLayout.setRefreshing(false);
             }
 
             @Override

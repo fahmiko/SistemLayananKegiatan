@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,13 +27,16 @@ import com.ta.slk.sistemlayanankegiatan.Model.Comment;
 import com.ta.slk.sistemlayanankegiatan.R;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public class CommentFragment extends Fragment {
+    ProgressBar progressBar;
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
@@ -53,6 +57,7 @@ public class CommentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View view =  inflater.inflate(R.layout.fragment_comment,container,false);
+        progressBar = view.findViewById(R.id.progress_bar);
 
         SharedPreferences sf = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         name = sf.getString("name","");
@@ -72,9 +77,8 @@ public class CommentFragment extends Fragment {
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int time = (int) (System.currentTimeMillis());
-                Timestamp tsTemp = new Timestamp(time);
-                String ts =  tsTemp.toString();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd:MM:YY | HH:mm");
+                String currentDateandTime = sdf.format(new Date());
 
                 Map<String,Object> map = new HashMap<>();
                 temp_key = root.push().getKey();
@@ -83,7 +87,7 @@ public class CommentFragment extends Fragment {
                 DatabaseReference message_root = root.child(temp_key);
                 Map<String,Object> map2 = new HashMap<String, Object>();
                 map2.put("name",name);
-                map2.put("date",ts);
+                map2.put("date",currentDateandTime);
                 map2.put("comment",commentText.getText().toString());
                 map2.put("photo",photo);
                 message_root.updateChildren(map2);
@@ -95,6 +99,7 @@ public class CommentFragment extends Fragment {
                 commentList = refreshComment(dataSnapshot);
                 adapter = new CommentAdapter(commentList,view.getContext());
                 recyclerView.setAdapter(adapter);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override

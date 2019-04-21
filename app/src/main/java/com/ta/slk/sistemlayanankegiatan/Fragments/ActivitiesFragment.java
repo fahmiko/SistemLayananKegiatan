@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.abdeveloper.library.MultiSelectDialog;
@@ -45,6 +46,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
     SwipeRefreshLayout refreshLayout;
+    ProgressBar progressBar;
     FloatingActionButton floatingActionButton;
     MultiSelectDialog multiSelectDialog;
     private String id_activity;
@@ -64,7 +66,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_activities, container, false);
         mRecyclerView = view.findViewById(R.id.recycler_content);
-
+        progressBar = view.findViewById(R.id.progress_bar);
         refreshLayout = view.findViewById(R.id.swipe_refresh);
         refreshLayout.setOnRefreshListener(this);
 //        refreshLayout.setColorSchemeResources(R.color.colorAccent,
@@ -93,10 +95,12 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
         mGetActivity.enqueue(new Callback<GetActivities>() {
             @Override
             public void onResponse(Call<GetActivities> call, Response<GetActivities> response) {
+                if (response.isSuccessful()){ refreshLayout.setRefreshing(false);}
                 listActivities = response.body().getResult();
                 mAdapter = new ActivitiesAdapter(listActivities, getContext());
                 mRecyclerView.setAdapter(mAdapter);
                 mRecyclerView.scheduleLayoutAnimation();
+                progressBar.setVisibility(View.GONE);
 
                 mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), mRecyclerView, new ClickListenner() {
                     @Override

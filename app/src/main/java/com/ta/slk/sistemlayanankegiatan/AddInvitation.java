@@ -231,6 +231,7 @@ public class AddInvitation extends AppCompatActivity {
                 if(response.body().getStatus().equals("success")){
                     DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                     reference.setValue(response.body().getMessage());
+                    finish();
                 }
             }
 

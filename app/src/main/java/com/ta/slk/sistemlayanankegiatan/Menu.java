@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.ta.slk.sistemlayanankegiatan.Method.Preferences;
 import com.ta.slk.sistemlayanankegiatan.Model.Groups;
+import com.ta.slk.sistemlayanankegiatan.Tabs.Myactivities;
 
 public class Menu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public void getMenu(){
@@ -78,9 +79,8 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
 //            intent.putExtra("action","groups");
 //            startActivity(intent);
         } else if (id == R.id.nav_activities) {
-//            Intent intent = new Intent(getApplicationContext(),ContentActivity.class);
-//            intent.putExtra("action","my_activities");
-//            startActivity(intent);
+            Intent intent = new Intent(getApplicationContext(), Myactivities.class);
+            startActivity(intent);
         } else if (id == R.id.nav_invitation) {
             Intent intent = new Intent(getApplicationContext(),UserInvitation.class);
             startActivity(intent);
