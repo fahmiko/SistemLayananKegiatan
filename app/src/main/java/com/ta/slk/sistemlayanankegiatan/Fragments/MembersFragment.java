@@ -52,6 +52,7 @@ import com.ta.slk.sistemlayanankegiatan.R;
  * A simple {@link Fragment} subclass.
  */
 public class MembersFragment extends Fragment {
+    SwipeRefreshLayout refreshLayout;
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
@@ -68,8 +69,17 @@ public class MembersFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_members, container, false);
         mRecyclerView = view.findViewById(R.id.recycler_content);
-        mLayoutManager = new LinearLayoutManager(view.getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        refreshLayout = view.findViewById(R.id.swipe_refresh);
+//        mLayoutManager = new LinearLayoutManager(view.getContext());
+//        mRecyclerView.setLayoutManager(mLayoutManager);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData(view);
+                refreshLayout.setRefreshing(false);
+            }
+        });
+
 
         loadData(view);
 
@@ -85,6 +95,7 @@ public class MembersFragment extends Fragment {
                 listUsers = response.body().getResult();
                 mAdapter =  new MembersAdapter(listUsers, view.getContext());
                 mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.scheduleLayoutAnimation();
             }
 
             @Override

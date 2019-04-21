@@ -40,10 +40,16 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity{
     EditText username,password;
     Button btn_login,btn_login_other;
+    private String TAG = "Pesan Login";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        String msg = getIntent().getStringExtra("message");
+        if(msg != null){
+            Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+        }
+
         username = findViewById(R.id.username);
         btn_login = findViewById(R.id.btn_login);
         btn_login.setOnClickListener(new View.OnClickListener() {
@@ -64,21 +70,22 @@ public class LoginActivity extends AppCompatActivity{
 
     public void Login(){
         ApiInterface mApiInterface = ApiClient.getClient().create(ApiInterface.class);
-        SharedPreferences sf = getSharedPreferences("device_token",MODE_PRIVATE);
-
+        final SharedPreferences sf = getSharedPreferences("device_token",MODE_PRIVATE);
+//        Log.d(TAG, "Login: Login berjalan");
         Call<GetUsers> mLoginCall = mApiInterface.getLoginNip(username.getText().toString(),sf.getString("device_token",""));
         mLoginCall.enqueue(new Callback<GetUsers>() {
             @Override
             public void onResponse(Call<GetUsers> call, retrofit2.Response<GetUsers> response) {
-                if(response.body().getStatus().equals("success")){
+                if(response.isSuccessful()){
                     String id_user = response.body().getResult().get(0).getIdUser();
                     String username = response.body().getResult().get(0).getUsername();
                     String password = response.body().getResult().get(0).getPassword();
                     String name = response.body().getResult().get(0).getName();
                     String photo = response.body().getResult().get(0).getPhotoProfile();
                     String id_member = response.body().getResult().get(0).getIdMember();
+                    String token = response.body().getToken();
                     Preferences pr = new Preferences(getApplicationContext());
-                    pr.saveCredentials(id_user,name,username,password,photo, id_member);
+                    pr.saveCredentials(id_user,name,username,password,photo, id_member, token);
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);
                 }

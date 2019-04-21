@@ -1,10 +1,10 @@
 package com.ta.slk.sistemlayanankegiatan.Fragments;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +13,16 @@ import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.widget.Toast;
 
 import com.abdeveloper.library.MultiSelectDialog;
 import com.abdeveloper.library.MultiSelectModel;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.ta.slk.sistemlayanankegiatan.Adapter.*;
+import com.ta.slk.sistemlayanankegiatan.AdminContent;
 import com.ta.slk.sistemlayanankegiatan.DetailActivity;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
 import com.ta.slk.sistemlayanankegiatan.Rest.*;
@@ -39,7 +40,7 @@ import com.ta.slk.sistemlayanankegiatan.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ActivitiesFragment extends Fragment {
+public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
@@ -62,16 +63,28 @@ public class ActivitiesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_activities, container, false);
-
         mRecyclerView = view.findViewById(R.id.recycler_content);
-        mLayoutManager = new LinearLayoutManager(view.getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        loadData(view);
+        refreshLayout = view.findViewById(R.id.swipe_refresh);
+        refreshLayout.setOnRefreshListener(this);
+//        refreshLayout.setColorSchemeResources(R.color.colorAccent,
+//                android.R.color.holo_green_dark,
+//                android.R.color.holo_orange_dark,
+//                android.R.color.holo_blue_dark);
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                onRefresh();
+            }
+        });
+//        mLayoutManager = new LinearLayoutManager(view.getContext());
+//        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        loadData();
         return view;
     }
 
-    private void loadData(final View view){
+    private void loadData(){
         getDataGroups();
         getDataUsers();
 
@@ -81,9 +94,11 @@ public class ActivitiesFragment extends Fragment {
             @Override
             public void onResponse(Call<GetActivities> call, Response<GetActivities> response) {
                 listActivities = response.body().getResult();
-                mAdapter = new ActivitiesAdapter(listActivities, view.getContext());
+                mAdapter = new ActivitiesAdapter(listActivities, getContext());
                 mRecyclerView.setAdapter(mAdapter);
-                mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(view.getContext(), mRecyclerView, new ClickListenner() {
+                mRecyclerView.scheduleLayoutAnimation();
+
+                mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), mRecyclerView, new ClickListenner() {
                     @Override
                     public void onClick(View v, int position) {
                         Bundle bundle = new Bundle();
@@ -103,7 +118,7 @@ public class ActivitiesFragment extends Fragment {
                     public void onLongClick(View v, int position) {
                         id_activity = listActivities.get(position).getIdActivity();
                         final CharSequence[] dialogitem = {"Buka","Kirim Grup","Kirim Pribadi","Edit","Hapus"};
-                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("Pilih Menu");
                         builder.setItems(dialogitem, new DialogInterface.OnClickListener() {
                             @Override
@@ -222,5 +237,11 @@ public class ActivitiesFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onRefresh() {
+        loadData();
+        refreshLayout.setRefreshing(false);
     }
 }

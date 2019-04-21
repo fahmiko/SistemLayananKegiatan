@@ -57,7 +57,7 @@ public class MainActivity extends Menu{
 //        mRecyclerView = findViewById(R.id.recycler_activities);
 //        mLayoutManager = new LinearLayoutManager(mContext);
 //        mRecyclerView.setLayoutManager(mLayoutManager);
-//        LoadData();
+        LoadData();
     }
 
     @Override
@@ -69,15 +69,18 @@ public class MainActivity extends Menu{
     }
 
     private void LoadData(){
-        mApiInterface = ApiClient.getClient().create(ApiInterface.class);
+        SharedPreferences sf = this.getSharedPreferences("login",MODE_PRIVATE);
+        mApiInterface = ApiClient.getServer(sf.getString("token","")).create(ApiInterface.class);
         Call<GetActivities> mActivitiesCall = mApiInterface.getActivities();
         mActivitiesCall.enqueue(new Callback<GetActivities>() {
             @Override
             public void onResponse(Call<GetActivities> call, Response<GetActivities> response) {
-                Log.d("Get Server",response.body().getStatus());
-                listActivities = response.body().getResult();
-                mAdapter = new ActivitiesAdapter(listActivities,getApplicationContext());
-                mRecyclerView.setAdapter(mAdapter);
+                Log.d("msg", "onResponse: "+response.message());
+                if(response.message().equals("Unauthorized")){
+                        finish();
+                        Preferences preferences = new Preferences(getApplicationContext());
+                        preferences.logout(0);
+                }
             }
 
             @Override

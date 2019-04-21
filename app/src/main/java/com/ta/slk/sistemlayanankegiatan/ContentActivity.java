@@ -1,155 +1,105 @@
 package com.ta.slk.sistemlayanankegiatan;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import com.ta.slk.sistemlayanankegiatan.Fragments.*;
+
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.FrameLayout;
 
-import com.abdeveloper.library.MultiSelectDialog;
-import com.abdeveloper.library.MultiSelectModel;
-import com.ta.slk.sistemlayanankegiatan.Adapter.*;
-import com.ta.slk.sistemlayanankegiatan.Model.*;
-import com.ta.slk.sistemlayanankegiatan.Rest.*;
-import com.ta.slk.sistemlayanankegiatan.Method.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+public class ContentActivity extends AppCompatActivity {
+    private BottomNavigationView mNavigationView;
+    private FrameLayout mFrameLayout;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ContentActivity extends AppCompatActivity{
-    // Variabel untuk recyclerview
-    RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
-    RecyclerView.LayoutManager mLayoutManager;
-    SwipeRefreshLayout refreshLayout;
-    FloatingActionButton floatingActionButton;
-    MultiSelectDialog multiSelectDialog;
-    // Variabel untuk menampung hasil intent
-    String user_level;
-    String request;
-    // List variabel
-    List<Groups> listGroups;
-    List<InvtActivities> listInvitation;
-    List<Activities> listActivities;
+    private ActivitiesFragment activitiesFragment;
+    private GroupsFragment groupsFragment;
+    private MembersFragment membersFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_content);
-        user_level = getIntent().getStringExtra("user_level");
-        request = getIntent().getStringExtra("action");
+        setContentView(R.layout.activity_admin_content);
 
-        instanceComponents();
-        loadData(request);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mNavigationView = findViewById(R.id.admin_nav);
+        mFrameLayout = findViewById(R.id.admin_frame);
+
+        activitiesFragment = new ActivitiesFragment();
+        groupsFragment = new GroupsFragment();
+        membersFragment = new MembersFragment();
+
+        setFragment(activitiesFragment);
+//        getTimeAgo();
+
+        mNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onRefresh() {
-                loadData(request);
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.nav_admin_activity:
+                        setFragment(activitiesFragment);
+                        return true;
+
+                    case R.id.nav_admin_group:
+                        setFragment(groupsFragment);
+                        return true;
+
+                    case R.id.nav_admin_member:
+                        setFragment(membersFragment);
+                        return true;
+
+                    default:
+                        return false;
+                }
             }
         });
     }
+    private void setFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.admin_frame, fragment);
+        fragmentTransaction.commit();
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.admin_menu,menu);
+        return true;
+    }
 
-
-    private void loadData(String action) {
-        if (action.equals("groups")) {
-            showDataGroupsById();
-        }else if(action.equals("invitation")){
-            showDataInvitationById();
-        }else if(action.equals("my_activities")){
-            showDataActivitiesById();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_add_activity:
+                Intent intent = new Intent(getApplicationContext(), AddInvitation.class);
+                startActivity(intent);
+                break;
         }
+        return super.onOptionsItemSelected(item);
     }
 
-    private void instanceComponents(){
-        refreshLayout = findViewById(R.id.swipe_refresh);
-
-//        floatingActionButton.setVisibility(View.INVISIBLE);
-
-        getSupportActionBar().setTitle(request);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().show();
-
-        mRecyclerView = findViewById(R.id.recycler_content);
-        if(this.request.equals("groups")){
-            mLayoutManager = new GridLayoutManager(this,3);
-        }else{
-            mLayoutManager = new LinearLayoutManager(this);
+    private void getTimeAgo() {
+        String input = "1970-01-09 17:11:23.104";
+        SimpleDateFormat parser = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy");
+        Date date = null;
+        try {
+            date = parser.parse(input);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        mRecyclerView.setLayoutManager(mLayoutManager);
-    }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = formatter.format(date);
 
-    private void showDataInvitationById(){
-        ApiInterface mApiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<GetInvtActivities> minvitCall =  mApiInterface.getInvitationActivity("1","invitation");
-
-        minvitCall.enqueue(new Callback<GetInvtActivities>() {
-            @Override
-            public void onResponse(Call<GetInvtActivities> call, Response<GetInvtActivities> response) {
-                listInvitation = response.body().getResult();
-                mAdapter = new InvitationAdapter(listInvitation,getApplicationContext());
-                mRecyclerView.setAdapter(mAdapter);
-            }
-
-            @Override
-            public void onFailure(Call<GetInvtActivities> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Cek koneksi Internet",Toast.LENGTH_SHORT).show();
-            }
-
-        });
-    }
-
-    private void showDataActivitiesById(){
-        ApiInterface mApiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<GetActivities> mCall =  mApiInterface.getActiviesById("1","my_activity");
-
-        mCall.enqueue(new Callback<GetActivities>() {
-            @Override
-            public void onResponse(Call<GetActivities> call, Response<GetActivities> response) {
-                listActivities = response.body().getResult();
-                mAdapter = new ActivitiesAdapter(listActivities, getApplicationContext());
-                mRecyclerView.setAdapter(mAdapter);
-            }
-
-            @Override
-            public void onFailure(Call<GetActivities> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Cek koneksi Internet",Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void showDataGroupsById(){
-        ApiInterface mApiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<GetGroups> mGroupCall =  mApiInterface.getGroupsById("1","groups");
-
-        mGroupCall.enqueue(new Callback<GetGroups>() {
-            @Override
-            public void onResponse(Call<GetGroups> call, Response<GetGroups> response) {
-                listGroups = response.body().getResult();
-                mAdapter = new GroupsAdapter(listGroups, getApplicationContext());
-                mRecyclerView.setAdapter(mAdapter);
-            }
-
-            @Override
-            public void onFailure(Call<GetGroups> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Cek koneksi Internet",Toast.LENGTH_SHORT).show();
-            }
-        });
+        Log.d("date", formattedDate.toString());
     }
 }

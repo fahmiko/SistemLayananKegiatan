@@ -74,23 +74,22 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
             Intent intent = new Intent(getApplicationContext(), AdminContent.class);
             startActivity(intent);
         } else if (id == R.id.nav_group) {
-            Intent intent = new Intent(getApplicationContext(), ContentActivity.class);
-            intent.putExtra("action","groups");
-            startActivity(intent);
+//            Intent intent = new Intent(getApplicationContext(), ContentActivity.class);
+//            intent.putExtra("action","groups");
+//            startActivity(intent);
         } else if (id == R.id.nav_activities) {
-            Intent intent = new Intent(getApplicationContext(),ContentActivity.class);
-            intent.putExtra("action","my_activities");
-            startActivity(intent);
+//            Intent intent = new Intent(getApplicationContext(),ContentActivity.class);
+//            intent.putExtra("action","my_activities");
+//            startActivity(intent);
         } else if (id == R.id.nav_invitation) {
-            Intent intent = new Intent(getApplicationContext(),ContentActivity.class);
-            intent.putExtra("action","invitation");
+            Intent intent = new Intent(getApplicationContext(),UserInvitation.class);
             startActivity(intent);
         } else if (id == R.id.nav_share) {
             Intent intent = new Intent(getApplicationContext(),UserInvitation.class);
             startActivity(intent);
         } else if (id == R.id.logout) {
             Preferences pr = new Preferences(getApplicationContext());
-            pr.logout();
+            pr.logout(1);
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         }

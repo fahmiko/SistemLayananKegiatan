@@ -62,7 +62,7 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
-    @POST("Rest_slkg/loginnip")
+    @POST("users/loginnip")
     Call<GetUsers> getLoginNip(
             @Field("nip") String nip,
             @Field("device_token") String device_token
@@ -80,7 +80,8 @@ public interface ApiInterface {
     Call<PostData> putInvitationStatus(
             @Field("id_activity") String id_activity,
             @Field("id_member") String id_member,
-            @Field("status") String status
+            @Field("status") String status,
+            @Field("message") String message
     );
 
 

@@ -47,6 +47,9 @@ public class Users {
     @SerializedName("device_token")
     @Expose
     private String deviceToken;
+    @SerializedName("user_token")
+    @Expose
+    private String userToken;
 
     public String getIdUser() {
         return idUser;
@@ -158,5 +161,13 @@ public class Users {
 
     public void setDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
+    }
+
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 }

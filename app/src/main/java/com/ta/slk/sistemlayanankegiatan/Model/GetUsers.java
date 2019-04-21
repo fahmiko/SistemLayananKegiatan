@@ -12,6 +12,10 @@ public class GetUsers {
     @SerializedName("result")
     @Expose
     private List<Users> result = null;
+    @SerializedName("token")
+    @Expose
+    private String token;
+
 
     public String getStatus() {
         return status;
@@ -29,4 +33,11 @@ public class GetUsers {
         this.result = result;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

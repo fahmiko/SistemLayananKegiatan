@@ -11,10 +11,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.ta.slk.sistemlayanankegiatan.Adapter.InvitationAdapter;
 import com.ta.slk.sistemlayanankegiatan.Method.ClickListenner;
@@ -51,7 +54,7 @@ public class UserInvitation extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(view.getContext(), recyclerView, new ClickListenner() {
             @Override
             public void onClick(View v, int position) {
-                showDialog(activitiesList.get(position).getIdActivity(),activitiesList.get(position).getNameActivities(), v);
+                showDialog(activitiesList.get(position).getIdActivity(),activitiesList.get(position).getNameActivities());
             }
 
             @Override
@@ -81,37 +84,59 @@ public class UserInvitation extends Fragment {
         });
     }
 
-    private void showDialog(final String id_activity, String name, final View view){
+    private void showDialog(final String id_activity, String name){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Terima undangan "+name+" ?")
                 .setPositiveButton("Terima", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        confirmInvitation(view,"join",id_activity);
+                        getMessageDialog("join",id_activity);
                     }
                 })
                 .setNegativeButton("Tolak", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        confirmInvitation(view,"rejected",id_activity);
+                        getMessageDialog("rejected",id_activity);
+//                        confirmInvitation(view,"rejected",id_activity,"");
                     }
                 });
         // Create the AlertDialog object and return it
             builder.show();
         }
-    private void confirmInvitation(final View view, String action, String id_activity){
-        SharedPreferences sf = view.getContext().getSharedPreferences("login",Context.MODE_PRIVATE);
+    private void confirmInvitation(String action, String id_activity, String message){
+        SharedPreferences sf = getContext().getSharedPreferences("login",Context.MODE_PRIVATE);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<PostData> call = apiInterface.putInvitationStatus(id_activity,sf.getString("id_member",""),action);
+        Call<PostData> call = apiInterface.putInvitationStatus(id_activity,sf.getString("id_member",""),action, message);
         call.enqueue(new Callback<PostData>() {
             @Override
             public void onResponse(Call<PostData> call, Response<PostData> response) {
-                Intent intent = new Intent(view.getContext(), com.ta.slk.sistemlayanankegiatan.UserInvitation.class);
+                Intent intent = new Intent(getView().getContext(), com.ta.slk.sistemlayanankegiatan.UserInvitation.class);
                 startActivity(intent);
             }
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
-                Snackbar.make(view, "Cek Koneksi Internet",Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(getView(), "Cek Koneksi Internet",Snackbar.LENGTH_SHORT).show();
             }
         });
+    }
+    private void getMessageDialog(final String action, final String id_activity){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Kirim Pesan");
+        final EditText input = new EditText(getContext());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                confirmInvitation(action,id_activity,input.getText().toString());
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 }
