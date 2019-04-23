@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.ta.slk.sistemlayanankegiatan.Fragments.ActivitiesFragment;
 import com.ta.slk.sistemlayanankegiatan.Fragments.CommentFragment;
 import com.ta.slk.sistemlayanankegiatan.Fragments.DetailFragment;
+import com.ta.slk.sistemlayanankegiatan.Fragments.DocumentationFragment;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -137,6 +138,9 @@ public class DetailActivity extends AppCompatActivity {
                     CommentFragment comment = new CommentFragment();
                     comment.setArguments(activity);
                     return comment;
+                case 2:
+                    DocumentationFragment documentation = new DocumentationFragment();
+                    return documentation;
                     default:
                         return null;
             }
@@ -150,6 +154,8 @@ public class DetailActivity extends AppCompatActivity {
                     return "Detail";
                 case 1:
                     return "Komentar";
+                case 2:
+                    return "Dokumentasi";
                     default:
                         return null;
             }
@@ -158,7 +164,7 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
+            return 3;
         }
     }
 

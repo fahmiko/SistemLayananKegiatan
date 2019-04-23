@@ -45,7 +45,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.polinema_logo)
+                .setSmallIcon(R.drawable.lovely_time)
                 .setContentTitle(titile)
                 .setContentIntent(resultPendingIntent);
         notificationManager.notify(3,builder.build());
