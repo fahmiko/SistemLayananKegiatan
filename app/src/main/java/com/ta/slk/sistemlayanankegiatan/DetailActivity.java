@@ -1,5 +1,6 @@
 package com.ta.slk.sistemlayanankegiatan;
 
+import android.content.Intent;
 import android.os.CpuUsageInfo;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -50,8 +51,8 @@ public class DetailActivity extends AppCompatActivity {
 
         activity = getIntent().getBundleExtra("activity");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -163,6 +164,8 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+//        Intent i=new Intent(this,AdminContent.class);
+//        startActivity(i);
         finish();
     }
 }

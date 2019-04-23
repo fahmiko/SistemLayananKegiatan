@@ -2,6 +2,7 @@ package com.ta.slk.sistemlayanankegiatan.Fragments;
 
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,7 +79,14 @@ public class MembersFragment extends Fragment {
 
             @Override
             public void onFailure(Call<GetUsers> call, Throwable t) {
-
+                progressBar.setVisibility(View.GONE);
+                Snackbar.make(getView(),"Cek koneksi Internet",Snackbar.LENGTH_LONG).setAction("retry", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        loadData(view);
+                    }
+                }).show();
             }
         });
     }

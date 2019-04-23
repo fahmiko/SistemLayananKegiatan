@@ -130,4 +130,5 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_user_invitation">UserInvitation</string>
     <string name="title_activity_myactivities">Myactivities</string>
+    <string name="title_activity_detail_groups">DetailGroups</string>
 </resources>

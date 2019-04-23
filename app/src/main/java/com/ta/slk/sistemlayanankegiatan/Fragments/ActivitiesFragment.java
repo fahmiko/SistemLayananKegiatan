@@ -3,6 +3,7 @@ package com.ta.slk.sistemlayanankegiatan.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -49,6 +50,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
     ProgressBar progressBar;
     FloatingActionButton floatingActionButton;
     MultiSelectDialog multiSelectDialog;
+    View v;
     private String id_activity;
 
     List<Groups> listGroups;
@@ -65,10 +67,12 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_activities, container, false);
+        this.v = view;
         mRecyclerView = view.findViewById(R.id.recycler_content);
         progressBar = view.findViewById(R.id.progress_bar);
         refreshLayout = view.findViewById(R.id.swipe_refresh);
         refreshLayout.setOnRefreshListener(this);
+        
 //        refreshLayout.setColorSchemeResources(R.color.colorAccent,
 //                android.R.color.holo_green_dark,
 //                android.R.color.holo_orange_dark,
@@ -83,6 +87,45 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
 //        mRecyclerView.setLayoutManager(mLayoutManager);
 
         loadData();
+        mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), mRecyclerView, new ClickListenner() {
+            @Override
+            public void onClick(View v, int position) {
+                Bundle bundle = new Bundle();
+                Intent intent = new Intent(v.getContext(), DetailActivity.class);
+                bundle.putString("id_activity",listActivities.get(position).getIdActivity());
+                bundle.putString("comment_key",listActivities.get(position).getCommentKey());
+                bundle.putString("name",listActivities.get(position).getNameActivities());
+                bundle.putString("contact",listActivities.get(position).getContactPerson());
+                bundle.putString("date",listActivities.get(position).getDate());
+                bundle.putString("picture",listActivities.get(position).getPicture());
+                bundle.putString("place",listActivities.get(position).getPlace());
+                intent.putExtra("activity",bundle);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongClick(View v, int position) {
+                id_activity = listActivities.get(position).getIdActivity();
+                final CharSequence[] dialogitem = {"Buka","Kirim Grup","Kirim Pribadi","Edit","Hapus"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Pilih Menu");
+                builder.setItems(dialogitem, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case 1:
+                                MultiSelectDialog dialog1 = multiSelectShow("groups");
+                                dialog1.show(getFragmentManager(),"Testing");
+                                break;
+                            case 2:
+                                MultiSelectDialog dialog2 = multiSelectShow("members");
+                                dialog2.show(getFragmentManager(),"Testing");
+                                break;
+                        }
+                    }
+                }).create().show();
+            }
+        }));
         return view;
     }
 
@@ -95,57 +138,23 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
         mGetActivity.enqueue(new Callback<GetActivities>() {
             @Override
             public void onResponse(Call<GetActivities> call, Response<GetActivities> response) {
-                if (response.isSuccessful()){ refreshLayout.setRefreshing(false);}
                 listActivities = response.body().getResult();
                 mAdapter = new ActivitiesAdapter(listActivities, getContext());
                 mRecyclerView.setAdapter(mAdapter);
                 mRecyclerView.scheduleLayoutAnimation();
                 progressBar.setVisibility(View.GONE);
-
-                mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), mRecyclerView, new ClickListenner() {
-                    @Override
-                    public void onClick(View v, int position) {
-                        Bundle bundle = new Bundle();
-                        Intent intent = new Intent(v.getContext(), DetailActivity.class);
-                        bundle.putString("id_activity",listActivities.get(position).getIdActivity());
-                        bundle.putString("comment_key",listActivities.get(position).getCommentKey());
-                        bundle.putString("name",listActivities.get(position).getNameActivities());
-                        bundle.putString("contact",listActivities.get(position).getContactPerson());
-                        bundle.putString("date",listActivities.get(position).getDate());
-                        bundle.putString("picture",listActivities.get(position).getPicture());
-                        bundle.putString("place",listActivities.get(position).getPlace());
-                        intent.putExtra("activity",bundle);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onLongClick(View v, int position) {
-                        id_activity = listActivities.get(position).getIdActivity();
-                        final CharSequence[] dialogitem = {"Buka","Kirim Grup","Kirim Pribadi","Edit","Hapus"};
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle("Pilih Menu");
-                        builder.setItems(dialogitem, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which){
-                                    case 1:
-                                        MultiSelectDialog dialog1 = multiSelectShow("groups");
-                                        dialog1.show(getFragmentManager(),"Testing");
-                                        break;
-                                    case 2:
-                                        MultiSelectDialog dialog2 = multiSelectShow("members");
-                                        dialog2.show(getFragmentManager(),"Testing");
-                                        break;
-                                }
-                            }
-                        }).create().show();
-                    }
-                }));
             }
 
             @Override
             public void onFailure(Call<GetActivities> call, Throwable t) {
-
+                progressBar.setVisibility(View.GONE);
+                Snackbar.make(v,"Cek koneksi Internet",Snackbar.LENGTH_LONG).setAction("retry", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        loadData();
+                    }
+                }).show();
             }
         });
     }

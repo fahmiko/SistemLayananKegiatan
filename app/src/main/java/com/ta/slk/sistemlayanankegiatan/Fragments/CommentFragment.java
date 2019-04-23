@@ -91,6 +91,7 @@ public class CommentFragment extends Fragment {
                 map2.put("comment",commentText.getText().toString());
                 map2.put("photo",photo);
                 message_root.updateChildren(map2);
+                commentText.setText("");
             }
         });
         root.addChildEventListener(new ChildEventListener() {

@@ -18,9 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/PrimaryTheme">
         <activity
+            android:name=".DetailGroups"
+            android:label="@string/title_activity_detail_groups"
+            android:theme="@style/PrimaryTheme.NoActionBar"></activity>
+        <activity
             android:name=".Tabs.Myactivities"
             android:label="@string/title_activity_myactivities"
-            android:theme="@style/PrimaryTheme.NoActionBar"></activity>
+            android:theme="@style/PrimaryTheme.NoActionBar" />
         <activity
             android:name=".UserInvitation"
             android:label="@string/title_activity_user_invitation"

@@ -34,8 +34,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -206,7 +208,8 @@ public class AddInvitation extends AppCompatActivity {
                     requestFile);
         }
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().getRoot();
+        final String key = reference.push().getKey();
 
         RequestBody reqName = MultipartBody.create(MediaType.parse("multipart/form-data"),
                 (name.getText().toString().isEmpty())?"":name.getText().toString());
@@ -221,7 +224,7 @@ public class AddInvitation extends AppCompatActivity {
         RequestBody reqContact = MultipartBody.create(MediaType.parse("multipart/form-data"),
                 (contact.getText().toString().isEmpty())?"":contact.getText().toString());
         RequestBody reqKey = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                reference.push().getKey());
+                key);
 
         Call<PostData> mPostActivity;
         mPostActivity = mApiInterface.postActivity(body,reqName,reqCreated,reqLocation,reqContact,reqDate,reqDesription,reqKey);
@@ -230,7 +233,9 @@ public class AddInvitation extends AppCompatActivity {
             public void onResponse(Call<PostData> call, Response<PostData> response) {
                 if(response.body().getStatus().equals("success")){
                     DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                    reference.setValue(response.body().getMessage());
+                    Map<String,Object> map = new HashMap<>();
+                    map.put(key,"");
+                    reference.updateChildren(map);
                     finish();
                 }
             }

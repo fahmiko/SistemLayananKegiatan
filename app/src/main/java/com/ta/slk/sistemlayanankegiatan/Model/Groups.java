@@ -26,6 +26,9 @@ public class Groups {
     @SerializedName("photo_group")
     @Expose
     private String photoGroup;
+    @SerializedName("count")
+    @Expose
+    private String count;
 
     public String getIdGroup() {
         return idGroup;
@@ -83,4 +86,7 @@ public class Groups {
         this.photoGroup = photoGroup;
     }
 
+    public String getCount() { return count; }
+
+    public void setCount(String count) { this.count = count; }
 }

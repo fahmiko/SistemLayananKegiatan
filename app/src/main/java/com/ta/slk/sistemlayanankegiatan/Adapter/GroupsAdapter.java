@@ -22,12 +22,13 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.MyViewHold
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        private TextView name;
-        private CircleImageView image;
+        private TextView name,count;
+        private ImageView image;
         public MyViewHolder(View v) {
             super(v);
             name = itemView.findViewById(R.id.name_group);
             image = itemView.findViewById(R.id.image_group);
+            count = itemView.findViewById(R.id.count_group);
         }
     }
 
@@ -50,8 +51,9 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.MyViewHold
     @Override
     public void onBindViewHolder(GroupsAdapter.MyViewHolder holder, final int position) {
         holder.name.setText(myList.get(position).getName());
+        holder.count.setText("Anggota : "+myList.get(position).getCount());
         if (myList.get(position).getPhotoGroup() != null) {
-            Glide.with(holder.itemView.getContext()).load(ApiClient.BASE_URL+"uploads/"+myList.get
+            Glide.with(holder.itemView.getContext()).load(ApiClient.BASE_URL+"uploads/groups/"+myList.get
                     (position).getPhotoGroup())
                     .into(holder.image);
         }
