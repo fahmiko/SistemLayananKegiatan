@@ -44,26 +44,26 @@ public class MainActivity extends Menu{
     RecyclerView.LayoutManager mLayoutManager;
     private List<Activities> listActivities;
     ApiInterface mApiInterface;
+    private static final int READ_STORAGE_PERMISSIONS_REQUEST = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getMenu();
-//        SimpleDateFormat sdf = new SimpleDateFormat("dd:MM:YY | HH:mm");
-//        String currentDateandTime = sdf.format(new Date());
-//        Toast.makeText(getApplicationContext(),"DateTime "+currentDateandTime,Toast.LENGTH_LONG).show();
+        /*
+        SimpleDateFormat sdf = new SimpleDateFormat("dd:MM:YY | HH:mm");
+        String currentDateandTime = sdf.format(new Date());
+        Toast.makeText(getApplicationContext(),"DateTime "+currentDateandTime,Toast.LENGTH_LONG).show();
+        */
 
         SharedPreferences sf = getApplicationContext().getSharedPreferences("login",MODE_PRIVATE);
         if(sf.getString("id_member","").equals("")){
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         }
+        galleryPermition();
 
-//        final Context mContext = getApplicationContext();
-//        mRecyclerView = findViewById(R.id.recycler_activities);
-//        mLayoutManager = new LinearLayoutManager(mContext);
-//        mRecyclerView.setLayoutManager(mLayoutManager);
         LoadData();
     }
 
@@ -96,55 +96,41 @@ public class MainActivity extends Menu{
             }
         });
     }
-    private static final int READ_CONTACTS_PERMISSIONS_REQUEST = 0;
-    private void internet_permission(){
-        // Here, thisActivity is the current activity
+
+    private void galleryPermition(){
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            // Permission is not granted
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
+
             } else {
-                // No explanation needed; request the permission
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        READ_CONTACTS_PERMISSIONS_REQUEST);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+                        READ_STORAGE_PERMISSIONS_REQUEST);
             }
         } else {
-            // Permission has already been granted
+
         }
     }
 
-    // Callback yang membawa hasil dari pemanggilan requestPermissions(...)
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case READ_CONTACTS_PERMISSIONS_REQUEST: {
-                // If request is cancelled, the result arrays are empty.
+            case READ_STORAGE_PERMISSIONS_REQUEST: {
+
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+
                 }
                 return;
             }
 
-            // other 'case' lines to check for other
-            // permissions this app might request.
         }
     }
+
 }

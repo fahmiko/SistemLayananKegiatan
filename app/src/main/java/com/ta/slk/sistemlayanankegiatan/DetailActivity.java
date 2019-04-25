@@ -20,12 +20,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ta.slk.sistemlayanankegiatan.Fragments.ActivitiesFragment;
 import com.ta.slk.sistemlayanankegiatan.Fragments.CommentFragment;
 import com.ta.slk.sistemlayanankegiatan.Fragments.DetailFragment;
 import com.ta.slk.sistemlayanankegiatan.Fragments.DocumentationFragment;
+import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -57,6 +60,11 @@ public class DetailActivity extends AppCompatActivity {
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().show();
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -66,29 +74,6 @@ public class DetailActivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_detail, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -140,6 +125,7 @@ public class DetailActivity extends AppCompatActivity {
                     return comment;
                 case 2:
                     DocumentationFragment documentation = new DocumentationFragment();
+                    documentation.setArguments(activity);
                     return documentation;
                     default:
                         return null;
@@ -173,5 +159,11 @@ public class DetailActivity extends AppCompatActivity {
 //        Intent i=new Intent(this,AdminContent.class);
 //        startActivity(i);
         finish();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }

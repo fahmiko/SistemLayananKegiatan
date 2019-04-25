@@ -209,7 +209,9 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
         mGetGroups.enqueue(new Callback<GetGroups>() {
             @Override
             public void onResponse(Call<GetGroups> call, Response<GetGroups> response) {
-                listGroups = response.body().getResult();
+                if(response.code()==200){
+                    listGroups = response.body().getResult();
+                }
             }
 
             @Override

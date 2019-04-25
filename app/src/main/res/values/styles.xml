@@ -28,4 +28,9 @@
 
     <style name="PrimaryTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="ZoomImageDialog">
+        <item name="android:windowEnterAnimation">@anim/fadein</item>
+        <item name="android:windowExitAnimation">@anim/fadeout</item>
+    </style>
+
 </resources>

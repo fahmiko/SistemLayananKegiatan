@@ -36,7 +36,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,"Notification",NotificationManager.IMPORTANCE_HIGH);
-            notificationChannel.setDescription("EDMT Channel");
+            notificationChannel.setDescription("POLINEMA Channel");
             notificationChannel.enableLights(true);
             notificationManager.createNotificationChannel(notificationChannel);
         }
@@ -45,10 +45,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.lovely_time)
+                .setSmallIcon(R.drawable.activity)
                 .setContentTitle(titile)
                 .setContentIntent(resultPendingIntent);
-        notificationManager.notify(3,builder.build());
+        notificationManager.notify((int)System.currentTimeMillis(),builder.build());
     }
 
     @Override
