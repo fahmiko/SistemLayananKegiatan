@@ -8,11 +8,13 @@
         android:layout_height="120dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginStart="5dp"
             android:id="@+id/img_member"
             android:src="@drawable/member"
-            android:layout_width="100dp"
+            android:layout_width="50dp"
             android:layout_height="100dp" />
         <RelativeLayout
+            android:layout_marginStart="20dp"
             android:layout_toEndOf="@id/img_member"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

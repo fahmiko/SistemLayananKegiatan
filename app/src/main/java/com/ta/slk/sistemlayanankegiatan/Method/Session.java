@@ -3,15 +3,30 @@ package com.ta.slk.sistemlayanankegiatan.Method;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+import android.util.Log;
 
 import com.ta.slk.sistemlayanankegiatan.LoginActivity;
+import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
 
-public class Preferences {
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+
+public class Session {
     private Context context;
 
-    public Preferences(Context context) {
+    public Session(Context context) {
         this.context = context;
     }
+
+    public String getToken(){
+        SharedPreferences preferences = context.getSharedPreferences("login",Context.MODE_PRIVATE);
+        return preferences.getString("token",null);
+    }
+
 
     public void saveDeviceToken(String token){
         SharedPreferences sf = context.getSharedPreferences("device_token",Context.MODE_PRIVATE);
@@ -27,10 +42,9 @@ public class Preferences {
         editor.putString("name",name);
         editor.putString("username",username);
         editor.putString("password",password);
-        editor.putString("photo",photo);
+        editor.putString("photo",ApiClient.BASE_URL+"/uploads/members/"+photo);
         editor.putString("id_member",id_member);
         editor.putString("token",token);
-
         editor.apply();
     }
 

@@ -24,7 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.ta.slk.sistemlayanankegiatan.Method.Preferences;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
 import com.ta.slk.sistemlayanankegiatan.Rest.*;
 import com.ta.slk.sistemlayanankegiatan.Adapter.*;
@@ -64,7 +63,7 @@ public class MainActivity extends Menu{
         }
         galleryPermition();
 
-        LoadData();
+//        LoadData();
     }
 
     @Override
@@ -75,27 +74,27 @@ public class MainActivity extends Menu{
         startActivity(a);
     }
 
-    private void LoadData(){
-        SharedPreferences sf = this.getSharedPreferences("login",MODE_PRIVATE);
-        mApiInterface = ApiClient.getServer(sf.getString("token","")).create(ApiInterface.class);
-        Call<GetActivities> mActivitiesCall = mApiInterface.getActivities();
-        mActivitiesCall.enqueue(new Callback<GetActivities>() {
-            @Override
-            public void onResponse(Call<GetActivities> call, Response<GetActivities> response) {
-                Log.d("msg", "onResponse: "+response.message());
-                if(response.message().equals("Unauthorized")){
-                        finish();
-                        Preferences preferences = new Preferences(getApplicationContext());
-                        preferences.logout(0);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<GetActivities> call, Throwable t) {
-                Log.e("Get Server",t.getMessage());
-            }
-        });
-    }
+//    private void LoadData(){
+//        SharedPreferences sf = this.getSharedPreferences("login",MODE_PRIVATE);
+//        mApiInterface = ApiClient.getServer(sf.getString("token","")).create(ApiInterface.class);
+//        Call<GetActivities> mActivitiesCall = mApiInterface.getActivities();
+//        mActivitiesCall.enqueue(new Callback<GetActivities>() {
+//            @Override
+//            public void onResponse(Call<GetActivities> call, Response<GetActivities> response) {
+//                Log.d("msg", "onResponse: "+response.message());
+//                if(response.message().equals("Unauthorized")){
+//                        finish();
+//                        Preferences preferences = new Preferences(getApplicationContext());
+//                        preferences.logout(0);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<GetActivities> call, Throwable t) {
+//                Log.e("Get Server",t.getMessage());
+//            }
+//        });
+//    }
 
     private void galleryPermition(){
         if (ContextCompat.checkSelfPermission(this,

@@ -3,8 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.ta.slk.sistemlayanankegiatan.DetailActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/set_alarm"
+        android:icon="@drawable/baseline_alarm_black_24"
+        android:title="Pasang Alarm"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:tooltipText="SetAlarm"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/set_location"
+        android:orderInCategory="100"
+        android:icon="@drawable/baseline_location_on_black_24"
+        android:title="Location"
+        app:showAsAction="always"
+        />
+
 </menu>

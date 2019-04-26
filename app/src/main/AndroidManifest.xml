@@ -3,24 +3,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ta.slk.sistemlayanankegiatan">
 
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the 'MyLocation' functionality.
+    -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.SET_ALARM"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
 
     <uses-feature android:name="android.hardware.camera2" />
 
     <application
+        android:name=".Method.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/PrimaryTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".DetailGroups"
             android:label="@string/title_activity_detail_groups"
-            android:theme="@style/PrimaryTheme.NoActionBar"></activity>
+            android:theme="@style/PrimaryTheme.NoActionBar" />
         <activity
             android:name=".Tabs.Myactivities"
             android:label="@string/title_activity_myactivities"
@@ -32,8 +47,12 @@
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
-            android:theme="@style/PrimaryTheme.NoActionBar" />
-        <activity android:name=".AdminContent" />
+            android:theme="@style/PrimaryTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".AdminContent"
+            android:theme="@style/PrimaryTheme.NoActionBar"/>
         <activity
             android:name=".AddInvitation"
             android:windowSoftInputMode="adjustResize" />

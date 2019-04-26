@@ -130,19 +130,29 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     private void loadData(){
-        getDataGroups();
-        getDataUsers();
-
         ApiInterface mApiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<GetActivities> mGetActivity = mApiInterface.getActivities();
         mGetActivity.enqueue(new Callback<GetActivities>() {
             @Override
             public void onResponse(Call<GetActivities> call, Response<GetActivities> response) {
-                listActivities = response.body().getResult();
-                mAdapter = new ActivitiesAdapter(listActivities, getContext());
-                mRecyclerView.setAdapter(mAdapter);
-                mRecyclerView.scheduleLayoutAnimation();
-                progressBar.setVisibility(View.GONE);
+                if(response.code()==200){
+                    listActivities = response.body().getResult();
+                    mAdapter = new ActivitiesAdapter(listActivities, getContext());
+                    mRecyclerView.setAdapter(mAdapter);
+                    mRecyclerView.scheduleLayoutAnimation();
+                    progressBar.setVisibility(View.GONE);
+                    getDataGroups();
+                    getDataUsers();
+                }else{
+                    progressBar.setVisibility(View.GONE);
+                    Snackbar.make(getView(),"NO DATA",Snackbar.LENGTH_LONG).setAction("retry", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            loadData();
+                        }
+                    }).show();
+                }
             }
 
             @Override
@@ -227,7 +237,9 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
         mGetUser.enqueue(new Callback<GetUsers>() {
             @Override
             public void onResponse(Call<GetUsers> call, Response<GetUsers> response) {
-                listUsers = response.body().getResult();
+                if(response.code()==200){
+                    listUsers = response.body().getResult();
+                }
             }
 
             @Override

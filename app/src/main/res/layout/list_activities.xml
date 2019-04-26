@@ -13,7 +13,8 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardBackgroundColor="@color/cardview_light_background"
+        android:background="@drawable/cardborder_true"
+        card_view:cardCornerRadius="5dp"
         card_view:cardElevation="5dp"
         card_view:cardUseCompatPadding="true">
 
@@ -42,6 +43,9 @@
                     android:id="@+id/main_admin"
                     android:layout_below="@id/main_title"
                     android:text="By Admin Jurusan"
+                    android:drawableTint="@color/colorPrimary"
+                    android:drawablePadding="10dp"
+                    android:drawableLeft="@drawable/outline_supervised_user_circle_black_24"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -49,18 +53,22 @@
                     android:id="@+id/main_tgl"
                     android:layout_below="@id/main_admin"
                     android:text="20 Mei 2018 19:00"
+                    android:drawableLeft="@drawable/baseline_alarm_black_24"
                     android:textStyle="bold"
+                    android:drawableTint="@color/colorPrimary"
+                    android:drawablePadding="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <Button
-                    android:layout_marginTop="2pt"
+                <TextView
+                    android:id="@+id/main_location"
                     android:layout_below="@id/main_tgl"
+                    android:text="Lokasi"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="@color/colorPrimary"
+                    android:drawableLeft="@drawable/outline_location_on_black_24"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Komentar"
-                    android:textColor="@color/cardview_light_background"
-                    android:background="@color/colorPrimary"/>
+                    android:layout_height="wrap_content" />
 
             </RelativeLayout>
         </RelativeLayout>

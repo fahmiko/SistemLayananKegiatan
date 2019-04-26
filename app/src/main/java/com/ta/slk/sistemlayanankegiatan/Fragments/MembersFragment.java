@@ -70,11 +70,22 @@ public class MembersFragment extends Fragment {
         usersCall.enqueue(new Callback<GetUsers>() {
             @Override
             public void onResponse(Call<GetUsers> call, Response<GetUsers> response) {
-                listUsers = response.body().getResult();
-                mAdapter =  new MembersAdapter(listUsers, view.getContext());
-                mRecyclerView.setAdapter(mAdapter);
-                mRecyclerView.scheduleLayoutAnimation();
-                progressBar.setVisibility(View.GONE);
+                if(response.code() == 200){
+                    listUsers = response.body().getResult();
+                    mAdapter =  new MembersAdapter(listUsers, view.getContext());
+                    mRecyclerView.setAdapter(mAdapter);
+                    mRecyclerView.scheduleLayoutAnimation();
+                    progressBar.setVisibility(View.GONE);
+                }else{
+                    progressBar.setVisibility(View.GONE);
+                    Snackbar.make(getView(),"NO DATA",Snackbar.LENGTH_LONG).setAction("retry", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            loadData(view);
+                        }
+                    }).show();
+                }
             }
 
             @Override

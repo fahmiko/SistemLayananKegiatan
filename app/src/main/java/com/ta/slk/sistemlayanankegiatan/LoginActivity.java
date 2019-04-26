@@ -25,7 +25,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-import com.ta.slk.sistemlayanankegiatan.Method.Preferences;
+import com.ta.slk.sistemlayanankegiatan.Method.Application;
+import com.ta.slk.sistemlayanankegiatan.Method.Session;
 import com.ta.slk.sistemlayanankegiatan.Model.GetUsers;
 import com.ta.slk.sistemlayanankegiatan.Model.Users;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
@@ -69,7 +70,7 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     public void Login(){
-        ApiInterface mApiInterface = ApiClient.getClient().create(ApiInterface.class);
+        ApiInterface mApiInterface = ApiClient.getAuth().create(ApiInterface.class);
         final SharedPreferences sf = getSharedPreferences("device_token",MODE_PRIVATE);
 //        Log.d(TAG, "Login: Login berjalan");
         Call<GetUsers> mLoginCall = mApiInterface.getLoginNip(username.getText().toString(),sf.getString("device_token",""));
@@ -84,8 +85,8 @@ public class LoginActivity extends AppCompatActivity{
                     String photo = response.body().getResult().get(0).getPhotoProfile();
                     String id_member = response.body().getResult().get(0).getIdMember();
                     String token = response.body().getToken();
-                    Preferences pr = new Preferences(getApplicationContext());
-                    pr.saveCredentials(id_user,name,username,password,photo, id_member, token);
+                    Session session = Application.getSession();
+                    session.saveCredentials(id_user,name,username,password,photo, id_member, token);
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);
                 }

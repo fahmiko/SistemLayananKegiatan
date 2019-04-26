@@ -93,12 +93,23 @@ public class GroupsFragment extends Fragment {
         call.enqueue(new Callback<GetGroups>() {
             @Override
             public void onResponse(Call<GetGroups> call, Response<GetGroups> response) {
-                groupsList = response.body().getResult();
-                adapter = new GroupsAdapter(groupsList,getContext());
-                recyclerView.scheduleLayoutAnimation();
-                recyclerView.setAdapter(adapter);
-                progressBar.setVisibility(View.GONE);
-                refreshLayout.setRefreshing(false);
+                if(response.code()==200){
+                    groupsList = response.body().getResult();
+                    adapter = new GroupsAdapter(groupsList,getContext());
+                    recyclerView.scheduleLayoutAnimation();
+                    recyclerView.setAdapter(adapter);
+                    progressBar.setVisibility(View.GONE);
+                    refreshLayout.setRefreshing(false);
+                }else{
+                    progressBar.setVisibility(View.GONE);
+                    Snackbar.make(getView(),"Cek koneksi Internet",Snackbar.LENGTH_LONG).setAction("retry", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            loadData();
+                        }
+                    }).show();
+                }
             }
 
             @Override

@@ -15,7 +15,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.ta.slk.sistemlayanankegiatan.Method.Preferences;
+import com.ta.slk.sistemlayanankegiatan.Method.Application;
+import com.ta.slk.sistemlayanankegiatan.Method.Session;
 import com.ta.slk.sistemlayanankegiatan.Model.Groups;
 import com.ta.slk.sistemlayanankegiatan.Tabs.Myactivities;
 
@@ -88,10 +89,8 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
             Intent intent = new Intent(getApplicationContext(),UserInvitation.class);
             startActivity(intent);
         } else if (id == R.id.logout) {
-            Preferences pr = new Preferences(getApplicationContext());
-            pr.logout(1);
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
+            Session session = Application.getSession();
+            session.logout(0);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

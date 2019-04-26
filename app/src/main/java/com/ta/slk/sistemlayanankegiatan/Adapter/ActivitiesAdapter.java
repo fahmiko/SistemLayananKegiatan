@@ -19,7 +19,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        private TextView title,admin,date;
+        private TextView title,admin,date,location;
         private ImageView image;
         public MyViewHolder(View v) {
             super(v);
@@ -27,6 +27,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
             admin = itemView.findViewById(R.id.main_admin);
             date = itemView.findViewById(R.id.main_tgl);
             image = itemView.findViewById(R.id.main_img_card);
+            location = itemView.findViewById(R.id.main_location);
         }
     }
 
@@ -51,6 +52,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
         holder.title.setText(myActivity.get(position).getNameActivities());
         holder.admin.setText(myActivity.get(position).getCreatedBy());
         holder.date.setText(myActivity.get(position).getDate());
+        holder.location.setText(myActivity.get(position).getPlace());
         if (myActivity.get(position).getPicture() != null) {
             Glide.with(holder.itemView.getContext()).load(ApiClient.BASE_URL+"uploads/"+myActivity.get
                     (position).getPicture())

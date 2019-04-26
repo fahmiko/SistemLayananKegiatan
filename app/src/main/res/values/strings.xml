@@ -131,4 +131,5 @@
     <string name="title_activity_user_invitation">UserInvitation</string>
     <string name="title_activity_myactivities">Myactivities</string>
     <string name="title_activity_detail_groups">DetailGroups</string>
+    <string name="title_activity_location">Map</string>
 </resources>

@@ -14,7 +14,8 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.ta.slk.sistemlayanankegiatan.MainActivity;
-import com.ta.slk.sistemlayanankegiatan.Method.Preferences;
+import com.ta.slk.sistemlayanankegiatan.Method.Application;
+import com.ta.slk.sistemlayanankegiatan.Method.Session;
 import com.ta.slk.sistemlayanankegiatan.R;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -54,7 +55,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
-        Preferences pr = new Preferences(getApplicationContext());
-        pr.saveDeviceToken(s);
+        Session session = Application.getSession();
+        session.saveDeviceToken(s);
     }
 }

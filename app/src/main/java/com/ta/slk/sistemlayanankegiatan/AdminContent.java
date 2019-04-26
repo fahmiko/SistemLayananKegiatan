@@ -1,19 +1,26 @@
 package com.ta.slk.sistemlayanankegiatan;
 
+import com.bumptech.glide.Glide;
 import com.ta.slk.sistemlayanankegiatan.Fragments.*;
+import com.ta.slk.sistemlayanankegiatan.Method.Application;
+import com.ta.slk.sistemlayanankegiatan.Method.Session;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,7 +29,7 @@ import java.util.Date;
 public class AdminContent extends AppCompatActivity {
     private BottomNavigationView mNavigationView;
     private FrameLayout mFrameLayout;
-
+    private Toolbar toolbar;
     private ActivitiesFragment activitiesFragment;
     private GroupsFragment groupsFragment;
     private MembersFragment membersFragment;
@@ -42,20 +49,38 @@ public class AdminContent extends AppCompatActivity {
         setFragment(activitiesFragment);
 //        getTimeAgo();
 
+        toolbar = findViewById(R.id.my_toolbar);
+//        Drawable drawable;
+//        SharedPreferences preferences = this.getSharedPreferences("login",MODE_PRIVATE);
+//        String url = preferences.getString("photo",null);
+//        ImageView imageView = findViewById(R.id.img_visi);
+//        Glide.with(getApplicationContext()).load(url).into(imageView);
+//        drawable = imageView.getDrawable();
+        toolbar.setNavigationIcon(R.drawable.common_google_signin_btn_icon_dark_normal);
+
+        toolbar.setTitle("Kegiatan");
+        setSupportActionBar(toolbar);
+
         mNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_admin_activity:
                         setFragment(activitiesFragment);
+                        toolbar.setTitle("Kegiatan");
+                        setSupportActionBar(toolbar);
                         return true;
 
                     case R.id.nav_admin_group:
                         setFragment(groupsFragment);
+                        toolbar.setTitle("Group");
+                        setSupportActionBar(toolbar);
                         return true;
 
                     case R.id.nav_admin_member:
                         setFragment(membersFragment);
+                        toolbar.setTitle("Member");
+                        setSupportActionBar(toolbar);
                         return true;
 
                         default:
