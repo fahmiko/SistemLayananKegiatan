@@ -12,8 +12,20 @@
         android:icon="@drawable/group"
         android:title="Group" />
     <item
+        android:id="@+id/nav_admin_invit"
+        android:icon="@drawable/round_email_black_24dp"
+        android:iconTint="@color/textPrimary"
+        android:title="Undangan"
+        />
+    <item
         android:id="@+id/nav_admin_member"
         android:icon="@drawable/member"
         android:iconTint="@color/textPrimary"
         android:title="Member" />
+    <item
+        android:id="@+id/nav_admin_setting"
+        android:iconTint="@color/textPrimary"
+        android:icon="@drawable/baseline_settings_black_18dp"
+        android:title="Setting"
+        />
 </menu>

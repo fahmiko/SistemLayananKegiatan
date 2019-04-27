@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".AddInvitation">
+    android:layout_height="match_parent">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/img_inv"
@@ -21,72 +24,85 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_image"
         android:layout_below="@id/img_inv"
-        app:backgroundTint="@color/cardview_dark_background"
+        app:backgroundTint="@color/colorPrimary"
         android:layout_alignParentRight="true"
         android:layout_marginTop="-26dp"
         android:src="@android:drawable/ic_menu_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <RelativeLayout
-        android:layout_marginTop="30dp"
-        android:layout_below="@id/fab_image"
-        android:layout_margin="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        
-        <EditText
-            android:id="@+id/name_act"
-            android:hint="Nama Acara"
-            android:text="Rapat JTI"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:id="@+id/name_day"
-            android:layout_below="@+id/name_act"
-            android:hint="Tanggal/Jam"
-            android:clickable="true"
-            android:editable="false"
-            android:focusable="false"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:id="@+id/name_location"
-            android:hint="Lokasi"
-            android:text="POLINEMA"
-            android:layout_below="@id/name_day"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:id="@+id/name_description"
-            android:layout_below="@+id/name_location"
-            android:inputType="textMultiLine"
-            android:lines="8"
-            android:minLines="6"
-            android:text="Pemilihan Kajur"
-            android:gravity="top|left"
-            android:hint="Deskripsi"
-            android:maxLines="10"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:scrollbars="vertical"
-        />
-        <EditText
-            android:id="@+id/contact_person"
-            android:layout_below="@id/name_description"
-            android:text="081927283917"
-            android:hint="Contact Person"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:layout_below="@id/fab_image"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp">
 
-        <Button
-            android:id="@+id/btn_add"
-            android:text="BUAT UNDANGAN"
-            android:layout_marginTop="5dp"
-            android:layout_below="@id/contact_person"
-            android:textColor="@color/cardview_light_background"
-            android:background="@color/colorPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/name_act"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="20dp"
+                android:drawableTint="@color/textSecondary"
+                android:drawableLeft="@drawable/baseline_title_black_18dp"
+                android:hint="Nama Acara" />
+
+            <EditText
+                android:id="@+id/name_day"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="20dp"
+                android:drawableLeft="@drawable/baseline_alarm_black_36"
+                android:layout_below="@+id/name_act"
+                android:clickable="true"
+                android:drawableTint="@color/textSecondary"
+                android:editable="false"
+                android:focusable="false"
+                android:hint="Tanggal/Jam" />
+
+            <EditText
+                android:id="@+id/name_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/outline_location_on_black_36"
+                android:layout_below="@id/name_day"
+                android:drawableTint="@color/textSecondary"
+                android:drawablePadding="20dp"
+                android:hint="Lokasi" />
+
+            <EditText
+                android:id="@+id/name_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/name_location"
+                android:gravity="center"
+                android:drawableTop="@drawable/baseline_text_fields_black_18dp"
+                android:drawableTint="@color/textSecondary"
+                android:hint="Deskripsi"
+                android:scrollbars="vertical"/>
+
+            <EditText
+                android:id="@+id/contact_person"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableTint="@color/textSecondary"
+                android:drawablePadding="20dp"
+                android:drawableLeft="@drawable/baseline_phone_black_24"
+                android:layout_below="@id/name_description"
+                android:hint="Contact Person" />
+
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/contact_person"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorPrimary"
+                android:text="BUAT UNDANGAN"
+                android:textColor="@color/cardview_light_background" />
+
+        </RelativeLayout>
 </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

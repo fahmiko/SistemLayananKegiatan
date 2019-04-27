@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +51,7 @@ public class AddInvitation extends AppCompatActivity {
     DatePickerDialog datePickerDialog;
     SimpleDateFormat simpleDateFormat;
     Button button;
+    String textDialog;
     EditText name,contact,description,day,location;
     FloatingActionButton upload;
     ImageView mImageView;
@@ -60,6 +62,7 @@ public class AddInvitation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_invitation);
+
         initComponents();
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -246,5 +249,21 @@ public class AddInvitation extends AppCompatActivity {
             }
         });
 
+    }
+
+    private String initTextDialog(String msg){
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddInvitation.this);
+        final EditText editText = new EditText(AddInvitation.this);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setTitle("Tambah Kegiatan").setView(editText).setMessage(msg);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                textDialog = editText.getText().toString();
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+        return textDialog;
     }
 }

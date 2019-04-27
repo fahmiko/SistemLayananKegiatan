@@ -40,7 +40,7 @@
 
     <FrameLayout
         android:id="@+id/admin_frame"
-         android:layout_below="@id/my_toolbar"
+        android:layout_below="@id/my_toolbar"
         android:layout_above="@id/admin_nav"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

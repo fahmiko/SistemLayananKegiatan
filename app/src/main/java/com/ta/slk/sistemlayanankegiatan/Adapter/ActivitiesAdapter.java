@@ -9,9 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.MyViewHolder> {
     private Context context;
@@ -21,6 +25,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
         // each data item is just a string in this case
         private TextView title,admin,date,location;
         private ImageView image;
+        private Button status;
         public MyViewHolder(View v) {
             super(v);
             title = itemView.findViewById(R.id.main_title);
@@ -28,6 +33,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
             date = itemView.findViewById(R.id.main_tgl);
             image = itemView.findViewById(R.id.main_img_card);
             location = itemView.findViewById(R.id.main_location);
+            status = itemView.findViewById(R.id.btn_status);
         }
     }
 
@@ -57,6 +63,27 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
             Glide.with(holder.itemView.getContext()).load(ApiClient.BASE_URL+"uploads/"+myActivity.get
                     (position).getPicture())
                     .into(holder.image);
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateStart = sdf.format(new Date());
+        String dateStop = myActivity.get(position).getDate();
+        Date d1 = null;
+        Date d2 = null;
+        try {
+            d1 = sdf.parse(dateStart);
+            d2 = sdf.parse(dateStop);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long diff = d2.getTime() - d1.getTime();
+        long diffHours = diff / (60 * 60 * 1000);
+
+        if(diffHours < 0){
+            if(diffHours <= -24){
+                holder.status.setBackgroundResource(R.drawable.shape_green);
+                holder.status.setText("FINISH");
+            }
         }
     }
 

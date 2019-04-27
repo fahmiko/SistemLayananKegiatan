@@ -8,6 +8,12 @@
         app:showAsAction="always"
         app:actionViewClass="android.widget.SearchView" />
     <item
+        android:id="@+id/app_bar_help"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="Help"
+        app:showAsAction="always"
+        />
+    <item
         android:title="Tambah Kegiatan"
         android:id="@+id/menu_add_activity" />
     <item android:title="Tambah Group" />

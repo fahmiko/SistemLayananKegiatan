@@ -73,7 +73,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/CustomToolbar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

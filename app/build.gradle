@@ -37,6 +37,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:17.6.0'
     implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.google.firebase:firebase-database:16.1.0'
+    implementation 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
 //    implementation 'com.github.MikeOrtiz:TouchImageView:1.4.0' // Support Lib
 //    implementation 'com.github.MikeOrtiz:TouchImageView:2.1.1' // Android X
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
