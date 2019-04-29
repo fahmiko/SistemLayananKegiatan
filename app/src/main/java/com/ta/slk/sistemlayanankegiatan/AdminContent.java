@@ -1,30 +1,48 @@
 package com.ta.slk.sistemlayanankegiatan;
 
-import com.bumptech.glide.Glide;
 import com.ta.slk.sistemlayanankegiatan.Fragments.*;
-import com.ta.slk.sistemlayanankegiatan.Method.Application;
-import com.ta.slk.sistemlayanankegiatan.Method.Session;
+import com.ta.slk.sistemlayanankegiatan.Model.PostData;
+import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
+import com.ta.slk.sistemlayanankegiatan.Rest.ApiGroups;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.POST;
 
 public class AdminContent extends AppCompatActivity {
     private BottomNavigationView mNavigationView;
@@ -33,6 +51,11 @@ public class AdminContent extends AppCompatActivity {
     private ActivitiesFragment activitiesFragment;
     private GroupsFragment groupsFragment;
     private MembersFragment membersFragment;
+    String TAG = "checking";
+    String imagePath = "";
+    TextInputEditText title, description, image;
+    Button save, close;
+    Boolean isSuccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +65,7 @@ public class AdminContent extends AppCompatActivity {
         mNavigationView = findViewById(R.id.admin_nav);
         mFrameLayout = findViewById(R.id.admin_frame);
 
+        isSuccess = false;
         activitiesFragment = new ActivitiesFragment();
         groupsFragment = new GroupsFragment();
         membersFragment = new MembersFragment();
@@ -104,10 +128,48 @@ public class AdminContent extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()){
             case R.id.menu_add_activity:
-                Intent intent = new Intent(getApplicationContext(), AddInvitation.class);
+                intent = new Intent(getApplicationContext(), AddInvitation.class);
                 startActivity(intent);
+                break;
+            case R.id.menu_add_group:
+//                intent = new Intent(getApplicationContext(), ManageGroups.class);
+//                startActivity(intent);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(AdminContent.this);
+                LayoutInflater inflater = getLayoutInflater();
+                final View dialog = inflater.inflate(R.layout.manage_groups,null);
+                builder.setView(dialog).setTitle("Tambah Group").setIcon(R.drawable.group);
+                title = dialog.findViewById(R.id.mg_title_text);
+                description = dialog.findViewById(R.id.mg_desc_text);
+                image = dialog.findViewById(R.id.mg_img_text);
+
+                image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Intent gallery = new Intent();
+                        gallery.setType("image/*").setAction(Intent.ACTION_PICK);
+                        Intent intentChoice = Intent.createChooser(gallery,"Pilih Gambar untuk di upload");
+                        startActivityForResult(intentChoice,1);
+                    }
+                });
+
+                builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        insertGroup();
+                        dialog.dismiss();
+                    }
+
+                }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -126,5 +188,74 @@ public class AdminContent extends AppCompatActivity {
         String formattedDate = formatter.format(date);
 
         Log.d("date", formattedDate.toString());
+    }
+
+    private void insertGroup() {
+        ApiGroups service = ApiClient.getClient().create(ApiGroups.class);
+        MultipartBody.Part body = null;
+        if (!imagePath.isEmpty()){
+            File file = new File(imagePath);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), file);
+            body = MultipartBody.Part.createFormData("picture", file.getName(),
+                    requestFile);
+        }
+        RequestBody reqName = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                (title.getText().toString().isEmpty())?"":title.getText().toString());
+        RequestBody reqDes = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                (description.getText().toString().isEmpty())?"":description.getText().toString());
+
+        Call<PostData> call = service.new_group(body,reqName,reqDes);
+        call.enqueue(new Callback<PostData>() {
+            @Override
+            public void onResponse(Call<PostData> call, Response<PostData> response) {
+                if(response.body().getStatus().equals("success")){
+                    isSuccess = true;
+                    Toast.makeText(getApplicationContext(),"Data Group Ditambahkan",Toast.LENGTH_SHORT).show();
+                }else{
+                    isSuccess = false;
+                    Toast.makeText(getApplicationContext(),"Data Gagal Ditambahkan",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostData> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 1){
+            if (data==null){
+                Toast.makeText(getApplicationContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
+            }
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                imagePath =cursor.getString(columnIndex);
+
+//                Picasso.with(getApplicationContext()).load(new File(imagePath)).fit().into(mImageView);
+//                Glide.with(getApplicationContext()).load(new File(imagePath)).into(mImageView);
+                SharedPreferences preferences = getSharedPreferences("imgUrl",MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                try {
+                    image.setText(imagePath);
+                }catch (Exception e){
+
+                }
+                editor.putString("path",imagePath);
+                editor.apply();
+
+                cursor.close();
+            }else{
+                Toast.makeText(getApplicationContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

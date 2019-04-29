@@ -5,6 +5,7 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:progressBarStyle"
@@ -25,15 +26,19 @@
             android:layout_marginTop="20dp"
             android:layout_below="@id/recycler_content"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
-            <EditText
-                android:id="@+id/txt_comment"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:hint="Komentar">
-            </EditText>
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/txt_comment"
+                    android:layout_width="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:hint="Komentar"/>
+            </android.support.design.widget.TextInputLayout>
             <Button
                 android:background="@android:color/transparent"
                 android:id="@+id/btn_submit"

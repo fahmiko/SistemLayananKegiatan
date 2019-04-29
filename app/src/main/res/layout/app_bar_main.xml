@@ -18,14 +18,11 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/nav_toolbar"
             android:elevation="0dp"
-            app:titleTextColor="@color/textSecondary"
             android:layout_alignParentTop="true"
             android:layout_height="?attr/actionBarSize"
             android:layout_width="match_parent"
             app:title="@string/app_name"
             app:layout_scrollFlags="scroll|enterAlways"
-            android:background="@android:color/background_light"
-            app:theme="@style/PrimaryTheme"
             />
 
     </android.support.design.widget.AppBarLayout>

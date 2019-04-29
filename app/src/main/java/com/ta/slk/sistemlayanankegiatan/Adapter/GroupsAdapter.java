@@ -23,7 +23,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.MyViewHold
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private TextView name,count;
-        private ImageView image;
+        private CircleImageView image;
         public MyViewHolder(View v) {
             super(v);
             name = itemView.findViewById(R.id.name_group);

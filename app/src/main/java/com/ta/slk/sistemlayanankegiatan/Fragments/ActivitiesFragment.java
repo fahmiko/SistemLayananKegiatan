@@ -104,7 +104,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
             }
 
             @Override
-            public void onLongClick(View v, int position) {
+            public void onLongClick(View v, final int position) {
                 id_activity = listActivities.get(position).getIdActivity();
                 final CharSequence[] dialogitem = {"Buka","Kirim Grup","Kirim Pribadi","Edit","Hapus"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -121,12 +121,47 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
                                 MultiSelectDialog dialog2 = multiSelectShow("members");
                                 dialog2.show(getFragmentManager(),"Testing");
                                 break;
+                            case 4:
+                                deleteActivity(listActivities.get(position).getIdActivity());
+                                break;
                         }
                     }
                 }).create().show();
             }
         }));
         return view;
+    }
+
+    private void deleteActivity(final String idActivity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Konfirmasi").setMessage("Hapus kegiatan akan menghapus semua rekam jejak kegiatan");
+        builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                doDelete(idActivity);
+            }
+        }).show();
+    }
+
+    private void doDelete(String idActivity) {
+        ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
+        Call<PostData> call = service.deleteActivities(idActivity);
+        call.enqueue(new Callback<PostData>() {
+            @Override
+            public void onResponse(Call<PostData> call, Response<PostData> response) {
+                if(response.code()==200){
+                    if(response.body().getStatus().equals("success")){
+                        Toast.makeText(getContext(),"Berhasil di hapus",Toast.LENGTH_SHORT).show();
+                        loadData();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostData> call, Throwable t) {
+
+            }
+        });
     }
 
     private void loadData(){
@@ -171,9 +206,6 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
 
     private MultiSelectDialog multiSelectShow(String table){
         ArrayList<MultiSelectModel> listOfSelect= new ArrayList<>();
-//        listOfCountries.add(new MultiSelectModel(1,"JTI"));
-//        listOfCountries.add(new MultiSelectModel(2,"JTD"));
-//        listOfCountries.add(new MultiSelectModel(3,"JTE"));
         if(table.equals("groups")){
             for(int i = 0; i < listGroups.size(); i++){
                 int idGroups = Integer.parseInt(listGroups.get(i).getIdGroup());
@@ -202,7 +234,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
                         sendInvitation(arrayList,"groups");
 //                        for (int i = 0; i < arrayList.size(); i++) {
 //                            Log.d("msg", arrayList1.get(i).toString());
-//                        }
+//
                     }
 
                     @Override

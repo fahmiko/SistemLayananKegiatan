@@ -76,14 +76,13 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
-    @PUT("Rest_slkg/invitation")
+    @POST("Rest_slkg/invitationupdate")
     Call<PostData> putInvitationStatus(
             @Field("id_activity") String id_activity,
             @Field("id_member") String id_member,
             @Field("status") String status,
             @Field("message") String message
     );
-
 
     @Multipart
     @POST("Rest_slkg/activity")
@@ -96,5 +95,11 @@ public interface ApiInterface {
             @Part("date") RequestBody date,
             @Part("description") RequestBody description,
             @Part("comment_key") RequestBody key
+    );
+
+    @FormUrlEncoded
+    @POST("Rest_activities/delete")
+    Call<PostData> deleteActivities(
+            @Field("id_activity") String id
     );
 }

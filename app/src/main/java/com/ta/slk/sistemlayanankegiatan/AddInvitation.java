@@ -2,6 +2,7 @@ package com.ta.slk.sistemlayanankegiatan;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,11 +11,14 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -52,8 +56,8 @@ public class AddInvitation extends AppCompatActivity {
     SimpleDateFormat simpleDateFormat;
     Button button;
     String textDialog;
-    EditText name,contact,description,day,location;
-    FloatingActionButton upload;
+    TextInputEditText name,contact,description,day,location;
+    TextInputEditText upload;
     ImageView mImageView;
     File mFileURI;
     String imagePath = "";
@@ -77,19 +81,25 @@ public class AddInvitation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showDialog();
+                showTime();
             }
         });
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                final CharSequence[] dialogitem = {"Camera","Gallery"};
+            public void onClick(final View v) {
+                final CharSequence[] dialogitem = {"Tampilkan","Gallery"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddInvitation.this);
                 builder.setItems(dialogitem, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case 0:
-                                dispatchTakePictureIntent();
+                                Dialog dialog1=new Dialog(v.getContext(),R.style.ZoomImageDialog);
+                                dialog1.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                                dialog1.setContentView(R.layout.zoom_image);
+                                ImageView imageView = dialog1.findViewById(R.id.zoom_image);
+                                Glide.with(v.getContext()).load(new File(imagePath)).into(imageView);
+                                dialog1.show();
                                 break;
                             case 1:
                                 final Intent intent = new Intent();
@@ -117,6 +127,28 @@ public class AddInvitation extends AppCompatActivity {
             }
         },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
+    }
+
+    public void showTime(){
+        // Get Current Time
+        final Calendar c = Calendar.getInstance();
+        int mHour = c.get(Calendar.HOUR_OF_DAY);
+        int mMinute = c.get(Calendar.MINUTE);
+        final int mSecond = c.get(Calendar.SECOND);
+
+        // Launch Time Picker Dialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                          int minute) {
+                        String txtTime = day.getText().toString();
+                        txtTime += " "+hourOfDay + ":" + minute+":"+mSecond;
+                        day.setText(txtTime);
+                    }
+                }, mHour, mMinute, false);
+        timePickerDialog.show();
     }
 
     String mCurrentPhotoPath;
@@ -178,7 +210,8 @@ public class AddInvitation extends AppCompatActivity {
                 imagePath =cursor.getString(columnIndex);
 
 //                Picasso.with(getApplicationContext()).load(new File(imagePath)).fit().into(mImageView);
-                Glide.with(getApplicationContext()).load(new File(imagePath)).into(mImageView);
+//                Glide.with(getApplicationContext()).load(new File(imagePath)).into(mImageView);
+                upload.setText(imagePath);
                 cursor.close();
             }else{
                 Toast.makeText(getApplicationContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
@@ -192,8 +225,7 @@ public class AddInvitation extends AppCompatActivity {
         location = findViewById(R.id.name_location);
         contact = findViewById(R.id.contact_person);
         description = findViewById(R.id.name_description);
-        upload = findViewById(R.id.fab_image);
-        mImageView = findViewById(R.id.img_inv);
+        upload = findViewById(R.id.insert_image);
         button = findViewById(R.id.btn_add);
 
     }

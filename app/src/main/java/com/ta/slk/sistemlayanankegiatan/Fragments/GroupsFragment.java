@@ -1,13 +1,22 @@
 package com.ta.slk.sistemlayanankegiatan.Fragments;
 
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.icu.util.ValueIterator;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,20 +25,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.ta.slk.sistemlayanankegiatan.Adapter.GroupsAdapter;
+import com.ta.slk.sistemlayanankegiatan.AdminContent;
 import com.ta.slk.sistemlayanankegiatan.DetailGroups;
+import com.ta.slk.sistemlayanankegiatan.Method.Application;
 import com.ta.slk.sistemlayanankegiatan.Method.ClickListenner;
 import com.ta.slk.sistemlayanankegiatan.Method.RecyclerTouchListener;
 import com.ta.slk.sistemlayanankegiatan.Model.GetGroups;
+import com.ta.slk.sistemlayanankegiatan.Model.GetUsers;
 import com.ta.slk.sistemlayanankegiatan.Model.Groups;
+import com.ta.slk.sistemlayanankegiatan.Model.PostData;
+import com.ta.slk.sistemlayanankegiatan.Model.Users;
 import com.ta.slk.sistemlayanankegiatan.R;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
+import com.ta.slk.sistemlayanankegiatan.Rest.ApiGroups;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiInterface;
 
+import java.io.File;
 import java.util.List;
 import java.util.zip.Inflater;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,12 +57,20 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupsFragment extends Fragment {
+public class GroupsFragment extends Fragment{
     RecyclerView recyclerView;
     SwipeRefreshLayout refreshLayout;
     ProgressBar progressBar;
     RecyclerView.Adapter adapter;
+
+    ApiGroups service;
+    private String imagePath;
+    Context myContext;
+    Fragment fragment;
+    TextInputEditText title, description, image;
+
     List<Groups> groupsList;
+    List<Users> usersList;
 
     public GroupsFragment() {
         // Required empty public constructor
@@ -57,8 +85,10 @@ public class GroupsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_content);
         refreshLayout = view.findViewById(R.id.swipe_refresh);
         progressBar = view.findViewById(R.id.progress_bar);
-
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        service = ApiClient.getClient().create(ApiGroups.class);
+        myContext = view.getContext();
+        fragment = this;
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -78,18 +108,32 @@ public class GroupsFragment extends Fragment {
             }
 
             @Override
-            public void onLongClick(View v, int position) {
-
+            public void onLongClick(View v, final int position) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                final CharSequence[] sequence = {"Buka","Tambah Anggota","Edit","Delete"};
+                builder.setTitle("Pilihan Group").setItems(sequence, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case 2:
+                                updateData(position);
+                                break;
+                            case 3:
+                                deleteData(groupsList.get(position).getIdGroup());
+                                break;
+                        }
+                    }
+                }).create().show();
             }
         }));
         return view;
     }
 
     private void loadData(){
+        loadUsers();
         progressBar.setVisibility(View.VISIBLE);
         refreshLayout.setRefreshing(true);
-        ApiInterface apiClient = ApiClient.getClient().create(ApiInterface.class);
-        Call<GetGroups> call = apiClient.getGroups();
+        Call<GetGroups> call = service.getGroups();
         call.enqueue(new Callback<GetGroups>() {
             @Override
             public void onResponse(Call<GetGroups> call, Response<GetGroups> response) {
@@ -126,6 +170,129 @@ public class GroupsFragment extends Fragment {
         });
     }
 
+    private void loadUsers() {
+        ApiInterface userService = ApiClient.getClient().create(ApiInterface.class);
+        Call<GetUsers> call = userService.getUsers();
+        call.enqueue(new Callback<GetUsers>() {
+            @Override
+            public void onResponse(Call<GetUsers> call, Response<GetUsers> response) {
+                if(response.code()==200){
+                    usersList = response.body().getResult();
+                }
+            }
 
+            @Override
+            public void onFailure(Call<GetUsers> call, Throwable t) {
 
+            }
+        });
+    }
+
+    private void deleteData(String id){
+        Call<PostData> call = service.del_group(id);
+        call.enqueue(new Callback<PostData>() {
+            @Override
+            public void onResponse(Call<PostData> call, Response<PostData> response) {
+                if(response.code()==200){
+                    if(response.body().getStatus().equals("success")){
+                        progressBar.setVisibility(View.VISIBLE);
+                        loadData();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostData> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void doUpdate(String id){
+        MultipartBody.Part body = null;
+        if (!imagePath.isEmpty()){
+            File file = new File(imagePath);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), file);
+            body = MultipartBody.Part.createFormData("picture", file.getName(),
+                    requestFile);
+        }
+        RequestBody reqId = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                (id.isEmpty())?"":id);
+        RequestBody reqName = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                (title.getText().toString().isEmpty())?"":title.getText().toString());
+        final RequestBody reqDes = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                (description.getText().toString().isEmpty())?"":description.getText().toString());
+
+        Call<PostData> call= service.update_group(body,reqId,reqName,reqDes);
+        call.enqueue(new Callback<PostData>() {
+            @Override
+            public void onResponse(Call<PostData> call, Response<PostData> response) {
+                if(response.code()==200){
+                    Toast.makeText(getContext(),"SUKSES",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostData> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    private void updateData(final int position){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialog = inflater.inflate(R.layout.manage_groups,null);
+        builder.setView(dialog).setTitle("Edit Group").setIcon(R.drawable.group);
+        title       = dialog.findViewById(R.id.mg_title_text);
+        description = dialog.findViewById(R.id.mg_desc_text);
+        image       = dialog.findViewById(R.id.mg_img_text);
+        title.setText(groupsList.get(position).getName());
+        description.setText(groupsList.get(position).getDescription());
+
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent gallery = new Intent();
+                gallery.setType("image/*").setAction(Intent.ACTION_PICK);
+                Intent intentChoice = Intent.createChooser(gallery,"Pilih Gambar untuk di upload");
+//                getActivity().startActivityForResult(intentChoice,1);
+                fragment.startActivityForResult(intentChoice,1);
+            }
+        });
+
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                doUpdate(groupsList.get(position).getIdGroup());
+            }
+        });
+        builder.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == 1){
+            if (data==null){
+                Toast.makeText(getContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
+            }
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContext().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                imagePath =cursor.getString(columnIndex);
+
+//                Picasso.with(getApplicationContext()).load(new File(imagePath)).fit().into(mImageView);
+//                Glide.with(getApplicationContext()).load(new File(imagePath)).into(mImageView);
+                image.setText(imagePath);
+                cursor.close();
+            }else{
+                Toast.makeText(getContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 }
