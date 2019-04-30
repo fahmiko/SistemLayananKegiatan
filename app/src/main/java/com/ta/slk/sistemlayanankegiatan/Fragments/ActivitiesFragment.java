@@ -204,7 +204,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
         });
     }
 
-    private MultiSelectDialog multiSelectShow(String table){
+    private MultiSelectDialog multiSelectShow(final String table){
         ArrayList<MultiSelectModel> listOfSelect= new ArrayList<>();
         if(table.equals("groups")){
             for(int i = 0; i < listGroups.size(); i++){
@@ -231,10 +231,11 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
                 .onSubmit(new MultiSelectDialog.SubmitCallbackListener() {
                     @Override
                     public void onSelected(ArrayList<Integer> arrayList, ArrayList<String> arrayList1, String s) {
-                        sendInvitation(arrayList,"groups");
-//                        for (int i = 0; i < arrayList.size(); i++) {
-//                            Log.d("msg", arrayList1.get(i).toString());
-//
+                        if(table.equals("groups")){
+                            sendGroup(arrayList);
+                        }else{
+                            sendInvitation(arrayList,"groups");
+                        }
                     }
 
                     @Override
@@ -282,18 +283,41 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     private void sendInvitation(ArrayList<Integer> list, String action){
-        Log.d("size", "sendInvitation: "+list.size());
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<PostData> postDataCall = apiInterface.sendInvitation(list,id_activity,action);
         postDataCall.enqueue(new Callback<PostData>() {
             @Override
             public void onResponse(Call<PostData> call, Response<PostData> response) {
-                Log.d("data", response.body().getMessage());
+                if(response.code()==200){
+                    if(response.body().getStatus().equals("success")){
+                        Toast.makeText(getContext(),"Undangan Berhasil dikirimkan",Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
+                Toast.makeText(getContext(),"Cek koneksi interner",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
+    private void sendGroup(ArrayList<Integer> list){
+        ApiGroups apiGroups = ApiClient.getClient().create(ApiGroups.class);
+        Call<PostData> call = apiGroups.sendGroup(list,id_activity);
+        call.enqueue(new Callback<PostData>() {
+            @Override
+            public void onResponse(Call<PostData> call, Response<PostData> response) {
+                if(response.code()==200){
+                    if(response.body().getStatus().equals("success")){
+                        Toast.makeText(getContext(),"Undangan Berhasil dikirimkan",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostData> call, Throwable t) {
+                Toast.makeText(getContext(),"Cek koneksi internet",Toast.LENGTH_SHORT).show();
             }
         });
     }

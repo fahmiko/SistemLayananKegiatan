@@ -3,17 +3,9 @@ package com.ta.slk.sistemlayanankegiatan.Method;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
-import android.util.Log;
 
-import com.ta.slk.sistemlayanankegiatan.LoginActivity;
+import com.ta.slk.sistemlayanankegiatan.Activity.LoginActivity;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
-
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.net.URL;
 
 public class Session {
     private Context context;
@@ -35,14 +27,13 @@ public class Session {
         editor.apply();
     }
 
-    public void saveCredentials(String id, String name, String username, String password, String photo, String id_member, String token){
+    public void saveCredentials(String id, String name, String username, String photo, String id_member, String token){
         SharedPreferences sf = context.getSharedPreferences("login",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sf.edit();
         editor.putString("id_user",id);
         editor.putString("name",name);
         editor.putString("username",username);
-        editor.putString("password",password);
-        editor.putString("photo",ApiClient.BASE_URL+"/uploads/members/"+photo);
+        editor.putString("photo",photo);
         editor.putString("id_member",id_member);
         editor.putString("token",token);
         editor.apply();

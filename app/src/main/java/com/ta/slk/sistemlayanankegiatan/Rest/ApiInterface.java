@@ -19,7 +19,7 @@ public interface ApiInterface {
     @GET("Rest_slkg/activities")
     Call<GetActivities> getActivities();
 
-    @GET("Rest_slkg/groups")
+    @GET("Rest_groups/groups")
     Call<GetGroups> getGroups();
 
     @GET("Rest_slkg/users")
@@ -55,17 +55,17 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
-    @POST("Rest_slkg/login")
-    Call<GetUsers> getLoginUser(
+    @POST("users/login")
+    Call<GetUsers> getUser(
             @Field("username") String username,
-            @Field("password") String password
+            @Field("password") String password,
+            @Field("device_token") String token
     );
 
     @FormUrlEncoded
     @POST("users/loginnip")
     Call<GetUsers> getLoginNip(
-            @Field("nip") String nip,
-            @Field("device_token") String device_token
+            @Field("nip") String nip
     );
 
     @FormUrlEncoded

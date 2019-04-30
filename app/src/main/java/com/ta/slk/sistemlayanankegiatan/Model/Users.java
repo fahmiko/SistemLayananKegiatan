@@ -4,25 +4,15 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Users {
-
-    @SerializedName("id_user")
-    @Expose
-    private String idUser;
-    @SerializedName("username")
-    @Expose
-    private String username;
-    @SerializedName("password")
-    @Expose
-    private String password;
-    @SerializedName("level")
-    @Expose
-    private String level;
     @SerializedName("id_member")
     @Expose
     private String idMember;
     @SerializedName("id_employee")
     @Expose
     private String idEmployee;
+    @SerializedName("id_user")
+    @Expose
+    private String idUser;
     @SerializedName("name")
     @Expose
     private String name;
@@ -47,41 +37,12 @@ public class Users {
     @SerializedName("device_token")
     @Expose
     private String deviceToken;
-    @SerializedName("user_token")
+    @SerializedName("level")
     @Expose
-    private String userToken;
-
-    public String getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
-    }
+    private String level;
+    @SerializedName("username")
+    @Expose
+    private String username;
 
     public String getIdMember() {
         return idMember;
@@ -97,6 +58,14 @@ public class Users {
 
     public void setIdEmployee(String idEmployee) {
         this.idEmployee = idEmployee;
+    }
+
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
     public String getName() {
@@ -163,11 +132,19 @@ public class Users {
         this.deviceToken = deviceToken;
     }
 
-    public String getUserToken() {
-        return userToken;
+    public String getLevel() {
+        return level;
     }
 
-    public void setUserToken(String userToken) {
-        this.userToken = userToken;
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

@@ -1,14 +1,11 @@
 package com.ta.slk.sistemlayanankegiatan.Rest;
 
-import android.content.Context;
-import android.content.Intent;
-
-import com.ta.slk.sistemlayanankegiatan.LoginActivity;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ta.slk.sistemlayanankegiatan.Method.Application;
 import com.ta.slk.sistemlayanankegiatan.Method.Session;
 
 import java.io.IOException;
-import java.security.PublicKey;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -20,6 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
 //    public static final String BASE_URL = "http://trialapi.000webhostapp.com/android_api/";
     public static final String BASE_URL = "http://192.168.43.102/android_api/";
+//    public static final String BASE_URL = "http://192.168.201.1/android_api/";
     private static Session session = Application.getSession();
     private static Retrofit retrofit = null;
 
@@ -42,10 +40,10 @@ public class ApiClient {
     }
 
     public static Retrofit getAuth() {
-        retrofit = null;
+        Gson gson = new GsonBuilder().setLenient().create();
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
 
         return retrofit;

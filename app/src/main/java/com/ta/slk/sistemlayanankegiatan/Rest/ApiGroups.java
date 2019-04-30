@@ -2,6 +2,8 @@ package com.ta.slk.sistemlayanankegiatan.Rest;
 
 import com.ta.slk.sistemlayanankegiatan.Model.*;
 
+import java.util.ArrayList;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -17,6 +19,20 @@ public interface ApiGroups {
     @POST("Rest_groups/groupmember")
     Call<GetUsers> getMemberGroup(
             @Field("id_group") String id_group
+    );
+
+    @FormUrlEncoded
+    @POST("Rest_groups/invitegroup")
+    Call<PostData> inviteGroup(
+            @Field("id_member[]") ArrayList<Integer> id,
+            @Field("id_group") String id_group
+    );
+
+    @FormUrlEncoded
+    @POST("Rest_groups/invitation")
+    Call<PostData> sendGroup(
+            @Field("id_group[]") ArrayList<Integer> id,
+            @Field("id_activity") String id_activity
     );
 
     @GET("Rest_groups/groups")
@@ -44,5 +60,4 @@ public interface ApiGroups {
     Call<PostData> del_group(
             @Field("id_group") String id
     );
-
 }

@@ -1,6 +1,7 @@
 package com.ta.slk.sistemlayanankegiatan;
 
 import com.ta.slk.sistemlayanankegiatan.Fragments.*;
+import com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitation;
 import com.ta.slk.sistemlayanankegiatan.Model.PostData;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiGroups;
@@ -51,6 +52,8 @@ public class AdminContent extends AppCompatActivity {
     private ActivitiesFragment activitiesFragment;
     private GroupsFragment groupsFragment;
     private MembersFragment membersFragment;
+    private ProfileFragment profileFragment;
+    private com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitation userInvitation;
     String TAG = "checking";
     String imagePath = "";
     TextInputEditText title, description, image;
@@ -69,6 +72,8 @@ public class AdminContent extends AppCompatActivity {
         activitiesFragment = new ActivitiesFragment();
         groupsFragment = new GroupsFragment();
         membersFragment = new MembersFragment();
+        profileFragment = new ProfileFragment();
+        userInvitation = new UserInvitation();
 
         setFragment(activitiesFragment);
 //        getTimeAgo();
@@ -91,22 +96,34 @@ public class AdminContent extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.nav_admin_activity:
                         setFragment(activitiesFragment);
+                        toolbar.setVisibility(View.VISIBLE);
                         toolbar.setTitle("Kegiatan");
                         setSupportActionBar(toolbar);
                         return true;
 
                     case R.id.nav_admin_group:
                         setFragment(groupsFragment);
+                        toolbar.setVisibility(View.VISIBLE);
                         toolbar.setTitle("Group");
                         setSupportActionBar(toolbar);
                         return true;
-
+                    case R.id.nav_admin_invit:
+                        setFragment(userInvitation);
+                        toolbar.setVisibility(View.VISIBLE);
+                        toolbar.setTitle("Undangan");
+                        setSupportActionBar(toolbar);
                     case R.id.nav_admin_member:
                         setFragment(membersFragment);
+                        toolbar.setVisibility(View.VISIBLE);
                         toolbar.setTitle("Member");
                         setSupportActionBar(toolbar);
                         return true;
-
+                    case R.id.nav_admin_setting:
+                        setFragment(profileFragment);
+                        toolbar.setVisibility(View.GONE);
+                        toolbar.setTitle("Profile");
+                        setSupportActionBar(toolbar);
+                        return true;
                         default:
                             return false;
                 }

@@ -1,41 +1,19 @@
 package com.ta.slk.sistemlayanankegiatan;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-import com.google.firebase.messaging.FirebaseMessaging;
+import com.ta.slk.sistemlayanankegiatan.Activity.LoginActivity;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
 import com.ta.slk.sistemlayanankegiatan.Rest.*;
-import com.ta.slk.sistemlayanankegiatan.Adapter.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends Menu{
     RecyclerView mRecyclerView;
@@ -57,7 +35,7 @@ public class MainActivity extends Menu{
         */
 
         SharedPreferences sf = getApplicationContext().getSharedPreferences("login",MODE_PRIVATE);
-        if(sf.getString("id_member","").equals("")){
+        if(sf.getString("token","").equals("")){
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         }

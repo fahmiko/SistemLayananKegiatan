@@ -27,6 +27,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.abdeveloper.library.MultiSelectDialog;
+import com.abdeveloper.library.MultiSelectModel;
 import com.ta.slk.sistemlayanankegiatan.Adapter.GroupsAdapter;
 import com.ta.slk.sistemlayanankegiatan.AdminContent;
 import com.ta.slk.sistemlayanankegiatan.DetailGroups;
@@ -44,6 +46,7 @@ import com.ta.slk.sistemlayanankegiatan.Rest.ApiGroups;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiInterface;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -62,6 +65,7 @@ public class GroupsFragment extends Fragment{
     SwipeRefreshLayout refreshLayout;
     ProgressBar progressBar;
     RecyclerView.Adapter adapter;
+    MultiSelectDialog multiSelectDialog;
 
     ApiGroups service;
     private String imagePath;
@@ -115,6 +119,10 @@ public class GroupsFragment extends Fragment{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
+                            case 1:
+                                MultiSelectDialog dialog1 = inviteGroup(position);
+                                dialog1.show(getFragmentManager(),"Group");
+                                break;
                             case 2:
                                 updateData(position);
                                 break;
@@ -127,6 +135,55 @@ public class GroupsFragment extends Fragment{
             }
         }));
         return view;
+    }
+
+    private MultiSelectDialog inviteGroup(final int position) {
+        ArrayList<MultiSelectModel> listOfSelect= new ArrayList<>();
+        for(int i=0 ;i < usersList.size();i++) {
+            int idEmployee = Integer.parseInt(usersList.get(i).getIdMember());
+            String nameEmployee = usersList.get(i).getName();
+            listOfSelect.add(new MultiSelectModel(idEmployee, nameEmployee));
+        }
+            multiSelectDialog = new MultiSelectDialog()
+                    .title("Pilih") //setting title for dialog
+                    .titleSize(25)
+                    .positiveText("Done")
+                    .negativeText("Cancel")
+                    .setMinSelectionLimit(1) //you can set minimum checkbox selection limit (Optional)
+                    .setMaxSelectionLimit(listOfSelect.size()) //you can set maximum checkbox selection limit (Optional)
+                    .multiSelectList(listOfSelect)// the multi select model list with ids and name
+                    .onSubmit(new MultiSelectDialog.SubmitCallbackListener() {
+                        @Override
+                        public void onSelected(ArrayList<Integer> arrayList, ArrayList<String> arrayList1, String s) {
+                            sendInvitationGroup(arrayList,groupsList.get(position).getIdGroup());
+                        }
+
+                        @Override
+                        public void onCancel() {
+
+                        }
+                    });
+        return multiSelectDialog;
+    }
+
+    private void sendInvitationGroup(ArrayList<Integer> arrayList, String idGroup) {
+        Call<PostData> call = service.inviteGroup(arrayList,idGroup);
+        call.enqueue(new Callback<PostData>() {
+            @Override
+            public void onResponse(Call<PostData> call, Response<PostData> response) {
+                if(response.code()==200){
+                    if(response.body().getStatus().equals("success")){
+                        progressBar.setVisibility(View.VISIBLE);
+                        loadData();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostData> call, Throwable t) {
+                Snackbar.make(getView(), "Cek Koneksi internet",Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void loadData(){

@@ -6,6 +6,9 @@
     <color name="colorLight">#FFFFFF</color>
     <color name="colorDark">#000000</color>
     <!--<color name="colorAccent">#FF4081</color>-->
+    <color name="graylight">#fafafa</color>
+    <color name="startblue">#09c6df</color>
+    <color name="endblue">#0bcce6</color>
     <color name="colorAccent">#4CAF50</color>
     <color name="mateOrange">#FF5722</color>
     <color name="mateGreen">#4CAF50</color>

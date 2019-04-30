@@ -46,6 +46,10 @@ public class UserInvitation extends Fragment {
     RecyclerView.LayoutManager layoutManager;
     List<InvtActivities> activitiesList;
 
+    public UserInvitation(){
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -87,11 +91,13 @@ public class UserInvitation extends Fragment {
         call.enqueue(new Callback<GetInvtActivities>() {
             @Override
             public void onResponse(Call<GetInvtActivities> call, Response<GetInvtActivities> response) {
-                activitiesList = response.body().getResult();
-                adapter = new InvitationAdapter(activitiesList,view.getContext());
-                recyclerView.setAdapter(adapter);
-                progressBar.setVisibility(View.GONE);
-                refreshLayout.setRefreshing(false);
+                if(response.code()==200){
+                    activitiesList = response.body().getResult();
+                    adapter = new InvitationAdapter(activitiesList,view.getContext());
+                    recyclerView.setAdapter(adapter);
+                    progressBar.setVisibility(View.GONE);
+                    refreshLayout.setRefreshing(false);
+                }
             }
 
             @Override

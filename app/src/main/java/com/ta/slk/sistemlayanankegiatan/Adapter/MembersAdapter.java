@@ -11,27 +11,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.MyViewHolder> {
+public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.MyViewHolder> implements Filterable{
     private Context context;
     private List<Users> myList;
+    private List<Users> myListFiltered;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private TextView nip,name;
-        private CircleImageView image;
+//        private ImageView image;
         public MyViewHolder(View v) {
             super(v);
-            nip = itemView.findViewById(R.id.nip_member);
-            name = itemView.findViewById(R.id.name_member);
-            image = itemView.findViewById(R.id.img_member);
+            nip = itemView.findViewById(R.id.phone);
+            name = itemView.findViewById(R.id.name);
+//            image = itemView.findViewById(R.id.thumbnail);
         }
     }
+
+
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MembersAdapter(List<Users> myList, Context context) {
@@ -53,11 +59,11 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.nip.setText(myList.get(position).getIdEmployee());
         holder.name.setText(myList.get(position).getName());
-        if (myList.get(position).getPhotoProfile() != null) {
-            Glide.with(holder.itemView.getContext()).load(ApiClient.BASE_URL+"uploads/"+myList.get
-                    (position).getPhotoProfile())
-                    .into(holder.image);
-        }
+//        if (myList.get(position).getPhotoProfile() != null) {
+//            Glide.with(holder.itemView.getContext()).load(ApiClient.BASE_URL+"uploads/"+myList.get
+//                    (position).getPhotoProfile())
+//                    .into(holder.image);
+//        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -65,4 +71,38 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.MyViewHo
     public int getItemCount() {
         return myList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String charString = constraint.toString();
+                if(charString.isEmpty()){
+                    myListFiltered = myList;
+                }else{
+                    List<Users> filteredList = new ArrayList<>();
+                    for (Users row : myList){
+                        if(row.getName().toLowerCase().contains(charString.toLowerCase())){
+                            filteredList.add(row);
+                        }
+                    }
+                    myListFiltered = filteredList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = myListFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                myListFiltered = (ArrayList<Users>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+
+
+
 }

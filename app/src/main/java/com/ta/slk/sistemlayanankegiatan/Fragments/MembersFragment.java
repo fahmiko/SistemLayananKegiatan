@@ -1,10 +1,19 @@
 package com.ta.slk.sistemlayanankegiatan.Fragments;
 
 
+import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.DividerItemDecoration;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,8 +21,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 
 import android.support.v7.widget.RecyclerView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.ta.slk.sistemlayanankegiatan.Adapter.*;
+import com.ta.slk.sistemlayanankegiatan.AdminContent;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
 import com.ta.slk.sistemlayanankegiatan.Rest.*;
 
@@ -28,15 +40,19 @@ import com.ta.slk.sistemlayanankegiatan.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MembersFragment extends Fragment {
+public class MembersFragment extends Fragment{
     SwipeRefreshLayout refreshLayout;
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
     ProgressBar progressBar;
+    Fragment fragment;
     List<Users> listUsers;
 
-    public MembersFragment() {
+    private SearchView searchView;
+    String s = null;
+
+    public MembersFragment(){
         // Required empty public constructor
     }
 
@@ -49,6 +65,7 @@ public class MembersFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recycler_content);
         progressBar = view.findViewById(R.id.progress_bar);
         refreshLayout = view.findViewById(R.id.swipe_refresh);
+        fragment = this;
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -60,7 +77,6 @@ public class MembersFragment extends Fragment {
 
 
         loadData(view);
-
         return view;
     }
 
@@ -72,8 +88,8 @@ public class MembersFragment extends Fragment {
             public void onResponse(Call<GetUsers> call, Response<GetUsers> response) {
                 if(response.code() == 200){
                     listUsers = response.body().getResult();
-                    mAdapter =  new MembersAdapter(listUsers, view.getContext());
-                    mRecyclerView.setAdapter(mAdapter);
+                    mRecyclerView.setAdapter(new MembersAdapter(listUsers,getContext()));
+                    mRecyclerView.addItemDecoration(new MyDividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL,36));
                     mRecyclerView.scheduleLayoutAnimation();
                     progressBar.setVisibility(View.GONE);
                 }else{
