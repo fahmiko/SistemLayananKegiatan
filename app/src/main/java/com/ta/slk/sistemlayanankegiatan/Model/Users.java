@@ -16,16 +16,10 @@ public class Users {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("birth")
-    @Expose
-    private String birth;
     @SerializedName("address")
     @Expose
     private String address;
     @SerializedName("gender")
-    @Expose
-    private String gender;
-    @SerializedName("phone_number")
     @Expose
     private String phoneNumber;
     @SerializedName("email")
@@ -76,28 +70,12 @@ public class Users {
         this.name = name;
     }
 
-    public String getBirth() {
-        return birth;
-    }
-
-    public void setBirth(String birth) {
-        this.birth = birth;
-    }
-
     public String getAddress() {
         return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
     }
 
     public String getPhoneNumber() {

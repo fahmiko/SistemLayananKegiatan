@@ -48,11 +48,14 @@ public class UserInvitationRejected extends Fragment{
         call.enqueue(new Callback<GetInvtActivities>() {
             @Override
             public void onResponse(Call<GetInvtActivities> call, Response<GetInvtActivities> response) {
-                activitiesList = response.body().getResult();
-                adapter = new InvitationAdapter(activitiesList,view.getContext());
-                recyclerView.setAdapter(adapter);
+                if(response.code()==200){
+                    if(response.body().getResult().size()!=0){
+                        activitiesList = response.body().getResult();
+                        adapter = new InvitationAdapter(activitiesList,view.getContext());
+                        recyclerView.setAdapter(adapter);
+                    }
+                }
             }
-
             @Override
             public void onFailure(Call<GetInvtActivities> call, Throwable t) {
                 Snackbar.make(view,"Cek Koneksi Internet",Snackbar.LENGTH_SHORT).show();

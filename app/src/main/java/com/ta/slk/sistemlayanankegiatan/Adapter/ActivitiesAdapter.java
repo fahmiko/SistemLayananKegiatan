@@ -78,8 +78,11 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
         }
         long diff = d2.getTime() - d1.getTime();
         long diffHours = diff / (60 * 60 * 1000);
-
-        if(diffHours < 0){
+        long datediff = d2.getDate() - d1.getDate();
+        if(datediff <=7 && datediff >=0){
+            holder.status.setBackgroundResource(R.color.mateOrange);
+            holder.status.setText(datediff+" DAYS");
+        }else if(diffHours < 0){
             if(diffHours <= -24){
                 holder.status.setBackgroundResource(R.drawable.shape_green);
                 holder.status.setText("FINISH");

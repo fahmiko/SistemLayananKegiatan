@@ -23,6 +23,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/PrimaryTheme">
+        <activity android:name=".Activity.UserActivity"></activity>
+        <activity
+            android:name=".Activity.Register"
+            android:theme="@style/PrimaryTheme"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -34,10 +38,6 @@
         <activity
             android:name=".DetailGroups"
             android:label="@string/title_activity_detail_groups"
-            android:theme="@style/PrimaryTheme.NoActionBar" />
-        <activity
-            android:name=".Tabs.Myactivities"
-            android:label="@string/title_activity_myactivities"
             android:theme="@style/PrimaryTheme.NoActionBar" />
         <activity
             android:name=".UserInvitation"

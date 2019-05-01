@@ -15,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="405dp">
         <Button
+            android:id="@+id/btn_edit"
             android:layout_margin="15dp"
             android:backgroundTint="@color/colorLight"
             android:background="@drawable/baseline_settings_black_18dp"
@@ -27,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="350dp"
             android:orientation="vertical">
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/pr_photo"
                 android:src="@drawable/polinema_logo"
                 android:layout_marginTop="35dp"
@@ -70,6 +71,7 @@
                         android:textSize="20sp"
                         />
                     <TextView
+                        android:id="@+id/pr_docs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="125"
@@ -92,6 +94,7 @@
                         android:textSize="20sp"
                         />
                     <TextView
+                        android:id="@+id/pr_act"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1205"
@@ -116,6 +119,7 @@
                         android:textSize="20sp" />
 
                     <TextView
+                        android:id="@+id/pr_pending"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="10dp"

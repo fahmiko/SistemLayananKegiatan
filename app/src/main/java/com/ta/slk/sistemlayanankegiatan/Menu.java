@@ -15,10 +15,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.ta.slk.sistemlayanankegiatan.Activity.MyGroups;
+import com.ta.slk.sistemlayanankegiatan.Activity.UserActivity;
 import com.ta.slk.sistemlayanankegiatan.Method.Application;
 import com.ta.slk.sistemlayanankegiatan.Method.Session;
 import com.ta.slk.sistemlayanankegiatan.Model.Groups;
-import com.ta.slk.sistemlayanankegiatan.Tabs.Myactivities;
 
 public class Menu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public void getMenu(){
@@ -76,11 +77,10 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
             Intent intent = new Intent(getApplicationContext(), AdminContent.class);
             startActivity(intent);
         } else if (id == R.id.nav_group) {
-//            Intent intent = new Intent(getApplicationContext(), ContentActivity.class);
-//            intent.putExtra("action","groups");
-//            startActivity(intent);
+            Intent intent = new Intent(getApplicationContext(), MyGroups.class);
+            startActivity(intent);
         } else if (id == R.id.nav_activities) {
-            Intent intent = new Intent(getApplicationContext(), Myactivities.class);
+            Intent intent = new Intent(getApplicationContext(), UserActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_invitation) {
             Intent intent = new Intent(getApplicationContext(),UserInvitation.class);

@@ -83,30 +83,43 @@ public class LoginActivity extends AppCompatActivity{
         LayoutInflater inflater = getLayoutInflater();
         final View dialog = inflater.inflate(R.layout.popup_register,null);
         final TextInputEditText input = dialog.findViewById(R.id.register_nip);
+        final Button button = dialog.findViewById(R.id.btn_check_nip);
         builder.setView(dialog).setTitle("Daftar Anggota").setMessage("Masukan Identitas");
-        builder.setPositiveButton("cek", new DialogInterface.OnClickListener() {
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Call<GetUsers> call = service.getLoginNip(input.getText().toString());
+            public void onClick(View v) {
+                Call<GetUsers> call  = service.getLoginNip(input.getText().toString());
                 call.enqueue(new Callback<GetUsers>() {
                     @Override
                     public void onResponse(Call<GetUsers> call, Response<GetUsers> response) {
                         if(response.code()==200){
-                            if(response.body().getStatus().equals("success")){
-                                Toast.makeText(getApplicationContext(),"DATA TIDAK DITEMUKAN",Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(getApplicationContext(),response.body().getResult().get(0).getName(),Toast.LENGTH_SHORT).show();
+                            if(response.isSuccessful()){
+                                if(response.body().getResult().isEmpty()){
+                                    Toast.makeText(getApplicationContext(),"Data tidak ditemukan",Toast.LENGTH_LONG).show();
+                                }else{
+                                    if(!response.body().getResult().get(0).getIdUser().equals("0")){
+                                        Toast.makeText(getApplicationContext(),"User Sudah Terdaftar",Toast.LENGTH_LONG).show();
+                                    }else{
+                                        Intent intent = new Intent(getApplicationContext(),Register.class);
+                                        intent.putExtra("id_member",response.body().getResult().get(0).getIdMember());
+                                        intent.putExtra("name",response.body().getResult().get(0).getName());
+                                        intent.putExtra("action","Register");
+                                        startActivity(intent);
+                                    }
+                                }
+
                             }
                         }
                     }
 
                     @Override
                     public void onFailure(Call<GetUsers> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(),"CEK KONEKSI",Toast.LENGTH_SHORT).show();
+
                     }
                 });
             }
-        }).show();
+        });
+        builder.show();
     }
 
     @Override
@@ -137,8 +150,11 @@ public class LoginActivity extends AppCompatActivity{
                         String name = response.body().getResult().get(0).getName();
                         String photo = response.body().getResult().get(0).getPhotoProfile();
                         String id_member = response.body().getResult().get(0).getIdMember();
+                        String email = response.body().getResult().get(0).getEmail();
+                        String telp = response.body().getResult().get(0).getPhoneNumber();
                         String token = response.body().getToken();
-                        session.saveCredentials(id_user,name,username,photo, id_member, token);
+                        String level = response.body().getResult().get(0).getLevel();
+                        session.saveCredentials(id_user,name,username,photo,id_member,email,telp,level,token);
                         Intent i = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(i);
                     }else{

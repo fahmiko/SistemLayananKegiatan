@@ -12,6 +12,7 @@
     tools:context=".DetailActivity$PlaceholderFragment">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/card_description"
         app:cardElevation="3dp"
         app:cardCornerRadius="3dp"
         app:cardUseCompatPadding="true"
@@ -35,13 +36,83 @@
                 android:layout_height="1sp"/>
 
             <TextView
-                android:text="@string/large_text"
+                android:id="@+id/dt_detail"
+                android:text="Text"
                 android:layout_marginTop="5dp"
                 android:layout_margin="10dp"
                 android:layout_below="@id/dt_titile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/lay_accept"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/card_description"
+        app:cardElevation="3dp"
+        app:cardCornerRadius="3dp"
+        app:cardUseCompatPadding="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_margin="10dp"
+                android:textSize="16dp"
+                android:textColor="@color/textPrimary"
+                android:text="Undangan Mensetujui"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <View
+                android:background="@color/colorPrimary"
+                android:layout_height="1sp"
+                android:layout_width="match_parent"/>
+            <android.support.v7.widget.RecyclerView
+                android:layout_margin="10dp"
+                android:id="@+id/recycler_member"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:id="@+id/lay_pending"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/lay_accept"
+        app:cardElevation="3dp"
+        app:cardCornerRadius="3dp"
+        app:cardUseCompatPadding="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_margin="10dp"
+                android:textSize="16dp"
+                android:textColor="@color/textPrimary"
+                android:text="Undangan Pending"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <View
+                android:background="@color/colorPrimary"
+                android:layout_height="1sp"
+                android:layout_width="match_parent"/>
+            <android.support.v7.widget.RecyclerView
+                android:layout_margin="10dp"
+                android:id="@+id/recycler_pending"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
     </android.support.v7.widget.CardView>
 
 </RelativeLayout>

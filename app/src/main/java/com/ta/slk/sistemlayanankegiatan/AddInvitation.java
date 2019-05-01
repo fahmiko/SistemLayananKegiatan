@@ -56,7 +56,7 @@ public class AddInvitation extends AppCompatActivity {
     SimpleDateFormat simpleDateFormat;
     Button button;
     String textDialog;
-    TextInputEditText name,contact,description,day,location;
+    TextInputEditText name,contact,description,day,location,clock;
     TextInputEditText upload;
     ImageView mImageView;
     File mFileURI;
@@ -72,6 +72,8 @@ public class AddInvitation extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                String dateTime = day.getText().toString()+" "+clock.getText().toString();
+//                Toast.makeText(getApplicationContext(),dateTime,Toast.LENGTH_SHORT).show();
                 postData();
             }
         });
@@ -81,6 +83,11 @@ public class AddInvitation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showDialog();
+            }
+        });
+        clock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 showTime();
             }
         });
@@ -143,9 +150,7 @@ public class AddInvitation extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay,
                                           int minute) {
-                        String txtTime = day.getText().toString();
-                        txtTime += " "+hourOfDay + ":" + minute+":"+mSecond;
-                        day.setText(txtTime);
+                        clock.setText(" "+hourOfDay + ":" + minute+":"+mSecond);
                     }
                 }, mHour, mMinute, false);
         timePickerDialog.show();
@@ -208,9 +213,6 @@ public class AddInvitation extends AppCompatActivity {
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 imagePath =cursor.getString(columnIndex);
-
-//                Picasso.with(getApplicationContext()).load(new File(imagePath)).fit().into(mImageView);
-//                Glide.with(getApplicationContext()).load(new File(imagePath)).into(mImageView);
                 upload.setText(imagePath);
                 cursor.close();
             }else{
@@ -227,6 +229,7 @@ public class AddInvitation extends AppCompatActivity {
         description = findViewById(R.id.name_description);
         upload = findViewById(R.id.insert_image);
         button = findViewById(R.id.btn_add);
+        clock = findViewById(R.id.name_clock);
 
     }
 
@@ -246,12 +249,14 @@ public class AddInvitation extends AppCompatActivity {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().getRoot();
         final String key = reference.push().getKey();
 
+        String dateTime = day.getText().toString()+" "+clock.getText().toString();
+
         RequestBody reqName = MultipartBody.create(MediaType.parse("multipart/form-data"),
                 (name.getText().toString().isEmpty())?"":name.getText().toString());
         RequestBody reqCreated = MultipartBody.create(MediaType.parse("multipart/form-data"),
                 "1");
         RequestBody reqDate = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                (day.getText().toString().isEmpty())?"":day.getText().toString());
+                dateTime);
         RequestBody reqLocation = MultipartBody.create(MediaType.parse("multipart/form-data"),
                 (location.getText().toString().isEmpty())?"":location.getText().toString());
         RequestBody reqDesription = MultipartBody.create(MediaType.parse("multipart/form-data"),

@@ -99,6 +99,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
                 bundle.putString("date",listActivities.get(position).getDate());
                 bundle.putString("picture",listActivities.get(position).getPicture());
                 bundle.putString("place",listActivities.get(position).getPlace());
+                bundle.putString("description",listActivities.get(position).getDescription());
                 intent.putExtra("activity",bundle);
                 startActivity(intent);
             }

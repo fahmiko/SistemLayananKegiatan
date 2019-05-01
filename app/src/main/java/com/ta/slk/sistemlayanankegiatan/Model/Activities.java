@@ -20,6 +20,9 @@ public class Activities {
     @SerializedName("contact_person")
     @Expose
     private String contactPerson;
+    @SerializedName("description")
+    @Expose
+    private String description;
     @SerializedName("date")
     @Expose
     private String date;
@@ -215,4 +218,11 @@ public class Activities {
         this.status = status;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

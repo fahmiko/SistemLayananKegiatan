@@ -65,6 +65,7 @@ public class DetailActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
     private Bundle activity;
+    private TextView contact, location,date, clock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,16 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         activity = getIntent().getBundleExtra("activity");
+        initComponents();
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri gmmIntentUri = Uri.parse("google.navigation:q="+activity.getString("place"));
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
@@ -91,6 +102,19 @@ public class DetailActivity extends AppCompatActivity {
         RoundedImageView imageView = findViewById(R.id.img_mini);
 
         Glide.with(getApplicationContext()).load(ApiClient.BASE_URL+"uploads/"+activity.getString("picture")).into(imageView);
+    }
+
+    private void initComponents() {
+        contact = findViewById(R.id.dt_contact);
+        date =findViewById(R.id.dt_date);
+        contact = findViewById(R.id.dt_contact);
+        clock = findViewById(R.id.dt_clock);
+        location = findViewById(R.id.dt_location);
+        contact.setText(activity.getString("contact"));
+        String[] dateTime = activity.getString("date").split(" ");
+        date.setText(dateTime[0]);
+        clock.setText(dateTime[1]);
+        location.setText(activity.getString("place"));
     }
 
     private void getTime() {

@@ -12,5 +12,6 @@
         android:id="@+id/menu_add_activity" />
     <item android:title="Tambah Group"
         android:id="@+id/menu_add_group"/>
-    <item android:title="Tambah Member" />
+    <item android:title="Tambah Member"
+        android:id="@+id/menu_add_member"/>
 </menu>

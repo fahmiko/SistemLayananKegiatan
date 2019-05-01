@@ -5,6 +5,7 @@ import com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitation;
 import com.ta.slk.sistemlayanankegiatan.Model.PostData;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiGroups;
+import com.ta.slk.sistemlayanankegiatan.Rest.ApiMembers;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -152,8 +153,6 @@ public class AdminContent extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.menu_add_group:
-//                intent = new Intent(getApplicationContext(), ManageGroups.class);
-//                startActivity(intent);
                 final AlertDialog.Builder builder = new AlertDialog.Builder(AdminContent.this);
                 LayoutInflater inflater = getLayoutInflater();
                 final View dialog = inflater.inflate(R.layout.manage_groups,null);
@@ -188,8 +187,51 @@ public class AdminContent extends AppCompatActivity {
 
                 builder.show();
                 break;
+            case R.id.menu_add_member:
+                final AlertDialog.Builder builder2 = new AlertDialog.Builder(AdminContent.this);
+                LayoutInflater inflater2 = getLayoutInflater();
+                final View dialog2 = inflater2.inflate(R.layout.popup_manage_member,null);
+                builder2.setView(dialog2).setTitle("Tambah Member").setIcon(R.drawable.ic_assignment_ind_black_24dp);
+                final TextInputEditText nip = dialog2.findViewById(R.id.mb_nip);
+                final TextInputEditText name = dialog2.findViewById(R.id.mb_name);
+
+                builder2.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        insertMember(nip.getText().toString(),name.getText().toString());
+                        dialog.dismiss();
+                    }
+
+                }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder2.show();
+                break;
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void insertMember(String nip, String name) {
+        ApiMembers members = ApiClient.getClient().create(ApiMembers.class);
+        Call<PostData> call = members.addNip(nip, name);
+        call.enqueue(new Callback<PostData>() {
+            @Override
+            public void onResponse(Call<PostData> call, Response<PostData> response) {
+                if(response.code()==200){
+                    Toast.makeText(getApplicationContext(),"Data berhasil ditambahkan",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostData> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"Cek Koneksi Interner",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void getTimeAgo() {

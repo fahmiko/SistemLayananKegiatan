@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.ta.slk.sistemlayanankegiatan.Adapter.InvitationAdapter;
 import com.ta.slk.sistemlayanankegiatan.Method.ClickListenner;
@@ -65,11 +66,18 @@ public class UserInvitationAccept extends Fragment {
         call.enqueue(new Callback<GetInvtActivities>() {
             @Override
             public void onResponse(Call<GetInvtActivities> call, Response<GetInvtActivities> response) {
-                activitiesList = response.body().getResult();
-                adapter = new InvitationAdapter(activitiesList,view.getContext());
-                recyclerView.setAdapter(adapter);
-                refreshLayout.setRefreshing(false);
-                progressBar.setVisibility(View.GONE);
+                if(response.code()==200){
+                    if(response.body().getResult().size()==0){
+                        Toast.makeText(getContext(),"NO DATA",Toast.LENGTH_SHORT).show();
+                    }else{
+                        activitiesList = response.body().getResult();
+                        adapter = new InvitationAdapter(activitiesList,view.getContext());
+                        recyclerView.setAdapter(adapter);
+                        refreshLayout.setRefreshing(false);
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+
             }
 
             @Override
