@@ -1,5 +1,6 @@
 package com.ta.slk.sistemlayanankegiatan.Fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.ta.slk.sistemlayanankegiatan.Adapter.MembersAdapter;
+import com.ta.slk.sistemlayanankegiatan.Method.ClickListenner;
+import com.ta.slk.sistemlayanankegiatan.Method.RecyclerTouchListener;
 import com.ta.slk.sistemlayanankegiatan.Model.GetUsers;
 import com.ta.slk.sistemlayanankegiatan.Model.PostData;
 import com.ta.slk.sistemlayanankegiatan.Model.Users;
@@ -47,12 +50,25 @@ public class DetailFragment extends Fragment {
         detail = view.findViewById(R.id.dt_detail);
         recyclerView = view.findViewById(R.id.recycler_member);
         recyclerView2 = view.findViewById(R.id.recycler_pending);
+        recyclerView2.setLayoutManager(new LinearLayoutManager(getContext()));
         bundle = getArguments();
         detail.setText(bundle.getString("description"));
         service = ApiClient.getClient().create(ApiMembers.class);
-
         loadDataMembers();
         loadDataPending();
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new ClickListenner() {
+            @Override
+            public void onClick(View v, int position) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Pesan").setMessage(usersList.get(position).getMessage());
+                builder.setIcon(R.drawable.round_announcement_black_18dp).create().show();
+            }
+
+            @Override
+            public void onLongClick(View v, int position) {
+
+            }
+        }));
         return view;
     }
 

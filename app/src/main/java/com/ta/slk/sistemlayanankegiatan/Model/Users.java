@@ -19,7 +19,7 @@ public class Users {
     @SerializedName("address")
     @Expose
     private String address;
-    @SerializedName("gender")
+    @SerializedName("phone_number")
     @Expose
     private String phoneNumber;
     @SerializedName("email")
@@ -37,6 +37,9 @@ public class Users {
     @SerializedName("username")
     @Expose
     private String username;
+    @SerializedName("message")
+    @Expose
+    private String message;
 
     public String getIdMember() {
         return idMember;
@@ -124,5 +127,13 @@ public class Users {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

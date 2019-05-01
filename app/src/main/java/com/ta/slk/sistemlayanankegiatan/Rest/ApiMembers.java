@@ -48,7 +48,7 @@ public interface ApiMembers {
             @Part("username") RequestBody username,
             @Part("password") RequestBody password,
             @Part("address") RequestBody address,
-            @Part("phone") RequestBody phone,
+            @Part("telp") RequestBody phone,
             @Part("email") RequestBody email,
             @Part("action") RequestBody action
     );

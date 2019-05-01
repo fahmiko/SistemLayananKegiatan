@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -61,6 +62,7 @@ public class Register extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),txt_phone.getText().toString(),Toast.LENGTH_LONG).show();
                 doUpdate();
             }
         });
@@ -74,16 +76,18 @@ public class Register extends AppCompatActivity {
         getSupportActionBar().show();
 
         txt_name = findViewById(R.id.re_name);
-        txt_name.setText(name);
         txt_username = findViewById(R.id.re_username);
         txt_password = findViewById(R.id.re_password);
         txt_address = findViewById(R.id.re_address);
         txt_email= findViewById(R.id.re_email);
-        txt_phone = findViewById(R.id.re_phone);
+        txt_phone = findViewById(R.id.re_call);
         upload = findViewById(R.id.btn_upload);
         profile = findViewById(R.id.img_profile);
         button = findViewById(R.id.btn_save);
 
+        if(action.equals("Register")){
+            txt_name.setText(name);
+        }
     }
 
     private void doUpdate(){
@@ -171,6 +175,7 @@ public class Register extends AppCompatActivity {
                     if(response.body().getStatus().equals("success")){
                         txt_username.setVisibility(View.GONE);
                         txt_password.setVisibility(View.GONE);
+                        txt_name.setText(response.body().getResult().get(0).getName());
                         txt_address.setText(response.body().getResult().get(0).getAddress());
                         txt_email.setText(response.body().getResult().get(0).getEmail());
                         txt_phone.setText(response.body().getResult().get(0).getPhoneNumber());

@@ -78,14 +78,14 @@
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-            android:hint="NO Telp"
+            android:hint="No Telp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputEditText
+                android:id="@+id/re_call"
                 android:drawableLeft="@drawable/baseline_phone_black_18"
                 android:drawablePadding="20dp"
-                android:id="@+id/re_phone"
                 android:inputType="number"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

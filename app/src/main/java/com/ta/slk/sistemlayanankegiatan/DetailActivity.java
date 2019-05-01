@@ -65,7 +65,7 @@ public class DetailActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
     private Bundle activity;
-    private TextView contact, location,date, clock;
+    private TextView contact, location,date, clock, title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +105,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
+        title = findViewById(R.id.dt_title);
         contact = findViewById(R.id.dt_contact);
         date =findViewById(R.id.dt_date);
         contact = findViewById(R.id.dt_contact);
@@ -115,6 +116,7 @@ public class DetailActivity extends AppCompatActivity {
         date.setText(dateTime[0]);
         clock.setText(dateTime[1]);
         location.setText(activity.getString("place"));
+        title.setText(activity.getString("name"));
     }
 
     private void getTime() {

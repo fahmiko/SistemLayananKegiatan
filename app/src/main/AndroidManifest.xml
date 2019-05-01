@@ -64,6 +64,8 @@
             </intent-filter>
         </service>
 
+        <activity android:name=".Activity.ProfileUser"
+            android:theme="@style/PrimaryTheme.NoActionBar"/>
         <activity
             android:name=".Activity.LoginActivity"
             android:label="@string/title_activity_login"

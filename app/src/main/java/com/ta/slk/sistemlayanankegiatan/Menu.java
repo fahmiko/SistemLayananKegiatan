@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.ta.slk.sistemlayanankegiatan.Activity.MyGroups;
+import com.ta.slk.sistemlayanankegiatan.Activity.ProfileUser;
 import com.ta.slk.sistemlayanankegiatan.Activity.UserActivity;
 import com.ta.slk.sistemlayanankegiatan.Method.Application;
 import com.ta.slk.sistemlayanankegiatan.Method.Session;
@@ -86,7 +87,7 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
             Intent intent = new Intent(getApplicationContext(),UserInvitation.class);
             startActivity(intent);
         } else if (id == R.id.nav_share) {
-            Intent intent = new Intent(getApplicationContext(),UserInvitation.class);
+            Intent intent = new Intent(getApplicationContext(), ProfileUser.class);
             startActivity(intent);
         } else if (id == R.id.logout) {
             Session session = Application.getSession();
