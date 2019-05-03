@@ -15,8 +15,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-//    public static final String BASE_URL = "http://trialapi.000webhostapp.com/android_api/";
-    public static final String BASE_URL = "http://192.168.43.102/android_api/";
+    public static final String BASE_URL = "http://trialapi.000webhostapp.com/android_api/";
+//    public static final String BASE_URL = "http://192.168.43.102/android_api/";
 //    public static final String BASE_URL = "http://192.168.201.1/android_api/";
     private static Session session = Application.getSession();
     private static Retrofit retrofit = null;

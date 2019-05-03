@@ -27,6 +27,12 @@ public class Session {
         editor.apply();
     }
 
+    public boolean isAdmin(){
+        SharedPreferences sf = context.getSharedPreferences("login", Context.MODE_PRIVATE);
+        String admin = sf.getString("level",null);
+        return (admin.equals("1"));
+    }
+
     public void saveCredentials(String id, String name, String username, String photo, String id_member,String email, String telp, String level,String token){
         SharedPreferences sf = context.getSharedPreferences("login",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sf.edit();
@@ -48,9 +54,9 @@ public class Session {
         editor.clear().apply();
         Intent intent = new Intent(context, LoginActivity.class);
         if (condition == 1){
-            intent.putExtra("message","Berhasil Logout");
+//            intent.putExtra("message","Berhasil Logout");
         }else{
-            intent.putExtra("message","SESI ANDA SUDAH HABIS");
+//            intent.putExtra("message","SESI ANDA SUDAH HABIS");
         }
         context.startActivity(intent);
 

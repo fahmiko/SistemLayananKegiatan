@@ -24,7 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyGroups  extends AppCompatActivity{
+public class MyGroups extends AppCompatActivity{
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     ProgressBar progressBar;
@@ -41,20 +41,36 @@ public class MyGroups  extends AppCompatActivity{
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
         service = ApiClient.getClient().create(ApiInterface.class);
         loadData();
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+            }
+        });
+        initComponents();
+    }
+
+    private void initComponents() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().show();
     }
 
     private void loadData() {
-        Call<GetGroups> call = service.getGroupsById("","groupd");
+        progressBar.setVisibility(View.VISIBLE);
+        Call<GetGroups> call = service.getGroupsById("","groups");
         call.enqueue(new Callback<GetGroups>() {
             @Override
             public void onResponse(Call<GetGroups> call, Response<GetGroups> response) {
                 if(response.code()==200){
                     if(response.body().getResult().size()!=0){
+                        refreshLayout.setRefreshing(false);
                         progressBar.setVisibility(View.GONE);
                         groupsList = response.body().getResult();
                         adapter = new GroupsAdapter(groupsList,getApplicationContext());
                         recyclerView.setAdapter(adapter);
                     }else{
+                        progressBar.setVisibility(View.GONE);
+                        refreshLayout.setRefreshing(false);
                         Toast.makeText(getApplicationContext(), "NO DATA",Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -62,6 +78,8 @@ public class MyGroups  extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<GetGroups> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                refreshLayout.setRefreshing(false);
                 Toast.makeText(getApplicationContext(),"Cek Koneksi Internet",Toast.LENGTH_SHORT).show();
             }
         });

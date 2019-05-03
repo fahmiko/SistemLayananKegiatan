@@ -57,6 +57,11 @@ public class LoginActivity extends AppCompatActivity{
         String msg = getIntent().getStringExtra("message");
         if(msg != null){
             Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+            if(msg.equals("logout")){
+                SharedPreferences sf =  getSharedPreferences("login",MODE_PRIVATE);
+                SharedPreferences.Editor editor = sf.edit();
+                editor.clear().apply();
+            }
         }
 
         username = findViewById(R.id.username);
@@ -141,7 +146,7 @@ public class LoginActivity extends AppCompatActivity{
         mLoginCall.enqueue(new Callback<GetUsers>() {
             @Override
             public void onResponse(Call<GetUsers> call, retrofit2.Response<GetUsers> response) {
-                Toast.makeText(getApplicationContext(),response.body().getToken(),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(),response.body().getToken(),Toast.LENGTH_SHORT).show();
                 if(response.code()==200){
                     if(response.body().getStatus().equals("success")){
                         Session session = Application.getSession();
@@ -155,6 +160,7 @@ public class LoginActivity extends AppCompatActivity{
                         String token = response.body().getToken();
                         String level = response.body().getResult().get(0).getLevel();
                         session.saveCredentials(id_user,name,username,photo,id_member,email,telp,level,token);
+                        finish();
                         Intent i = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(i);
                     }else{

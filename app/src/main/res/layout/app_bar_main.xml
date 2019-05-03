@@ -12,20 +12,47 @@
         app:elevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <android.support.v7.widget.Toolbar
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:backgroundTint="@color/colorLight"
-            app:titleTextColor="@color/colorLight"
-            android:id="@+id/nav_toolbar"
-            android:elevation="0dp"
-            android:layout_alignParentTop="true"
-            android:layout_height="?attr/actionBarSize"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsingtoolbar"
             android:layout_width="match_parent"
-            app:title="@string/app_name"
-            app:layout_scrollFlags="scroll|enterAlways"
-            />
+            android:layout_height="200dp"
+            app:contentScrim="?attr/colorPrimary"
+            android:foregroundTint="@color/colorLight"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="exitUntilCollapsed|scroll"
+            app:title="Layanan Kegiatan"
+            app:expandedTitleMarginEnd="64dp"
+            android:background="@drawable/material">
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/btn_drawer"
+                android:src="@drawable/ic_dehaze_black_24dp"
+                app:elevation="6dp"
+                android:layout_margin="10dp"
+                app:backgroundTint="@color/graylight"
+                app:layout_anchorGravity="top|left|start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbarid"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_collapseMode="pin"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"/>
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+            <!--android:backgroundTint="@color/colorLight"-->
+            <!--app:titleTextColor="@color/colorLight"-->
+            <!--android:id="@+id/nav_toolbar"-->
+            <!--android:elevation="0dp"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_height="?attr/actionBarSize"-->
+            <!--android:layout_width="match_parent"-->
+            <!--app:title="@string/app_name"-->
+            <!--app:layout_scrollFlags="scroll|enterAlways"-->
+            <!--/>-->
 
     </android.support.design.widget.AppBarLayout>
 

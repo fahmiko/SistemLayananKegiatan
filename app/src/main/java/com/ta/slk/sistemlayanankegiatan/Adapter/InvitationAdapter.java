@@ -61,7 +61,7 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.My
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        holder.admin.setText("Created By "+ myList.get(position).getCreatedBy());
+        holder.admin.setText(myList.get(position).getCreatedBy());
         holder.title.setText(myList.get(position).getNameActivities());
         String st_date = myList.get(0).getDate();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

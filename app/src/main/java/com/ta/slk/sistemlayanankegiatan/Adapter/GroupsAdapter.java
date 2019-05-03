@@ -51,7 +51,12 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.MyViewHold
     @Override
     public void onBindViewHolder(GroupsAdapter.MyViewHolder holder, final int position) {
         holder.name.setText(myList.get(position).getName());
-        holder.count.setText("Anggota : "+myList.get(position).getCount());
+        if(myList.get(position).getCount()!=null){
+            holder.count.setText("Anggota : "+myList.get(position).getCount());
+        }else{
+            holder.count.setText("Admin : "+myList.get(position).getCreatedBy());
+        }
+
         if (myList.get(position).getPhotoGroup() != null) {
             Glide.with(holder.itemView.getContext()).load(ApiClient.BASE_URL+"uploads/groups/"+myList.get
                     (position).getPhotoGroup())

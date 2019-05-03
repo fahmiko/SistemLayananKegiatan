@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,6 +54,7 @@ public class MembersFragment extends Fragment{
     ProgressBar progressBar;
     Fragment fragment;
     List<Users> listUsers;
+    MembersAdapter adapter;
 
     private SearchView searchView;
     String s = null;
@@ -71,6 +73,10 @@ public class MembersFragment extends Fragment{
         progressBar = view.findViewById(R.id.progress_bar);
         refreshLayout = view.findViewById(R.id.swipe_refresh);
         fragment = this;
+
+        mRecyclerView.addItemDecoration(new MyDividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL,36));
+        mRecyclerView.scheduleLayoutAnimation();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -111,7 +117,7 @@ public class MembersFragment extends Fragment{
 
             }
         }));
-
+        this.setHasOptionsMenu(true);
         loadData(view);
         return view;
     }
@@ -185,10 +191,9 @@ public class MembersFragment extends Fragment{
             public void onResponse(Call<GetUsers> call, Response<GetUsers> response) {
                 if(response.code() == 200){
                     listUsers = response.body().getResult();
-                    mRecyclerView.setAdapter(new MembersAdapter(listUsers,getContext()));
-                    mRecyclerView.addItemDecoration(new MyDividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL,36));
-                    mRecyclerView.scheduleLayoutAnimation();
+                    adapter = new MembersAdapter(listUsers,getContext());
                     progressBar.setVisibility(View.GONE);
+                    mRecyclerView.setAdapter(adapter);
                 }else{
                     progressBar.setVisibility(View.GONE);
                     Snackbar.make(getView(),"NO DATA",Snackbar.LENGTH_LONG).setAction("retry", new View.OnClickListener() {
@@ -211,6 +216,33 @@ public class MembersFragment extends Fragment{
                         loadData(view);
                     }
                 }).show();
+            }
+        });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search_menu, menu);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.app_bar_search)
+                .getActionView();
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getActivity().getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(getContext(),query,Toast.LENGTH_LONG).show();
+                adapter.getFilter().filter(query);
+                mRecyclerView.setAdapter(adapter);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                mRecyclerView.setAdapter(adapter);
+                return true;
             }
         });
     }

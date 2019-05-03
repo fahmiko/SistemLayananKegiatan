@@ -62,7 +62,6 @@ public class Register extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),txt_phone.getText().toString(),Toast.LENGTH_LONG).show();
                 doUpdate();
             }
         });
@@ -126,15 +125,14 @@ public class Register extends AppCompatActivity {
             public void onResponse(Call<PostData> call, Response<PostData> response) {
                 if(response.code()==200){
                     if(response.body().getStatus().equals("success")){
-                        Toast.makeText(getApplicationContext(),"Update Sukses",Toast.LENGTH_SHORT).show();
-                        finish();
+                        Toast.makeText(getApplicationContext(),"Update sukses",Toast.LENGTH_LONG).show();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
-
+                finish();
             }
         });
 

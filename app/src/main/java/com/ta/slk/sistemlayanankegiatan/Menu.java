@@ -1,12 +1,14 @@
 package com.ta.slk.sistemlayanankegiatan;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -24,13 +26,26 @@ import com.ta.slk.sistemlayanankegiatan.Model.Groups;
 
 public class Menu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public void getMenu(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.nav_toolbar);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarid);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        FloatingActionButton draw = findViewById(R.id.btn_drawer);
+        draw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout navDrawer = findViewById(R.id.drawer_layout);
+                // If the navigation drawer is not open then open it, if its already open then close it.
+                if(!navDrawer.isDrawerOpen(GravityCompat.START)) navDrawer.openDrawer(Gravity.START);
+                else navDrawer.closeDrawer(Gravity.END);
+            }
+        });
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -45,39 +60,13 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
             super.onBackPressed();
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(android.view.Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            Intent intent = new Intent(getApplicationContext(), AdminContent.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_group) {
+        if (id == R.id.nav_group) {
             Intent intent = new Intent(getApplicationContext(), MyGroups.class);
             startActivity(intent);
         } else if (id == R.id.nav_activities) {
@@ -91,7 +80,7 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(intent);
         } else if (id == R.id.logout) {
             Session session = Application.getSession();
-            session.logout(0);
+            session.logout(1);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

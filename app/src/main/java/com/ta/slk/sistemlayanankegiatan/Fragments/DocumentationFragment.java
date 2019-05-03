@@ -131,7 +131,7 @@ public class DocumentationFragment extends Fragment{
 
 //                Picasso.with(getApplicationContext()).load(new File(imagePath)).fit().into(mImageView);
 //                Glide.with(getApplicationContext()).load(new File(imagePath)).into(mImageView);
-                Toast.makeText(getContext(), "Berhasil di load", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(), "Berhasil di load", Toast.LENGTH_LONG).show();
                 doUpload();
                 cursor.close();
             }else{
@@ -175,7 +175,7 @@ public class DocumentationFragment extends Fragment{
                 if(response.code()==200){
                     if(response.body().getStatus().equals("success")){
                         loadData();
-                        Snackbar.make(getView(),"Berhasil di upload "+response.body().getMessage(),Snackbar.LENGTH_LONG).setAction("undo", new View.OnClickListener() {
+                        Snackbar.make(getView(),"Berhasil di upload ",Snackbar.LENGTH_LONG).setAction("undo", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 doDelete(response.body().getMessage());

@@ -1,7 +1,10 @@
 package com.ta.slk.sistemlayanankegiatan;
 
+import com.ta.slk.sistemlayanankegiatan.Activity.LoginActivity;
 import com.ta.slk.sistemlayanankegiatan.Fragments.*;
 import com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitation;
+import com.ta.slk.sistemlayanankegiatan.Method.Application;
+import com.ta.slk.sistemlayanankegiatan.Method.Session;
 import com.ta.slk.sistemlayanankegiatan.Model.PostData;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiGroups;
@@ -74,7 +77,6 @@ public class AdminContent extends AppCompatActivity {
         groupsFragment = new GroupsFragment();
         membersFragment = new MembersFragment();
         profileFragment = new ProfileFragment();
-        userInvitation = new UserInvitation();
 
         setFragment(activitiesFragment);
 //        getTimeAgo();
@@ -108,11 +110,12 @@ public class AdminContent extends AppCompatActivity {
                         toolbar.setTitle("Group");
                         setSupportActionBar(toolbar);
                         return true;
-                    case R.id.nav_admin_invit:
-                        setFragment(userInvitation);
-                        toolbar.setVisibility(View.VISIBLE);
-                        toolbar.setTitle("Undangan");
-                        setSupportActionBar(toolbar);
+                    case R.id.nav_admin_logout:
+                        finish();
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        intent.putExtra("message","logout");
+                        startActivity(intent);
+                        return false;
                     case R.id.nav_admin_member:
                         setFragment(membersFragment);
                         toolbar.setVisibility(View.VISIBLE);
@@ -316,5 +319,12 @@ public class AdminContent extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
             }
         }
+    }
+    @Override
+    public void onBackPressed() {
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
     }
 }

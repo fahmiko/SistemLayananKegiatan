@@ -43,6 +43,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.MyViewHo
     public MembersAdapter(List<Users> myList, Context context) {
         this.myList = myList;
         this.context = context;
+        this.myListFiltered = myList;
     }
 
     // Create new views (invoked by the layout manager)
@@ -96,7 +97,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.MyViewHo
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                myListFiltered = (ArrayList<Users>) results.values;
+                myListFiltered = (List<Users>) results.values;
                 notifyDataSetChanged();
             }
         };
