@@ -3,15 +3,18 @@ package com.ta.slk.sistemlayanankegiatan;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +30,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.dd.CircularProgressButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -54,7 +58,7 @@ import retrofit2.Response;
 public class AddInvitation extends AppCompatActivity {
     DatePickerDialog datePickerDialog;
     SimpleDateFormat simpleDateFormat;
-    Button button;
+    CircularProgressButton button;
     String textDialog;
     TextInputEditText name,contact,description,day,location,clock;
     TextInputEditText upload;
@@ -67,7 +71,10 @@ public class AddInvitation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_invitation);
 
+
         initComponents();
+        button.setText("Tambah Kegiatan");
+        button.setIdleText("Tambah KEGIATAN");
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,77 +237,75 @@ public class AddInvitation extends AppCompatActivity {
         upload = findViewById(R.id.insert_image);
         button = findViewById(R.id.btn_add);
         clock = findViewById(R.id.name_clock);
-
     }
 
     private void postData(){
-        ApiInterface mApiInterface = ApiClient.getClient().create(ApiInterface.class);
+        if(name.getText().toString().equals("")){
+            name.setError("judul kegiatan belum di isi");
+        }else if(day.getText().toString().equals("")){
+            day.setError("tanggal kegiatan belum ter isi");
+        }else if(clock.getText().toString().equals("")){
+            clock.setError("jam kegiatan belum ter isi");
+        }else if(description.getText().toString().equals("")){
+            description.setError("deskripsi kegiatan belum ter isi");
+        }else if(imagePath.equals("")){
+            upload.setError("gambar belum dipilih");
+        }else {
+            button.setIndeterminateProgressMode(true);
+            button.setProgress(1);
+            ApiInterface mApiInterface = ApiClient.getClient().create(ApiInterface.class);
+            MultipartBody.Part body = null;
+            if (!imagePath.isEmpty()) {
+                File file = new File(imagePath);
 
-        MultipartBody.Part body = null;
-        if (!imagePath.isEmpty()){
-            File file = new File(imagePath);
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), file);
 
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), file);
+                body = MultipartBody.Part.createFormData("picture", file.getName(),
+                        requestFile);
+            }
 
-            body = MultipartBody.Part.createFormData("picture", file.getName(),
-                    requestFile);
-        }
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference().getRoot();
+            final String key = reference.push().getKey();
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().getRoot();
-        final String key = reference.push().getKey();
+            String dateTime = day.getText().toString() + " " + clock.getText().toString();
 
-        String dateTime = day.getText().toString()+" "+clock.getText().toString();
+            RequestBody reqName = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                    (name.getText().toString().isEmpty()) ? "" : name.getText().toString());
+            RequestBody reqCreated = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                    "1");
+            RequestBody reqDate = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                    dateTime);
+            RequestBody reqLocation = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                    (location.getText().toString().isEmpty()) ? "" : location.getText().toString());
+            RequestBody reqDesription = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                    (description.getText().toString().isEmpty()) ? "" : description.getText().toString());
+            RequestBody reqContact = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                    (contact.getText().toString().isEmpty()) ? "" : contact.getText().toString());
+            RequestBody reqKey = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                    key);
 
-        RequestBody reqName = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                (name.getText().toString().isEmpty())?"":name.getText().toString());
-        RequestBody reqCreated = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                "1");
-        RequestBody reqDate = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                dateTime);
-        RequestBody reqLocation = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                (location.getText().toString().isEmpty())?"":location.getText().toString());
-        RequestBody reqDesription = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                (description.getText().toString().isEmpty())?"":description.getText().toString());
-        RequestBody reqContact = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                (contact.getText().toString().isEmpty())?"":contact.getText().toString());
-        RequestBody reqKey = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                key);
-
-        Call<PostData> mPostActivity;
-        mPostActivity = mApiInterface.postActivity(body,reqName,reqCreated,reqLocation,reqContact,reqDate,reqDesription,reqKey);
-        mPostActivity.enqueue(new Callback<PostData>() {
-            @Override
-            public void onResponse(Call<PostData> call, Response<PostData> response) {
-                if(response.body().getStatus().equals("success")){
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                    Map<String,Object> map = new HashMap<>();
-                    map.put(key,"");
-                    reference.updateChildren(map);
-                    finish();
+            Call<PostData> mPostActivity;
+            mPostActivity = mApiInterface.postActivity(body, reqName, reqCreated, reqLocation, reqContact, reqDate, reqDesription, reqKey);
+            mPostActivity.enqueue(new Callback<PostData>() {
+                @Override
+                public void onResponse(Call<PostData> call, Response<PostData> response) {
+                    if (response.body().getStatus().equals("success")) {
+                        button.setProgress(100);
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                        Map<String, Object> map = new HashMap<>();
+                        map.put(key, "");
+                        reference.updateChildren(map);
+                        finish();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<PostData> call, Throwable t) {
-                
-            }
-        });
-
-    }
-
-    private String initTextDialog(String msg){
-        AlertDialog.Builder builder = new AlertDialog.Builder(AddInvitation.this);
-        final EditText editText = new EditText(AddInvitation.this);
-        editText.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setTitle("Tambah Kegiatan").setView(editText).setMessage(msg);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                textDialog = editText.getText().toString();
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-        return textDialog;
+                @Override
+                public void onFailure(Call<PostData> call, Throwable t) {
+                    button.setProgress(-1);
+                    button.setProgress(0);
+                    Toast.makeText(getApplicationContext(),"Cek koneksi interner",Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

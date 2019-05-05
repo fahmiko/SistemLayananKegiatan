@@ -105,6 +105,7 @@ public class GroupsFragment extends Fragment{
             public void onClick(View v, int position) {
                 Intent intent = new Intent(getContext(), DetailGroups.class);
                 intent.putExtra("id_group",groupsList.get(position).getIdGroup());
+                intent.putExtra("admin",groupsList.get(position).getCreatedBy());
                 intent.putExtra("name",groupsList.get(position).getName());
                 intent.putExtra("description",groupsList.get(position).getDescription());
                 intent.putExtra("picture",groupsList.get(position).getPhotoGroup());
@@ -189,7 +190,6 @@ public class GroupsFragment extends Fragment{
     private void loadData(){
         loadUsers();
         progressBar.setVisibility(View.VISIBLE);
-        refreshLayout.setRefreshing(true);
         Call<GetGroups> call = service.getGroups();
         call.enqueue(new Callback<GetGroups>() {
             @Override

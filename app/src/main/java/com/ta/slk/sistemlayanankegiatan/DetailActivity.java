@@ -48,6 +48,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class DetailActivity extends AppCompatActivity {
 
     /**
@@ -74,15 +76,6 @@ public class DetailActivity extends AppCompatActivity {
 
         activity = getIntent().getBundleExtra("activity");
         initComponents();
-        location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri gmmIntentUri = Uri.parse("google.navigation:q="+activity.getString("place"));
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                startActivity(mapIntent);
-            }
-        });
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
@@ -99,7 +92,7 @@ public class DetailActivity extends AppCompatActivity {
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        RoundedImageView imageView = findViewById(R.id.img_mini);
+        CircleImageView imageView = findViewById(R.id.img_mini);
 
         Glide.with(getApplicationContext()).load(ApiClient.BASE_URL+"uploads/"+activity.getString("picture")).into(imageView);
     }

@@ -7,6 +7,7 @@
     <color name="colorDark">#000000</color>
     <!--<color name="colorAccent">#FF4081</color>-->
     <color name="graylight">#fafafa</color>
+    <color name="graydark">#D1D1D1</color>
     <color name="startblue">#09c6df</color>
     <color name="endblue">#0bcce6</color>
     <color name="colorAccent">#4CAF50</color>

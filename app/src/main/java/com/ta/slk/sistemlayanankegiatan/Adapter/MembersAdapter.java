@@ -1,5 +1,6 @@
 package com.ta.slk.sistemlayanankegiatan.Adapter;
 import com.bumptech.glide.Glide;
+import com.ta.slk.sistemlayanankegiatan.Activity.UserActivity;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
 import android.content.Context;
 import com.ta.slk.sistemlayanankegiatan.R;
@@ -25,15 +26,23 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.MyViewHo
     private List<Users> myList;
     private List<Users> myListFiltered;
 
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private TextView nip,name;
-//        private ImageView image;
+
+        //        private ImageView image;
         public MyViewHolder(View v) {
             super(v);
             nip = itemView.findViewById(R.id.phone);
             name = itemView.findViewById(R.id.name);
 //            image = itemView.findViewById(R.id.thumbnail);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    listener.onMemberSelected(myListFiltered.get(getAdapterPosition()));
+                }
+            });
         }
     }
 
@@ -58,8 +67,9 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        holder.nip.setText(myList.get(position).getIdEmployee());
-        holder.name.setText(myList.get(position).getName());
+        final Users users = myListFiltered.get(position);
+        holder.nip.setText(users.getIdEmployee());
+        holder.name.setText(users.getName());
 //        if (myList.get(position).getPhotoProfile() != null) {
 //            Glide.with(holder.itemView.getContext()).load(ApiClient.BASE_URL+"uploads/"+myList.get
 //                    (position).getPhotoProfile())
@@ -70,7 +80,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.MyViewHo
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return myList.size();
+        return myListFiltered.size();
     }
 
     @Override
@@ -84,7 +94,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.MyViewHo
                 }else{
                     List<Users> filteredList = new ArrayList<>();
                     for (Users row : myList){
-                        if(row.getName().toLowerCase().contains(charString.toLowerCase())){
+                        if(row.getName().toLowerCase().contains(charString.toLowerCase()) || row.getIdEmployee().contains(charString)){
                             filteredList.add(row);
                         }
                     }
@@ -97,13 +107,13 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.MyViewHo
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                myListFiltered = (List<Users>) results.values;
+                myListFiltered = (ArrayList<Users>) results.values;
                 notifyDataSetChanged();
             }
         };
     }
 
-
-
-
+    public List<Users> getUsersFiltered(){
+        return myListFiltered;
+    }
 }

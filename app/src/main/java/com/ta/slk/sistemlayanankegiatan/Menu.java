@@ -80,7 +80,7 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(intent);
         } else if (id == R.id.logout) {
             Session session = Application.getSession();
-            session.logout(1);
+            session.logout(0);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

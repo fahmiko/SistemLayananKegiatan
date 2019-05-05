@@ -1,7 +1,5 @@
-package com.ta.slk.sistemlayanankegiatan;
+package com.ta.slk.sistemlayanankegiatan.Activity;
 
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,10 +18,9 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
-import com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitationAccept;
-import com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitationRejected;
+import com.ta.slk.sistemlayanankegiatan.R;
 
-public class UserInvitation extends AppCompatActivity {
+public class Guide extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -43,22 +40,13 @@ public class UserInvitation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_invitation);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+        setContentView(R.layout.activity_guide);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().show();
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
     }
 
     /**
@@ -85,6 +73,15 @@ public class UserInvitation extends AppCompatActivity {
             fragment.setArguments(args);
             return fragment;
         }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_guide, container, false);
+            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            return rootView;
+        }
     }
 
     /**
@@ -99,35 +96,9 @@ public class UserInvitation extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            switch (position){
-                case 0:
-                    com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitation invitation = new com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitation();
-                    return invitation;
-                case 1:
-                    UserInvitationAccept userInvitationAccept = new UserInvitationAccept();
-                    return userInvitationAccept;
-                case 2:
-                    UserInvitationRejected userInvitationRejected = new UserInvitationRejected();
-                    return userInvitationRejected;
-                    default:
-                        return null;
-
-            }
-        }
-
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position){
-                case 0:
-                    return "Menuggu";
-                case 1:
-                    return "Diterima";
-                case 2:
-                    return "Ditolak";
-                    default:
-                        return "";
-            }
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            return PlaceholderFragment.newInstance(position + 1);
         }
 
         @Override
@@ -135,11 +106,5 @@ public class UserInvitation extends AppCompatActivity {
             // Show 3 total pages.
             return 3;
         }
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return true;
     }
 }

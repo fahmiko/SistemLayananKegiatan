@@ -18,15 +18,20 @@
     <application
         android:name=".Method.Application"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/calendar"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/calendar"
         android:supportsRtl="true"
         android:theme="@style/PrimaryTheme">
-        <activity android:name=".Activity.UserActivity"></activity>
+        <activity
+            android:name=".Activity.Guide"
+            android:label="@string/title_activity_guide"
+            android:theme="@style/PrimaryTheme.NoActionBar"></activity>
+        <activity android:name=".Activity.UserActivity"
+            android:theme="@style/CustomToolbar"/>
         <activity
             android:name=".Activity.Register"
-            android:theme="@style/PrimaryTheme"></activity>
+            android:theme="@style/PrimaryTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -42,7 +47,7 @@
         <activity
             android:name=".UserInvitation"
             android:label="@string/title_activity_user_invitation"
-            android:theme="@style/PrimaryTheme.NoActionBar" />
+            android:theme="@style/CustomToolbar" />
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
@@ -64,8 +69,9 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".Activity.ProfileUser"
-            android:theme="@style/PrimaryTheme.NoActionBar"/>
+        <activity
+            android:name=".Activity.ProfileUser"
+            android:theme="@style/PrimaryTheme.NoActionBar" />
         <activity
             android:name=".Activity.LoginActivity"
             android:label="@string/title_activity_login"
@@ -73,11 +79,15 @@
         <activity
             android:name=".Activity.MyGroups"
             android:label="Groups"
-            android:theme="@style/PrimaryTheme" />
+            android:theme="@style/CustomToolbar" />
         <activity
             android:name=".MainActivity"
+            android:label="Groups"
+            android:theme="@style/CustomToolbar" />
+        <activity
+            android:name=".Activity.SplashScreen"
             android:label="@string/app_name"
-            android:theme="@style/CustomToolbar">
+            android:theme="@style/PrimaryTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

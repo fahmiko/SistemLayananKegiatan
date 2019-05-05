@@ -298,7 +298,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
-                Toast.makeText(getContext(),"Cek koneksi interner",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(),"Cek koneksi interner",Toast.LENGTH_SHORT).show();
             }
         });
     }

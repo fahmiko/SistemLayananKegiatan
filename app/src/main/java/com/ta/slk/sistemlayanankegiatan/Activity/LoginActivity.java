@@ -1,5 +1,6 @@
 package com.ta.slk.sistemlayanankegiatan.Activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -8,15 +9,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.dd.CircularProgressButton;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
@@ -48,12 +53,15 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity{
     TextInputEditText username,password;
-    Button btn_login,btn_register;
+    CircularProgressButton btn_login;
+    Button btn_register;
+    private static final int READ_STORAGE_PERMISSIONS_REQUEST = 0;
     private String TAG = "Pesan Login";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        galleryPermition();
         String msg = getIntent().getStringExtra("message");
         if(msg != null){
             Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
@@ -68,9 +76,15 @@ public class LoginActivity extends AppCompatActivity{
         password = findViewById(R.id.password);
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_register);
+
+        btn_login.setText("Login");
+        btn_login.setIdleText("Login");
+
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btn_login.setIndeterminateProgressMode(true);
+                btn_login.setProgress(1);
                 Login();
             }
         });
@@ -149,6 +163,7 @@ public class LoginActivity extends AppCompatActivity{
 //                Toast.makeText(getApplicationContext(),response.body().getToken(),Toast.LENGTH_SHORT).show();
                 if(response.code()==200){
                     if(response.body().getStatus().equals("success")){
+                        btn_login.setProgress(100);
                         Session session = Application.getSession();
                         String id_user = response.body().getResult().get(0).getIdUser();
                         String username = response.body().getResult().get(0).getUsername();
@@ -161,9 +176,14 @@ public class LoginActivity extends AppCompatActivity{
                         String level = response.body().getResult().get(0).getLevel();
                         session.saveCredentials(id_user,name,username,photo,id_member,email,telp,level,token);
                         finish();
-                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(i);
+                        if(session.isAdmin()){
+                            startActivity(new Intent(getApplicationContext(), AdminContent.class));
+                        }else{
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        }
                     }else{
+                        btn_login.setProgress(-1);
+                        btn_login.setProgress(0);
                         username.setError("invalid");
                         password.setError("invalid");
                     }
@@ -177,5 +197,40 @@ public class LoginActivity extends AppCompatActivity{
         });
 
 
+    }
+    private void galleryPermition(){
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        READ_STORAGE_PERMISSIONS_REQUEST);
+            }
+        } else {
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case READ_STORAGE_PERMISSIONS_REQUEST: {
+
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+
+                }
+                return;
+            }
+
+        }
     }
 }

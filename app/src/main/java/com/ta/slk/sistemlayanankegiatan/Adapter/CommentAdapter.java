@@ -60,11 +60,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
         holder.comment.setText(myList.get(position).getComment());
         holder.date.setText(myList.get(position).getDate());
         holder.name.setText(myList.get(position).getName());
-        if (myList.get(position).getPhoto() != "") {
-            Glide.with(holder.itemView.getContext()).load(ApiClient.BASE_URL+"uploads/"+myList.get
+            Glide.with(holder.itemView.getContext()).load(ApiClient.BASE_URL+"uploads/members/"+myList.get
                     (position).getPhoto())
                     .into(holder.image);
-        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

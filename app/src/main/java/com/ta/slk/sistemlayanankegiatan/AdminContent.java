@@ -82,13 +82,13 @@ public class AdminContent extends AppCompatActivity {
 //        getTimeAgo();
 
         toolbar = findViewById(R.id.my_toolbar);
+        toolbar.setNavigationIcon(R.drawable.common_google_signin_btn_icon_dark_normal);
 //        Drawable drawable;
 //        SharedPreferences preferences = this.getSharedPreferences("login",MODE_PRIVATE);
 //        String url = preferences.getString("photo",null);
 //        ImageView imageView = findViewById(R.id.img_visi);
 //        Glide.with(getApplicationContext()).load(url).into(imageView);
 //        drawable = imageView.getDrawable();
-        toolbar.setNavigationIcon(R.drawable.common_google_signin_btn_icon_dark_normal);
 
         toolbar.setTitle("Kegiatan");
         setSupportActionBar(toolbar);

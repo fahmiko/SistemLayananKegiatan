@@ -20,16 +20,14 @@
     <ImageView
         android:id="@+id/img_detail"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="35dp"
         android:fitsSystemWindows="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/detail_img2"/>
+        android:scaleType="centerCrop"/>
 
-        <com.github.siyamed.shapeimageview.RoundedImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/img_mini"
             android:layout_marginTop="-30dp"
             android:layout_width="120dp"
-            app:siRadius="20dp"
             android:layout_marginLeft="10dp"
             android:layout_below="@id/img_detail"
             android:src="@drawable/drawer_background"
@@ -99,7 +97,7 @@
             android:layout_marginLeft="80dp"
             android:layout_toEndOf="@id/img_mini"
             android:text="Jl Soekarno Hatta No 10"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/textPrimary"/>
 
     <TextView
         android:id="@+id/dt_date"
@@ -132,6 +130,9 @@
         android:background="@android:color/background_light"
         android:layout_below="@id/dt_v"
         android:id="@+id/appbar"
+        android:fitsSystemWindows="true"
+        app:contentScrim="?attr/colorPrimary"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/PrimaryTheme.AppBarOverlay">

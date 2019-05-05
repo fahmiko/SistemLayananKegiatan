@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ta.slk.sistemlayanankegiatan.R;
@@ -72,6 +74,9 @@ public class MembersFragment extends Fragment{
         mRecyclerView = view.findViewById(R.id.recycler_content);
         progressBar = view.findViewById(R.id.progress_bar);
         refreshLayout = view.findViewById(R.id.swipe_refresh);
+        listUsers = new ArrayList<>();
+        adapter = new MembersAdapter(listUsers,getContext());
+        mRecyclerView.setAdapter(adapter);
         fragment = this;
 
         mRecyclerView.addItemDecoration(new MyDividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL,36));
@@ -89,6 +94,7 @@ public class MembersFragment extends Fragment{
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), mRecyclerView, new ClickListenner() {
             @Override
             public void onClick(View v, final int position) {
+                final List<Users> filtered = adapter.getUsersFiltered();
                 CharSequence[] sequence = {"Ganti Role","Hapus Member"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Opsi Member");
@@ -97,10 +103,10 @@ public class MembersFragment extends Fragment{
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case 0:
-                                if(!listUsers.get(position).getLevel().isEmpty()){
-                                    showSwitch(listUsers.get(position).getIdMember(),listUsers.get(position).getLevel());
+                                if(filtered.get(position).getLevel() != null){
+                                    showSwitch(filtered.get(position).getIdMember(),filtered.get(position).getLevel());
                                 }else{
-                                    Toast.makeText(getContext(),"User Belum Mendaftar",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(),"User Belum Mendaftar ",Toast.LENGTH_SHORT).show();
                                 }
                                 break;
                             case 1:
@@ -190,10 +196,10 @@ public class MembersFragment extends Fragment{
             @Override
             public void onResponse(Call<GetUsers> call, Response<GetUsers> response) {
                 if(response.code() == 200){
-                    listUsers = response.body().getResult();
-                    adapter = new MembersAdapter(listUsers,getContext());
+                    listUsers.clear();
+                    listUsers.addAll(response.body().getResult());
                     progressBar.setVisibility(View.GONE);
-                    mRecyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }else{
                     progressBar.setVisibility(View.GONE);
                     Snackbar.make(getView(),"NO DATA",Snackbar.LENGTH_LONG).setAction("retry", new View.OnClickListener() {
@@ -222,6 +228,7 @@ public class MembersFragment extends Fragment{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.search_menu, menu);
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.app_bar_search)
@@ -232,17 +239,16 @@ public class MembersFragment extends Fragment{
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(getContext(),query,Toast.LENGTH_LONG).show();
                 adapter.getFilter().filter(query);
-                mRecyclerView.setAdapter(adapter);
-                return true;
+//                adapter.notifyDataSetChanged();
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
-                mRecyclerView.setAdapter(adapter);
-                return true;
+//                adapter.notifyDataSetChanged();
+                return false;
             }
         });
     }

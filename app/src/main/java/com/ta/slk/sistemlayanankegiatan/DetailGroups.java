@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -21,32 +22,43 @@ import com.ta.slk.sistemlayanankegiatan.Rest.ApiGroups;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DetailGroups extends AppCompatActivity {
-    TextView description, title;
-    CollapsingToolbarLayout toolbarLayout;
+    TextView description, title, admin;
+    CircleImageView imgGroup;
     RecyclerView recyclerView;
+    ImageButton back;
     ApiGroups apiGroups;
     List<Users> usersList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_groups);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getIntent().getStringExtra("name"));
-        getSupportActionBar().show();
 
         apiGroups = ApiClient.getClient().create(ApiGroups.class);
-        toolbarLayout = findViewById(R.id.toolbar_layout);
+        title = findViewById(R.id.group_title);
+        admin = findViewById(R.id.group_admin);
+        imgGroup  = findViewById(R.id.img_group);
         description = findViewById(R.id.text_description);
+        back = findViewById(R.id.btn_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        admin.setText("Admin :"+getIntent().getStringExtra("admin"));
+        title.setText(getIntent().getStringExtra("name"));
         description.setText(getIntent().getStringExtra("description"));
         recyclerView = findViewById(R.id.recycler_content);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        Glide.with(getApplicationContext())
+                .load(ApiClient.BASE_URL+"uploads/groups/"+getIntent().getStringExtra("picture"))
+                .into(imgGroup);
         loadData();
     }
 

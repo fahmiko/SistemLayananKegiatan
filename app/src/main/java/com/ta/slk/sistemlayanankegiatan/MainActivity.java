@@ -28,29 +28,14 @@ public class MainActivity extends Menu{
     ApiMembers service;
     TextView invitation, activities, documentation,groups;
     String[] dataServer;
-    private static final int READ_STORAGE_PERMISSIONS_REQUEST = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        galleryPermition();
-        session = Application.getSession();
-
-        if(session.getToken()!=null){
-            if(session.isAdmin()){
-                finish();
-                Intent intent = new Intent(getApplicationContext(),AdminContent.class);
-                startActivity(intent);
-            }else{
-                getMenu();
-                initComponents();
-                getData();
-            }
-        }else{
-            finish();
-            session.logout(1);
-        }
+        getMenu();
+        initComponents();
+        getData();
     }
 
     private void getData() {
@@ -90,42 +75,6 @@ public class MainActivity extends Menu{
         a.addCategory(Intent.CATEGORY_HOME);
         a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(a);
-    }
-
-    private void galleryPermition(){
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        READ_STORAGE_PERMISSIONS_REQUEST);
-            }
-        } else {
-
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case READ_STORAGE_PERMISSIONS_REQUEST: {
-
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                } else {
-
-                }
-                return;
-            }
-
-        }
     }
 
 }

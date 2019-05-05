@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mountain_vector">
+
+    <ImageView
+        android:id="@+id/img_log2o"
+        android:layout_marginTop="150dp"
+        android:layout_width="258dp"
+        android:layout_height="244dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/polinema_logo" />
+
+    <TextView
+        android:layout_below="@id/img_log2o"
+        android:layout_width="325dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif-light"
+        android:text="LAYANAN KEGIATAN "
+        android:textColor="@color/colorLight"
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

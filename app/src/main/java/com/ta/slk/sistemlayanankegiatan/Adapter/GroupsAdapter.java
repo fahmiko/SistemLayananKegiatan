@@ -27,7 +27,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.MyViewHold
         public MyViewHolder(View v) {
             super(v);
             name = itemView.findViewById(R.id.name_group);
-            image = itemView.findViewById(R.id.image_group);
+            image = itemView.findViewById(R.id.img_group);
             count = itemView.findViewById(R.id.count_group);
         }
     }

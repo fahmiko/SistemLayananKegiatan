@@ -8,56 +8,46 @@
     android:layout_margin="8dp">
 
     <android.support.v7.widget.CardView
-        android:layout_width="170dp"
-        app:cardBackgroundColor="@color/colorPrimary"
-        android:layout_height="199dp"
-        app:cardCornerRadius="6dp"
-        app:cardElevation="2dp"
-        app:cardUseCompatPadding="true">
-
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:id="@+id/bankcardId"
+        android:layout_width="160dp"
+        android:layout_height="190dp"
+        android:layout_margin="10dp">
         <LinearLayout
-            android:layout_margin="2sp"
-            android:background="@color/colorLight"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
+            android:orientation="vertical"
+            android:gravity="center">
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_group"
-                android:layout_marginTop="1sp"
-                android:layout_width="match_parent"
-                android:layout_height="111dp"
-                android:src="@drawable/polinema_logo" />
-
+                android:id="@+id/img_group"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/cerclegray"
+                android:src="@drawable/polinema_logo"
+                android:padding="5dp"/>
             <TextView
                 android:id="@+id/name_group"
-                android:layout_marginTop="4dp"
-                android:textSize="17dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/textPrimary"
-                android:fontFamily="sans-serif-condensed"
-                android:text="Group 1" />
-
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Group"/>
             <View
                 android:layout_width="match_parent"
-                android:layout_margin="3dp"
-                android:layout_height="1px"
-                android:background="@android:color/darker_gray" />
-
+                android:layout_height="1dp"
+                android:background="@color/graylight"
+                android:layout_margin="10dp"/>
             <TextView
                 android:id="@+id/count_group"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:textAlignment="center"
-                android:gravity="center_vertical"
-                android:text="Count"
-                android:textAllCaps="false"
-                android:textColor="@color/textSecondary" />
-        </LinearLayout>
+                android:gravity="center"
+                android:text="Anggota 0"
+                android:padding="5dp"
+                android:textColor="@android:color/darker_gray"/>
 
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 
 </LinearLayout>

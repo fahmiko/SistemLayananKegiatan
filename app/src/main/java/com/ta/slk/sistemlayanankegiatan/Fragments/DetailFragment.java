@@ -1,6 +1,8 @@
 package com.ta.slk.sistemlayanankegiatan.Fragments;
 
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,6 +37,7 @@ import retrofit2.Response;
 public class DetailFragment extends Fragment {
     TextView detail;
     Bundle bundle;
+    ImageButton place;
     RecyclerView recyclerView,recyclerView2;
     RecyclerView.Adapter adapter,adapter2;
     List<Users> usersList,usersList2;
@@ -45,9 +49,9 @@ public class DetailFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        LayoutInflater layoutInflater = getLayoutInflater();
         View view =  inflater.inflate(R.layout.fragment_detail,container,false);
         detail = view.findViewById(R.id.dt_detail);
+        place = view.findViewById(R.id.btn_place);
         recyclerView = view.findViewById(R.id.recycler_member);
         recyclerView2 = view.findViewById(R.id.recycler_pending);
         recyclerView2.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -56,6 +60,15 @@ public class DetailFragment extends Fragment {
         service = ApiClient.getClient().create(ApiMembers.class);
         loadDataMembers();
         loadDataPending();
+        place.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri gmmIntentUri = Uri.parse("google.navigation:q="+bundle.getString("place"));
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new ClickListenner() {
             @Override
             public void onClick(View v, int position) {

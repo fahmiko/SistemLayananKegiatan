@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.dd.CircularProgressButton;
 import com.ta.slk.sistemlayanankegiatan.Model.GetUsers;
 import com.ta.slk.sistemlayanankegiatan.Model.PostData;
 import com.ta.slk.sistemlayanankegiatan.Model.Users;
@@ -26,6 +27,7 @@ import com.ta.slk.sistemlayanankegiatan.Rest.ApiMembers;
 
 import java.io.File;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -36,9 +38,8 @@ import retrofit2.Response;
 public class Register extends AppCompatActivity {
     String id_member, name, action, imagePath;
     TextInputEditText txt_name,txt_username,txt_password,txt_address,txt_email,txt_phone;
-    ImageButton upload;
-    Button button;
-    ImageView profile;
+    CircleImageView upload;
+    CircularProgressButton button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 doUpdate();
+                button.setProgress(0);
             }
         });
     }
@@ -71,8 +73,6 @@ public class Register extends AppCompatActivity {
         id_member = getIntent().getStringExtra("id_member");
         name = getIntent().getStringExtra("name");
         action = getIntent().getStringExtra("action");
-        getSupportActionBar().setTitle(action);
-        getSupportActionBar().show();
 
         txt_name = findViewById(R.id.re_name);
         txt_username = findViewById(R.id.re_username);
@@ -81,62 +81,85 @@ public class Register extends AppCompatActivity {
         txt_email= findViewById(R.id.re_email);
         txt_phone = findViewById(R.id.re_call);
         upload = findViewById(R.id.btn_upload);
-        profile = findViewById(R.id.img_profile);
         button = findViewById(R.id.btn_save);
 
         if(action.equals("Register")){
             txt_name.setText(name);
         }
+
+        button.setText("SUBMIT");
+        button.setIdleText("SUBMIT");
     }
 
     private void doUpdate(){
-        MultipartBody.Part body = null;
-        if (!imagePath.isEmpty()){
-            File file = new File(imagePath);
-
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), file);
-
-            body = MultipartBody.Part.createFormData("picture", file.getName(),
-                    requestFile);
-        }
-
-        RequestBody reqName = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                (txt_name.getText().toString().isEmpty())?"":txt_name.getText().toString());
-        RequestBody reqId = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                id_member);
-        RequestBody reqUsername = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                (txt_username.getText().toString().isEmpty())?"":txt_username.getText().toString());
-        RequestBody reqPassword = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                (txt_password.getText().toString().isEmpty())?"":txt_password.getText().toString());
-        RequestBody reqAddress = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                (txt_address.getText().toString().isEmpty())?"":txt_address.getText().toString());
-        RequestBody reqContact = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                (txt_phone.getText().toString().isEmpty())?"":txt_phone.getText().toString());
-        RequestBody reqEmail = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                (txt_email.getText().toString().isEmpty())?"":txt_email.getText().toString());
-        RequestBody Reqaction = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                action);
-
-        ApiMembers members = ApiClient.getAuth().create(ApiMembers.class);
-        Call<PostData> call = members.registerMember(body,reqId,reqName,reqUsername,reqPassword,reqAddress,reqContact,reqEmail,Reqaction);
-
-        call.enqueue(new Callback<PostData>() {
-            @Override
-            public void onResponse(Call<PostData> call, Response<PostData> response) {
-                if(response.code()==200){
-                    if(response.body().getStatus().equals("success")){
-                        Toast.makeText(getApplicationContext(),"Update sukses",Toast.LENGTH_LONG).show();
-                    }
+        if(txt_name.getText().toString().equals("")){
+            txt_name.setError("nama belum diisi");
+        }else if(txt_address.getText().toString().equals("")){
+            txt_address.setError("alamat belum diisi");
+        }else if(txt_email.getText().toString().equals("")){
+            txt_email.setError("email belum diisi");
+        }else if(txt_phone.getText().toString().equals("")){
+            txt_phone.setError("no hp belum diisi");
+        }else if(imagePath.equals("")){
+            Toast.makeText(getApplicationContext(),"Gambar belum dipilih",Toast.LENGTH_SHORT).show();
+        }else {
+            if(action.equals("Register")) {
+                if (txt_username.getText().toString().equals("")) {
+                    txt_username.setError("username belum diisi");
+                } else if (txt_password.getText().toString().equals("")) {
+                    txt_password.setError("password belum diisi");
                 }
             }
+            button.setIndeterminateProgressMode(true);
+            button.setProgress(1);
+            MultipartBody.Part body = null;
+                if (!imagePath.isEmpty()) {
+                    File file = new File(imagePath);
 
-            @Override
-            public void onFailure(Call<PostData> call, Throwable t) {
-                finish();
-            }
-        });
+                    RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), file);
 
+                    body = MultipartBody.Part.createFormData("picture", file.getName(),
+                            requestFile);
+                }
+                RequestBody reqName = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                        (txt_name.getText().toString().isEmpty()) ? "" : txt_name.getText().toString());
+                RequestBody reqId = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                        id_member);
+                RequestBody reqUsername = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                        (txt_username.getText().toString().isEmpty()) ? "" : txt_username.getText().toString());
+                RequestBody reqPassword = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                        (txt_password.getText().toString().isEmpty()) ? "" : txt_password.getText().toString());
+                RequestBody reqAddress = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                        (txt_address.getText().toString().isEmpty()) ? "" : txt_address.getText().toString());
+                RequestBody reqContact = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                        (txt_phone.getText().toString().isEmpty()) ? "" : txt_phone.getText().toString());
+                RequestBody reqEmail = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                        (txt_email.getText().toString().isEmpty()) ? "" : txt_email.getText().toString());
+                RequestBody Reqaction = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                        action);
 
+                ApiMembers members = ApiClient.getAuth().create(ApiMembers.class);
+                Call<PostData> call = members.registerMember(body, reqId, reqName, reqUsername, reqPassword, reqAddress, reqContact, reqEmail, Reqaction);
+
+                call.enqueue(new Callback<PostData>() {
+                    @Override
+                    public void onResponse(Call<PostData> call, Response<PostData> response) {
+                        if (response.code() == 200) {
+                            if (response.body().getStatus().equals("success")) {
+                                button.setProgress(100);
+                                Toast.makeText(getApplicationContext(), "Update sukses", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostData> call, Throwable t) {
+                        button.setProgress(100);
+                        finish();
+                    }
+                });
+        }
     }
 
     @Override
@@ -155,7 +178,7 @@ public class Register extends AppCompatActivity {
                 imagePath = cursor.getString(columnIndex);
 
 //                Picasso.with(getApplicationContext()).load(new File(imagePath)).fit().into(mImageView);
-                Glide.with(getApplicationContext()).load(new File(imagePath)).into(profile);
+                Glide.with(getApplicationContext()).load(new File(imagePath)).into(upload);
                 cursor.close();
             } else {
                 Toast.makeText(getApplicationContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
@@ -178,7 +201,7 @@ public class Register extends AppCompatActivity {
                         txt_email.setText(response.body().getResult().get(0).getEmail());
                         txt_phone.setText(response.body().getResult().get(0).getPhoneNumber());
                         Glide.with(getApplicationContext()).load(ApiClient.BASE_URL+"/uploads/members/"+
-                                response.body().getResult().get(0).getPhotoProfile()).into(profile);
+                                response.body().getResult().get(0).getPhotoProfile()).into(upload);
                     }
                 }
             }

@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:background="@drawable/cardborder_true"
         card_view:cardCornerRadius="5dp"
-        card_view:cardElevation="5dp"
         card_view:cardUseCompatPadding="true">
 
         <RelativeLayout

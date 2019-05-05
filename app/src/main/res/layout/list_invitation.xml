@@ -20,7 +20,7 @@
             <View
                 android:id="@+id/line_indicator"
                 android:background="@color/mateGreen"
-                android:layout_width="5dp"
+                android:layout_width="8dp"
                 android:layout_height="match_parent"/>
 
             <TextView
@@ -44,7 +44,6 @@
                 android:id="@+id/v_inv"
                 android:layout_marginLeft="80dp"
                 android:layout_marginVertical="15dp"
-                android:background="@color/textSecondary"
                 android:layout_width="1sp"
                 android:layout_height="match_parent"/>
             <TextView
