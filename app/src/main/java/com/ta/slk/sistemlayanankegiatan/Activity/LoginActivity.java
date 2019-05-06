@@ -76,7 +76,6 @@ public class LoginActivity extends AppCompatActivity{
         password = findViewById(R.id.password);
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_register);
-
         btn_login.setText("Login");
         btn_login.setIdleText("Login");
 
@@ -88,6 +87,7 @@ public class LoginActivity extends AppCompatActivity{
                 Login();
             }
         });
+
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,6 +164,7 @@ public class LoginActivity extends AppCompatActivity{
                 if(response.code()==200){
                     if(response.body().getStatus().equals("success")){
                         btn_login.setProgress(100);
+                        btn_login.setCompleteText("Success");
                         Session session = Application.getSession();
                         String id_user = response.body().getResult().get(0).getIdUser();
                         String username = response.body().getResult().get(0).getUsername();

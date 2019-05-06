@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ta.slk.sistemlayanankegiatan.Adapter.GroupsAdapter;
@@ -25,6 +27,7 @@ import com.ta.slk.sistemlayanankegiatan.Rest.ApiInterface;
 import java.security.acl.Group;
 import java.util.List;
 
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,7 +36,8 @@ public class MyGroups extends AppCompatActivity{
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     ProgressBar progressBar;
-    SwipeRefreshLayout refreshLayout;
+    WaveSwipeRefreshLayout refreshLayout;
+    public static MyGroups myGroups;
     Toolbar toolbar;
     ApiInterface service;
     List<Groups> groupsList;
@@ -41,18 +45,19 @@ public class MyGroups extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_group);
-        toolbar = findViewById(R.id.user_toolbar);
+        myGroups = this;
         refreshLayout = findViewById(R.id.swipe_refresh);
+        refreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorLight));
+        refreshLayout.setWaveColor(getResources().getColor(R.color.colorPrimary));
         progressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.recycler_content);
-        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().show();
 
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
         service = ApiClient.getClient().create(ApiInterface.class);
         loadData();
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        refreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 loadData();
@@ -76,7 +81,6 @@ public class MyGroups extends AppCompatActivity{
 
             }
         }));
-
     }
 
     private void initComponents() {
@@ -84,7 +88,7 @@ public class MyGroups extends AppCompatActivity{
         getSupportActionBar().show();
     }
 
-    private void loadData() {
+    public void loadData() {
         progressBar.setVisibility(View.VISIBLE);
         Call<GetGroups> call = service.getGroupsById("","groups");
         call.enqueue(new Callback<GetGroups>() {

@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.ta.slk.sistemlayanankegiatan.Adapter.InvitationAdapter;
 import com.ta.slk.sistemlayanankegiatan.Model.GetInvtActivities;
@@ -29,6 +31,7 @@ public class UserInvitationRejected extends Fragment{
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
+    ProgressBar progressBar;
     List<InvtActivities> activitiesList;
     @Nullable
     @Override
@@ -36,6 +39,7 @@ public class UserInvitationRejected extends Fragment{
         View view = inflater.inflate(R.layout.fragment_user_invitation,container,false);
         recyclerView = view.findViewById(R.id.recycler_content);
         layoutManager = new LinearLayoutManager(view.getContext());
+        progressBar = view.findViewById(R.id.progress_bar);
         recyclerView.setLayoutManager(layoutManager);
         refreshData(view);
         return view;
@@ -53,6 +57,10 @@ public class UserInvitationRejected extends Fragment{
                         activitiesList = response.body().getResult();
                         adapter = new InvitationAdapter(activitiesList,view.getContext());
                         recyclerView.setAdapter(adapter);
+                        progressBar.setVisibility(View.GONE);
+                    }else{
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(getContext(),"NO DATA",Toast.LENGTH_SHORT).show();
                     }
                 }
             }

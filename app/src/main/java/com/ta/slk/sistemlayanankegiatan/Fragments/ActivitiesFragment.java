@@ -52,6 +52,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
     MultiSelectDialog multiSelectDialog;
     View v;
     private String id_activity;
+    public static Fragment activityFragment;
 
     List<Groups> listGroups;
     List<Activities> listActivities;
@@ -72,7 +73,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
         progressBar = view.findViewById(R.id.progress_bar);
         refreshLayout = view.findViewById(R.id.swipe_refresh);
         refreshLayout.setOnRefreshListener(this);
-        
+        activityFragment = this;
 //        refreshLayout.setColorSchemeResources(R.color.colorAccent,
 //                android.R.color.holo_green_dark,
 //                android.R.color.holo_orange_dark,
@@ -165,7 +166,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
         });
     }
 
-    private void loadData(){
+    public void loadData(){
         ApiInterface mApiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<GetActivities> mGetActivity = mApiInterface.getActivities();
         mGetActivity.enqueue(new Callback<GetActivities>() {

@@ -62,23 +62,23 @@
     </RelativeLayout>
 
         <android.support.v7.widget.CardView
-            app:cardBackgroundColor="@color/colorPrimaryDark"
             android:layout_marginHorizontal="10dp"
-            app:cardCornerRadius="5dp"
+            app:cardCornerRadius="10dp"
             app:cardElevation="0dp"
+            android:padding="10dp"
             app:cardUseCompatPadding="true"
             android:layout_marginTop="50dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:background="@color/colorLight"
                 android:layout_margin="2sp"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_margin="10dp"
+                    android:textSize="16dp"
                     android:textColor="@color/textPrimary"
                     android:text="Deskripsi"
                     android:layout_width="wrap_content"
@@ -110,9 +110,11 @@
 
         <android.support.v7.widget.CardView
             android:layout_marginTop="20dp"
+            android:padding="10dp"
             android:layout_below="@id/card_description"
+            android:layout_margin="10dp"
             app:cardElevation="0dp"
-            app:cardCornerRadius="3dp"
+            app:cardCornerRadius="10dp"
             app:cardUseCompatPadding="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -138,8 +140,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </android.support.v7.widget.RecyclerView>
-
             </LinearLayout>
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_option"
+            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:background="@android:color/transparent"
+                android:id="@+id/action_group"
+                android:layout_gravity="center_vertical"
+                android:drawablePadding="20dp"
+                android:drawableTint="@color/mateRed"
+                android:drawableLeft="@drawable/ic_exit_to_app_black_24dp"
+                android:layout_margin="10dp"
+                android:textStyle="bold"
+                android:text="Keluar Grup"
+                android:textColor="@color/mateRed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
         </android.support.v7.widget.CardView>
 

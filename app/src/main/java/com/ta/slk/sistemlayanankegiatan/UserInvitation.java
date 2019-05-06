@@ -1,6 +1,9 @@
 package com.ta.slk.sistemlayanankegiatan;
 
+import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,7 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitationAccept;
 import com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitationRejected;
 
@@ -39,6 +44,10 @@ public class UserInvitation extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    Toolbar toolbar;
+    AppBarLayout appBarLayout;
+    TabLayout tabLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +55,14 @@ public class UserInvitation extends AppCompatActivity {
         setContentView(R.layout.activity_user_invitation);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+        appBarLayout = findViewById(R.id.app_bar_layout);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().show();
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
@@ -92,7 +99,6 @@ public class UserInvitation extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -109,8 +115,8 @@ public class UserInvitation extends AppCompatActivity {
                 case 2:
                     UserInvitationRejected userInvitationRejected = new UserInvitationRejected();
                     return userInvitationRejected;
-                    default:
-                        return null;
+                default:
+                    return null;
 
             }
         }
@@ -125,8 +131,8 @@ public class UserInvitation extends AppCompatActivity {
                     return "Diterima";
                 case 2:
                     return "Ditolak";
-                    default:
-                        return "";
+                default:
+                    return "";
             }
         }
 

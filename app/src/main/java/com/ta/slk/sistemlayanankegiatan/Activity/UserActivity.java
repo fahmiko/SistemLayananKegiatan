@@ -29,6 +29,7 @@ import retrofit2.Response;
 
 public class UserActivity extends AppCompatActivity {
     ApiInterface service;
+    public static UserActivity userActivity;
     ProgressBar progressBar;
     SwipeRefreshLayout refreshLayout;
     RecyclerView recyclerView;
@@ -44,6 +45,7 @@ public class UserActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().show();
+        userActivity = this;
 
         refreshLayout = findViewById(R.id.swipe_refresh);
         progressBar = findViewById(R.id.progress_bar);
@@ -82,7 +84,7 @@ public class UserActivity extends AppCompatActivity {
 
     }
 
-    private void loadData() {
+    public void loadData() {
         progressBar.setVisibility(View.VISIBLE);
         Call<GetActivities> call = service.getActiviesById("0","my_activity");
         call.enqueue(new Callback<GetActivities>() {

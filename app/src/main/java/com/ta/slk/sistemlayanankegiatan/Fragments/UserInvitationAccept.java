@@ -44,15 +44,12 @@ public class UserInvitationAccept extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_content);
         progressBar = view.findViewById(R.id.progress_bar);
         refreshLayout = view.findViewById(R.id.swipe_refresh);
-
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshData(view);
             }
         });
-
-
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
         refreshData(view);

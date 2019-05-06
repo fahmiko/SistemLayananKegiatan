@@ -22,6 +22,12 @@ public interface ApiGroups {
     );
 
     @FormUrlEncoded
+    @POST("Rest_groups/extigroups")
+    Call<PostData> exitGroup(
+            @Field("id_group") String id_group
+    );
+
+    @FormUrlEncoded
     @POST("Rest_groups/invitegroup")
     Call<PostData> inviteGroup(
             @Field("id_member[]") ArrayList<Integer> id,

@@ -36,7 +36,13 @@ public class SplashScreen extends AppCompatActivity {
                         startActivity(new Intent(SplashScreen.this, MainActivity.class));
                     }
                 }else{
-                    startActivity(new Intent(SplashScreen.this, LoginActivity.class));
+                    SharedPreferences sf = getSharedPreferences("guide",MODE_PRIVATE);
+                    if(sf.getString("user_guide",null) == null){
+                        startActivity(new Intent(SplashScreen.this, Guide.class));
+                    }else{
+                        startActivity(new Intent(SplashScreen.this, LoginActivity.class));
+                    }
+
                 }
             }
         },1500);

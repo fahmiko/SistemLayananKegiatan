@@ -34,6 +34,7 @@ import com.dd.CircularProgressButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
+import com.ta.slk.sistemlayanankegiatan.Fragments.ActivitiesFragment;
 import com.ta.slk.sistemlayanankegiatan.Model.PostData;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiInterface;
@@ -84,6 +85,8 @@ public class AddInvitation extends AppCompatActivity {
                 postData();
             }
         });
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().show();
 
         simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         day.setOnClickListener(new View.OnClickListener() {
@@ -296,6 +299,7 @@ public class AddInvitation extends AppCompatActivity {
                         map.put(key, "");
                         reference.updateChildren(map);
                         finish();
+                        ((ActivitiesFragment) ActivitiesFragment.activityFragment).loadData();
                     }
                 }
 
@@ -303,9 +307,16 @@ public class AddInvitation extends AppCompatActivity {
                 public void onFailure(Call<PostData> call, Throwable t) {
                     button.setProgress(-1);
                     button.setProgress(0);
-                    Toast.makeText(getApplicationContext(),"Cek koneksi interner",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Cek koneksi internet",Toast.LENGTH_SHORT).show();
                 }
             });
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        ((ActivitiesFragment) ActivitiesFragment.activityFragment).loadData();
+        finish();
+        return true;
     }
 }

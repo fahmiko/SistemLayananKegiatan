@@ -118,7 +118,7 @@ public class UserInvitation extends Fragment {
                 .setNegativeButton("Tolak", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         getMessageDialog("rejected",id_activity);
-//                        confirmInvitation(view,"rejected",id_activity,"");
+//                        confirmInvitation(view,"rejected",id_activity,"");y
                     }
                 });
         // Create the AlertDialog object and return it
@@ -131,8 +131,7 @@ public class UserInvitation extends Fragment {
         call.enqueue(new Callback<PostData>() {
             @Override
             public void onResponse(Call<PostData> call, Response<PostData> response) {
-                Intent intent = new Intent(getView().getContext(), com.ta.slk.sistemlayanankegiatan.UserInvitation.class);
-                startActivity(intent);
+                refreshData(getView());
             }
 
             @Override

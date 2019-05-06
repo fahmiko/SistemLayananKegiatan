@@ -173,6 +173,31 @@
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:layout_below="@id/lay_pending"
+        android:id="@+id/card_option"
+        android:layout_margin="10dp"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        app:cardUseCompatPadding="true"
+        app:cardElevation="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:background="@android:color/transparent"
+            android:id="@+id/action_activity"
+            android:layout_gravity="center_vertical"
+            android:drawablePadding="20dp"
+            android:drawableTint="@color/mateRed"
+            android:drawableLeft="@drawable/ic_exit_to_app_black_24dp"
+            android:layout_margin="10dp"
+            android:textStyle="bold"
+            android:text="Keluar dari Kegiatan"
+            android:textColor="@color/mateRed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

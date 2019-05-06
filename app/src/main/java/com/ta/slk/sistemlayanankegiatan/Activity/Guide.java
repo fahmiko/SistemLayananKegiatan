@@ -1,5 +1,7 @@
 package com.ta.slk.sistemlayanankegiatan.Activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,8 +18,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.ta.slk.sistemlayanankegiatan.Method.Application;
+import com.ta.slk.sistemlayanankegiatan.Method.Session;
 import com.ta.slk.sistemlayanankegiatan.R;
 
 public class Guide extends AppCompatActivity {
@@ -37,12 +42,14 @@ public class Guide extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    public static Guide guide;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
+        guide = this;
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -77,10 +84,25 @@ public class Guide extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_guide, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
+            final View rootView;
+            Bundle bundle = getArguments();
+            if(bundle.getInt(ARG_SECTION_NUMBER) == 1){
+                rootView = inflater.inflate(R.layout.user_guide1,container,false);
+                return rootView;
+            }else{
+                rootView = inflater.inflate(R.layout.user_guide2,container,false);
+                Button button = rootView.findViewById(R.id.btn_next);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Session session = Application.getSession();
+                        session.saveGuide();
+                        Guide.guide.finish();
+                        startActivity(new Intent(getContext(),LoginActivity.class));
+                    }
+                });
+                return rootView;
+            }
         }
     }
 
@@ -104,7 +126,15 @@ public class Guide extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 2;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
     }
 }

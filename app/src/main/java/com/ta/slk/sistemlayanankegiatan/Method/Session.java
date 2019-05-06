@@ -27,6 +27,13 @@ public class Session {
         editor.apply();
     }
 
+    public void saveGuide(){
+        SharedPreferences sf = context.getSharedPreferences("guide",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sf.edit();
+        editor.putString("user_guide","false");
+        editor.apply();
+    }
+
     public boolean isAdmin(){
         SharedPreferences sf = context.getSharedPreferences("login", Context.MODE_PRIVATE);
         String admin = sf.getString("level",null);

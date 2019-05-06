@@ -57,6 +57,7 @@ public class AdminContent extends AppCompatActivity {
     private GroupsFragment groupsFragment;
     private MembersFragment membersFragment;
     private ProfileFragment profileFragment;
+    public static AdminContent adminContent;
     private com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitation userInvitation;
     String TAG = "checking";
     String imagePath = "";
@@ -68,7 +69,7 @@ public class AdminContent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_content);
-
+        adminContent = this;
         mNavigationView = findViewById(R.id.admin_nav);
         mFrameLayout = findViewById(R.id.admin_frame);
 
@@ -82,7 +83,7 @@ public class AdminContent extends AppCompatActivity {
 //        getTimeAgo();
 
         toolbar = findViewById(R.id.my_toolbar);
-        toolbar.setNavigationIcon(R.drawable.common_google_signin_btn_icon_dark_normal);
+//        toolbar.setNavigationIcon(R.drawable.common_google_signin_btn_icon_dark_normal);
 //        Drawable drawable;
 //        SharedPreferences preferences = this.getSharedPreferences("login",MODE_PRIVATE);
 //        String url = preferences.getString("photo",null);
@@ -134,6 +135,7 @@ public class AdminContent extends AppCompatActivity {
             }
         });
     }
+
     private void setFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.admin_frame, fragment);

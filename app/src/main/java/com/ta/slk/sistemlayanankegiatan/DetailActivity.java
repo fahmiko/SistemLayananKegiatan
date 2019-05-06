@@ -68,12 +68,14 @@ public class DetailActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private Bundle activity;
     private TextView contact, location,date, clock, title;
+    public static DetailActivity detail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        detail = this;
         activity = getIntent().getBundleExtra("activity");
         initComponents();
 

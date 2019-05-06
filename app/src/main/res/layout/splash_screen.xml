@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/mountain_vector">
+    android:background="@color/colorPrimary">
 
     <ImageView
         android:id="@+id/img_log2o"
@@ -18,9 +18,10 @@
         android:layout_width="325dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:fontFamily="sans-serif-light"
-        android:text="LAYANAN KEGIATAN "
+        android:textAlignment="center"
+        android:text="SISTEM LAYANAN KEGIATAN"
         android:textColor="@color/colorLight"
         android:textSize="32sp"
         android:textStyle="bold" />
