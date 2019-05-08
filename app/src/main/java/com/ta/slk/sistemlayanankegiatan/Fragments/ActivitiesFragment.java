@@ -123,6 +123,9 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
                                 MultiSelectDialog dialog2 = multiSelectShow("members");
                                 dialog2.show(getFragmentManager(),"Testing");
                                 break;
+                            case 3:
+
+                                break;
                             case 4:
                                 deleteActivity(listActivities.get(position).getIdActivity());
                                 break;

@@ -1,12 +1,18 @@
 package com.ta.slk.sistemlayanankegiatan;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -25,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitationAccept;
 import com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitationRejected;
 
@@ -44,9 +51,11 @@ public class UserInvitation extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private AppBarLayout appBarLayout;
     Toolbar toolbar;
-    AppBarLayout appBarLayout;
-    TabLayout tabLayout;
+    private Drawable oldColor;
+    private int currentColor;
+    private PagerSlidingTabStrip strip;
 
 
     @Override
@@ -55,17 +64,60 @@ public class UserInvitation extends AppCompatActivity {
         setContentView(R.layout.activity_user_invitation);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        appBarLayout = findViewById(R.id.app_bar_layout);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        currentColor = getResources().getColor(R.color.colorPrimary);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        strip = findViewById(R.id.tabs);
+        strip.setViewPager(mViewPager);
+        strip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+            }
 
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+            @Override
+            public void onPageSelected(int i) {
+                switch (i){
+                    case 0:
+                        changeColor(getResources().getColor(R.color.colorPrimary),getResources().getColor(R.color.colorLightBlue));
+                        break;
+                    case 1:
+                        changeColor(getResources().getColor(R.color.mateGreen),getResources().getColor(R.color.colorLightGreen));
+                        break;
+                    case 2:
+                        changeColor(getResources().getColor(R.color.mateRed),getResources().getColor(R.color.colorLightRed));
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
+        });
+
+    }
+
+    private void changeColor(int newColor, int newColorTint){
+        strip.setBackgroundColor(newColor);
+        Drawable colorDrawable = new ColorDrawable(newColor);
+        Drawable bottomDrawable = new ColorDrawable(ContextCompat.getColor(getBaseContext(), android.R.color.transparent));
+        LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{colorDrawable,bottomDrawable});
+        if(oldColor == null){
+            mViewPager.setBackgroundColor(newColorTint);
+            toolbar.setBackground(layerDrawable);
+        }else{
+            TransitionDrawable transitionDrawable = new TransitionDrawable(new Drawable[]{oldColor, layerDrawable});
+            mViewPager.setBackgroundColor(newColorTint);
+            toolbar.setBackground(layerDrawable);
+        }
+
+        oldColor = layerDrawable;
+        currentColor = newColor;
     }
 
     /**
@@ -99,6 +151,7 @@ public class UserInvitation extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        private String tabTitles[] = new String[] { "PENDING", "ACCEPT", "REJECT" };
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -124,16 +177,7 @@ public class UserInvitation extends AppCompatActivity {
         @Nullable
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position){
-                case 0:
-                    return "Menuggu";
-                case 1:
-                    return "Diterima";
-                case 2:
-                    return "Ditolak";
-                default:
-                    return "";
-            }
+            return tabTitles[position];
         }
 
         @Override
