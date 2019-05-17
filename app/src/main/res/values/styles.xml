@@ -9,7 +9,7 @@
     </style>
 
     <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
+        <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
     </style>
 
@@ -20,8 +20,14 @@
     <style name="PrimaryTheme" parent="AppTheme" />
 
     <style name="PrimaryTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
+        <item name="android:windowEnterAnimation">@anim/fadein</item>
+        <item name="android:windowExitAnimation">@anim/fadeout</item>
+        <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionBarItemBackground">@color/colorLight</item>
     </style>
 
     <style name="PrimaryTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

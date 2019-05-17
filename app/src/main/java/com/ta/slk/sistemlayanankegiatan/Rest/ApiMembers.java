@@ -28,7 +28,7 @@ public interface ApiMembers {
     );
 
     @Multipart
-    @POST("Rest_members/update_post")
+    @POST("Rest_members/update")
     Call<PostData> editMember(
             @Part MultipartBody.Part file,
             @Part("id_member") RequestBody id_member,
@@ -71,5 +71,12 @@ public interface ApiMembers {
     Call<GetUsers> getUserActivities(
             @Field("id_activity") String id,
             @Field("action") String action
+    );
+
+    @FormUrlEncoded
+    @POST("Users/checkcode")
+    Call<PostData> checkCode(
+            @Field("id_user") String id,
+            @Field("code") String code
     );
 }

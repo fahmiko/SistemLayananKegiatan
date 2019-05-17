@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ import com.ta.slk.sistemlayanankegiatan.Rest.ApiInterface;
 
 import java.util.List;
 
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,7 +34,7 @@ public class UserActivity extends AppCompatActivity {
     ApiInterface service;
     public static UserActivity userActivity;
     ProgressBar progressBar;
-    SwipeRefreshLayout refreshLayout;
+    WaveSwipeRefreshLayout refreshLayout;
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     List<Activities> activitiesList;
@@ -40,20 +43,19 @@ public class UserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
-        toolbar = findViewById(R.id.user_toolbar);
-        toolbar.setTitle("Kegiatan");
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().show();
         userActivity = this;
 
         refreshLayout = findViewById(R.id.swipe_refresh);
+        refreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorLight));
+        refreshLayout.setWaveColor(getResources().getColor(R.color.colorPrimary));
         progressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.recycler_content);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         service = ApiClient.getClient().create(ApiInterface.class);
         loadData();
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        refreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 loadData();
@@ -113,6 +115,13 @@ public class UserActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         finish();
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.user_menu,menu);
         return true;
     }
 }

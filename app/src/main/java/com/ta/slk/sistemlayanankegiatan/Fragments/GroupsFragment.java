@@ -34,6 +34,7 @@ import com.ta.slk.sistemlayanankegiatan.AdminContent;
 import com.ta.slk.sistemlayanankegiatan.DetailGroups;
 import com.ta.slk.sistemlayanankegiatan.Method.Application;
 import com.ta.slk.sistemlayanankegiatan.Method.ClickListenner;
+import com.ta.slk.sistemlayanankegiatan.Method.FileUtil;
 import com.ta.slk.sistemlayanankegiatan.Method.RecyclerTouchListener;
 import com.ta.slk.sistemlayanankegiatan.Model.GetGroups;
 import com.ta.slk.sistemlayanankegiatan.Model.GetUsers;
@@ -50,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
+import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -75,6 +77,8 @@ public class GroupsFragment extends Fragment{
 
     List<Groups> groupsList;
     List<Users> usersList;
+
+    File originalFile, fileCompressed;
 
     public GroupsFragment() {
         // Required empty public constructor
@@ -182,7 +186,7 @@ public class GroupsFragment extends Fragment{
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
-                Snackbar.make(getView(), "Cek Koneksi internet",Snackbar.LENGTH_SHORT).show();
+//                Snackbar.make(getView(), "Cek Koneksi internet",Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -268,9 +272,8 @@ public class GroupsFragment extends Fragment{
     private void doUpdate(String id){
         MultipartBody.Part body = null;
         if (!imagePath.isEmpty()){
-            File file = new File(imagePath);
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), file);
-            body = MultipartBody.Part.createFormData("picture", file.getName(),
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), fileCompressed);
+            body = MultipartBody.Part.createFormData("picture", fileCompressed.getName(),
                     requestFile);
         }
         RequestBody reqId = MultipartBody.create(MediaType.parse("multipart/form-data"),
@@ -342,6 +345,14 @@ public class GroupsFragment extends Fragment{
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 imagePath =cursor.getString(columnIndex);
+                try {
+                    originalFile = FileUtil.from(fragment.getContext(),data.getData());
+                    fileCompressed = new Compressor(fragment.getContext())
+                            .setMaxHeight(480).setMaxWidth(480).setQuality(75)
+                            .compressToFile(originalFile);
+                }catch (Exception e){
+
+                }
 
 //                Picasso.with(getApplicationContext()).load(new File(imagePath)).fit().into(mImageView);
 //                Glide.with(getApplicationContext()).load(new File(imagePath)).into(mImageView);

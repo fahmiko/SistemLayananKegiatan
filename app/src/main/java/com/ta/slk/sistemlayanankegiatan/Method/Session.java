@@ -10,14 +10,19 @@ import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
 
 public class Session {
     private Context context;
+    private SharedPreferences preferences;
 
     public Session(Context context) {
         this.context = context;
+        preferences = context.getSharedPreferences("login",Context.MODE_PRIVATE);
     }
 
     public String getToken(){
-        SharedPreferences preferences = context.getSharedPreferences("login",Context.MODE_PRIVATE);
         return preferences.getString("token",null);
+    }
+
+    public String getIdMember(){
+        return preferences.getString("id_member",null);
     }
 
     public void saveDeviceToken(String token){

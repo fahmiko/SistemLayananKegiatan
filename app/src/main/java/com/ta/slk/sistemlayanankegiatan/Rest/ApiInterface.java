@@ -93,6 +93,9 @@ public interface ApiInterface {
             @Part("location") RequestBody location,
             @Part("contact") RequestBody contact,
             @Part("date") RequestBody date,
+            @Part("subject") RequestBody subject,
+            @Part("created") RequestBody created,
+            @Part("date_created") RequestBody date_created,
             @Part("description") RequestBody description,
             @Part("comment_key") RequestBody key
     );

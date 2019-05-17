@@ -45,6 +45,7 @@ import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiInterface;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import retrofit2.Call;
@@ -64,7 +65,6 @@ public class LoginActivity extends AppCompatActivity{
         galleryPermition();
         String msg = getIntent().getStringExtra("message");
         if(msg != null){
-            Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
             if(msg.equals("logout")){
                 SharedPreferences sf =  getSharedPreferences("login",MODE_PRIVATE);
                 SharedPreferences.Editor editor = sf.edit();
@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity{
                                 if(response.body().getResult().isEmpty()){
                                     Toast.makeText(getApplicationContext(),"Data tidak ditemukan",Toast.LENGTH_LONG).show();
                                 }else{
-                                    if(!response.body().getResult().get(0).getIdUser().equals("0")){
+                                    if(response.body().getResult().get(0).getIdUser() != null){
                                         Toast.makeText(getApplicationContext(),"User Sudah Terdaftar",Toast.LENGTH_LONG).show();
                                     }else{
                                         Intent intent = new Intent(getApplicationContext(),Register.class);
@@ -160,7 +160,6 @@ public class LoginActivity extends AppCompatActivity{
         mLoginCall.enqueue(new Callback<GetUsers>() {
             @Override
             public void onResponse(Call<GetUsers> call, retrofit2.Response<GetUsers> response) {
-//                Toast.makeText(getApplicationContext(),response.body().getToken(),Toast.LENGTH_SHORT).show();
                 if(response.code()==200){
                     if(response.body().getStatus().equals("success")){
                         btn_login.setProgress(100);
@@ -175,12 +174,20 @@ public class LoginActivity extends AppCompatActivity{
                         String telp = response.body().getResult().get(0).getPhoneNumber();
                         String token = response.body().getToken();
                         String level = response.body().getResult().get(0).getLevel();
-                        session.saveCredentials(id_user,name,username,photo,id_member,email,telp,level,token);
-                        finish();
-                        if(session.isAdmin()){
-                            startActivity(new Intent(getApplicationContext(), AdminContent.class));
-                        }else{
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+                        if(response.body().getResult().get(0).getActive().equals("0")){
+                            finish();
+                            Intent intent = new Intent(getApplicationContext(),Activation.class);
+                            intent.putExtra("email",email);
+                            intent.putExtra("id_user",id_user);
+                            startActivity(intent);
+                        }else {
+                            session.saveCredentials(id_user, name, username, photo, id_member, email, telp, level, token);
+                            if (session.isAdmin()) {
+                                startActivity(new Intent(getApplicationContext(), AdminContent.class));
+                            } else {
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            }
                         }
                     }else{
                         btn_login.setProgress(-1);

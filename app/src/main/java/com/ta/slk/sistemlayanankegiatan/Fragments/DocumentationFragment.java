@@ -5,14 +5,18 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,8 +32,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.ta.slk.sistemlayanankegiatan.Adapter.DoctAdapter;
-import com.ta.slk.sistemlayanankegiatan.Method.ClickListenner;
-import com.ta.slk.sistemlayanankegiatan.Method.RecyclerTouchListener;
+import com.ta.slk.sistemlayanankegiatan.Method.*;
 import com.ta.slk.sistemlayanankegiatan.Model.Documentation;
 import com.ta.slk.sistemlayanankegiatan.Model.GetDocumentation;
 import com.ta.slk.sistemlayanankegiatan.Model.PostData;
@@ -38,8 +41,13 @@ import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiDocumentation;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import id.zelory.compressor.Compressor;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -51,11 +59,15 @@ public class DocumentationFragment extends Fragment{
     ProgressBar progressBar;
     Bundle bundle;
     FloatingActionButton upload;
+    SwipeRefreshLayout refreshLayout;
     RecyclerView recyclerView;
     TextView status;
     private String imagePath;
     ApiDocumentation service;
     List<Documentation> list;
+    private File fileCompressed;
+    private File originalFile;
+    Fragment fragment;
 
     @Nullable
     @Override
@@ -65,10 +77,18 @@ public class DocumentationFragment extends Fragment{
         progressBar = view.findViewById(R.id.progress_bar);
         status = view.findViewById(R.id.txt_status);
         upload = view.findViewById(R.id.btn_upload);
-        final Fragment fragment = this;
+        refreshLayout = view.findViewById(R.id.swipe_refresh);
+        fragment = this;
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),4));
         service = ApiClient.getClient().create(ApiDocumentation.class);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshLayout.setRefreshing(true);
+                loadData();
+            }
+        });
 
         bundle = getArguments();
         loadData();
@@ -89,6 +109,8 @@ public class DocumentationFragment extends Fragment{
         service.getDocumentation(bundle.get("id_activity").toString()).enqueue(new Callback<GetDocumentation>() {
             @Override
             public void onResponse(Call<GetDocumentation> call, Response<GetDocumentation> response) {
+                refreshLayout.setRefreshing(false);
+                progressBar.setVisibility(View.GONE);
                 if(response.code()==200){
                     progressBar.setVisibility(View.GONE);
                     list = response.body().getResult();
@@ -129,11 +151,21 @@ public class DocumentationFragment extends Fragment{
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 imagePath =cursor.getString(columnIndex);
 
+                try {
+                    originalFile = FileUtil.from(fragment.getContext(),data.getData());
+                    fileCompressed = new Compressor(fragment.getContext())
+                            .setMaxHeight(480).setMaxWidth(480).setQuality(75)
+                            .compressToFile(originalFile);
+                }catch (Exception e){
+
+                }
+
 //                Picasso.with(getApplicationContext()).load(new File(imagePath)).fit().into(mImageView);
 //                Glide.with(getApplicationContext()).load(new File(imagePath)).into(mImageView);
 //                Toast.makeText(getContext(), "Berhasil di load", Toast.LENGTH_LONG).show();
-                doUpload();
+//                doUpload();
                 cursor.close();
+                doUpload();
             }else{
                 Toast.makeText(getContext(), "Foto gagal di-load", Toast.LENGTH_LONG).show();
             }
@@ -161,9 +193,9 @@ public class DocumentationFragment extends Fragment{
     private void doUpload(){
         MultipartBody.Part body = null;
         if (!imagePath.isEmpty()){
-            File file = new File(imagePath);
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), file);
-            body = MultipartBody.Part.createFormData("picture", file.getName(),
+//            File file = new File(originalFile.getPath());
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), fileCompressed);
+            body = MultipartBody.Part.createFormData("picture", fileCompressed.getName(),
                     requestFile);
         }
         String id = bundle.getString("id_activity");

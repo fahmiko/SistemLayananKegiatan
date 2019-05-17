@@ -4,6 +4,7 @@ import com.ta.slk.sistemlayanankegiatan.Activity.LoginActivity;
 import com.ta.slk.sistemlayanankegiatan.Fragments.*;
 import com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitation;
 import com.ta.slk.sistemlayanankegiatan.Method.Application;
+import com.ta.slk.sistemlayanankegiatan.Method.FileUtil;
 import com.ta.slk.sistemlayanankegiatan.Method.Session;
 import com.ta.slk.sistemlayanankegiatan.Model.PostData;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
@@ -41,6 +42,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -58,12 +60,14 @@ public class AdminContent extends AppCompatActivity {
     private MembersFragment membersFragment;
     private ProfileFragment profileFragment;
     public static AdminContent adminContent;
+    BottomNavigationView navigationView;
     private com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitation userInvitation;
     String TAG = "checking";
     String imagePath = "";
     TextInputEditText title, description, image;
     Button save, close;
     Boolean isSuccess;
+    File originalFile,fileCompressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,7 @@ public class AdminContent extends AppCompatActivity {
         adminContent = this;
         mNavigationView = findViewById(R.id.admin_nav);
         mFrameLayout = findViewById(R.id.admin_frame);
-
+        navigationView = findViewById(R.id.admin_nav);
         isSuccess = false;
         activitiesFragment = new ActivitiesFragment();
         groupsFragment = new GroupsFragment();
@@ -90,7 +94,6 @@ public class AdminContent extends AppCompatActivity {
 //        ImageView imageView = findViewById(R.id.img_visi);
 //        Glide.with(getApplicationContext()).load(url).into(imageView);
 //        drawable = imageView.getDrawable();
-
         toolbar.setTitle("Kegiatan");
         setSupportActionBar(toolbar);
 
@@ -258,9 +261,8 @@ public class AdminContent extends AppCompatActivity {
         ApiGroups service = ApiClient.getClient().create(ApiGroups.class);
         MultipartBody.Part body = null;
         if (!imagePath.isEmpty()){
-            File file = new File(imagePath);
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), file);
-            body = MultipartBody.Part.createFormData("picture", file.getName(),
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), fileCompressed);
+            body = MultipartBody.Part.createFormData("picture", fileCompressed.getName(),
                     requestFile);
         }
         RequestBody reqName = MultipartBody.create(MediaType.parse("multipart/form-data"),
@@ -303,6 +305,14 @@ public class AdminContent extends AppCompatActivity {
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 imagePath =cursor.getString(columnIndex);
+                try {
+                    originalFile = FileUtil.from(this,data.getData());
+                    fileCompressed = new Compressor(this)
+                            .setMaxHeight(480).setMaxWidth(480).setQuality(75)
+                            .compressToFile(originalFile);
+                }catch (Exception e){
+
+                }
 
 //                Picasso.with(getApplicationContext()).load(new File(imagePath)).fit().into(mImageView);
 //                Glide.with(getApplicationContext()).load(new File(imagePath)).into(mImageView);

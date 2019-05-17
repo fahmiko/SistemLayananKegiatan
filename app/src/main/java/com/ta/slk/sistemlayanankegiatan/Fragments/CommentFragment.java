@@ -26,6 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ta.slk.sistemlayanankegiatan.Adapter.CommentAdapter;
+import com.ta.slk.sistemlayanankegiatan.Method.Application;
+import com.ta.slk.sistemlayanankegiatan.Method.Session;
 import com.ta.slk.sistemlayanankegiatan.Model.Comment;
 import com.ta.slk.sistemlayanankegiatan.R;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
@@ -91,6 +93,7 @@ public class CommentFragment extends Fragment {
             public void onClick(View v) {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd:MM:YY | HH:mm");
                 String currentDateandTime = sdf.format(new Date());
+                Session session = Application.getSession();
 
                 Map<String,Object> map = new HashMap<>();
                 temp_key = root.push().getKey();
@@ -98,6 +101,7 @@ public class CommentFragment extends Fragment {
 
                 DatabaseReference message_root = root.child(temp_key);
                 Map<String,Object> map2 = new HashMap<String, Object>();
+                map2.put("id",session.getIdMember());
                 map2.put("name",name);
                 map2.put("date",currentDateandTime);
                 map2.put("comment",commentText.getText().toString());
@@ -155,9 +159,10 @@ public class CommentFragment extends Fragment {
         {
             String name = (String)((DataSnapshot)i.next()).getValue();
             String comment = (String)((DataSnapshot)i.next()).getValue();
+            String id = (String)((DataSnapshot)i.next()).getValue();
             String date = (String)((DataSnapshot)i.next()).getValue();
             String photo = (String)((DataSnapshot)i.next()).getValue();
-            commentList.add(new Comment(name,comment,date,photo));
+            commentList.add(new Comment(id,name,comment,date,photo));
         }
         return commentList;
     }

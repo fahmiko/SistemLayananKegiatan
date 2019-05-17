@@ -40,6 +40,9 @@ public class Users {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("active")
+    @Expose
+    private String active;
 
     public String getIdMember() {
         return idMember;
@@ -136,4 +139,6 @@ public class Users {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public String getActive() {return active;}
 }

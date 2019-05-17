@@ -1,6 +1,7 @@
 package com.ta.slk.sistemlayanankegiatan.Fragments;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,10 +18,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.ta.slk.sistemlayanankegiatan.Adapter.InvitationAdapter;
 import com.ta.slk.sistemlayanankegiatan.Method.ClickListenner;
 import com.ta.slk.sistemlayanankegiatan.Method.RecyclerTouchListener;
@@ -73,7 +77,7 @@ public class UserInvitation extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(view.getContext(), recyclerView, new ClickListenner() {
             @Override
             public void onClick(View v, int position) {
-                showDialog(activitiesList.get(position).getIdActivity(),activitiesList.get(position).getNameActivities());
+                showDialog(activitiesList.get(position).getIdActivity(),activitiesList.get(position).getNameActivities(),activitiesList.get(position).getPicture());
             }
 
             @Override
@@ -107,22 +111,34 @@ public class UserInvitation extends Fragment {
         });
     }
 
-    private void showDialog(final String id_activity, String name){
+    private void showDialog(final String id_activity, String name, final String picture){
+        CharSequence[] charSequence = {"Lihat Undangan","Terima","Tolak"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Terima undangan "+name+" ?")
-                .setPositiveButton("Terima", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+        builder.setTitle("Pilih Menu").setItems(charSequence, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case 0:
+                        final Dialog dialog1=new Dialog(getContext(),R.style.ZoomImageDialog);
+                        dialog1.setContentView(R.layout.zoom_image);
+                        final ImageView imageView = dialog1.findViewById(R.id.zoom_image);
+                        try {
+                            Glide.with(getContext()).load(ApiClient.BASE_URL+"uploads/"+picture).into(imageView);
+                        }catch (Exception e){
+
+                        }
+                        dialog1.show();
+                        break;
+                    case 1:
                         getMessageDialog("join",id_activity);
-                    }
-                })
-                .setNegativeButton("Tolak", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                        break;
+                    case 2:
                         getMessageDialog("rejected",id_activity);
-//                        confirmInvitation(view,"rejected",id_activity,"");y
-                    }
-                });
-        // Create the AlertDialog object and return it
-            builder.show();
+                        break;
+                }
+            }
+        });
+        builder.show();
         }
     private void confirmInvitation(String action, String id_activity, String message){
         SharedPreferences sf = getContext().getSharedPreferences("login",Context.MODE_PRIVATE);

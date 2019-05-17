@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -51,8 +53,8 @@ public class MyGroups extends AppCompatActivity{
         refreshLayout.setWaveColor(getResources().getColor(R.color.colorPrimary));
         progressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.recycler_content);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().show();
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
         service = ApiClient.getClient().create(ApiInterface.class);
@@ -121,6 +123,13 @@ public class MyGroups extends AppCompatActivity{
     @Override
     public boolean onSupportNavigateUp() {
         finish();
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.user_menu,menu);
         return true;
     }
 }

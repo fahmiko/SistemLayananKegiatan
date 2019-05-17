@@ -20,7 +20,6 @@
             android:foregroundTint="@color/colorLight"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="exitUntilCollapsed|scroll"
-            app:title="Layanan Kegiatan"
             app:expandedTitleMarginEnd="64dp"
             android:background="@drawable/material">
             <android.support.design.widget.FloatingActionButton
@@ -28,13 +27,16 @@
                 android:src="@drawable/ic_dehaze_black_24dp"
                 app:elevation="6dp"
                 android:layout_margin="10dp"
-                app:backgroundTint="@color/graylight"
+                app:backgroundTint="@color/colorLight"
                 app:layout_anchorGravity="top|left|start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbarid"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:title="Layanan Kegiatan"
+                app:titleTextColor="@color/colorLight"
+                app:subtitleTextColor="@color/colorLight"
+                app:subtitle="Politeknik Kegeri Malang"
                 app:layout_collapseMode="pin"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"/>

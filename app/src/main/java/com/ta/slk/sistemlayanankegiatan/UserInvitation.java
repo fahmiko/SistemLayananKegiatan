@@ -14,15 +14,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,8 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitationAccept;
 import com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitationRejected;
+
+import java.util.zip.Inflater;
 
 public class UserInvitation extends AppCompatActivity {
 
@@ -52,10 +55,11 @@ public class UserInvitation extends AppCompatActivity {
      */
     private ViewPager mViewPager;
     private AppBarLayout appBarLayout;
-    Toolbar toolbar;
+     Toolbar toolbar;
     private Drawable oldColor;
     private int currentColor;
     private PagerSlidingTabStrip strip;
+    SystemBarTintManager systemBarTintManager;
 
 
     @Override
@@ -64,6 +68,7 @@ public class UserInvitation extends AppCompatActivity {
         setContentView(R.layout.activity_user_invitation);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+        systemBarTintManager = new SystemBarTintManager(this);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -104,16 +109,18 @@ public class UserInvitation extends AppCompatActivity {
 
     private void changeColor(int newColor, int newColorTint){
         strip.setBackgroundColor(newColor);
-        Drawable colorDrawable = new ColorDrawable(newColor);
+        systemBarTintManager.setStatusBarTintColor(newColor);
+        Drawable colorDrawable = new ColorDrawable(newColorTint);
         Drawable bottomDrawable = new ColorDrawable(ContextCompat.getColor(getBaseContext(), android.R.color.transparent));
         LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{colorDrawable,bottomDrawable});
         if(oldColor == null){
             mViewPager.setBackgroundColor(newColorTint);
-            toolbar.setBackground(layerDrawable);
+            toolbar.setBackgroundColor(newColor);
         }else{
             TransitionDrawable transitionDrawable = new TransitionDrawable(new Drawable[]{oldColor, layerDrawable});
-            mViewPager.setBackgroundColor(newColorTint);
-            toolbar.setBackground(layerDrawable);
+            mViewPager.setBackground(transitionDrawable);
+            toolbar.setBackgroundColor(newColor);
+            transitionDrawable.startTransition(500);
         }
 
         oldColor = layerDrawable;
@@ -151,7 +158,7 @@ public class UserInvitation extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        private String tabTitles[] = new String[] { "PENDING", "ACCEPT", "REJECT" };
+        private String tabTitles[] = new String[] { "MENUNGGU KONFIRMASI", "DITERIMA", "DITOLAK" };
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -190,6 +197,13 @@ public class UserInvitation extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         finish();
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.user_menu,menu);
         return true;
     }
 }

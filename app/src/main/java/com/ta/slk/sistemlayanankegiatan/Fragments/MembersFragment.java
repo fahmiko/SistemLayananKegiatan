@@ -94,6 +94,11 @@ public class MembersFragment extends Fragment{
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), mRecyclerView, new ClickListenner() {
             @Override
             public void onClick(View v, final int position) {
+
+            }
+
+            @Override
+            public void onLongClick(View v, final int position) {
                 final List<Users> filtered = adapter.getUsersFiltered();
                 CharSequence[] sequence = {"Ganti Role","Hapus Member"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -110,17 +115,12 @@ public class MembersFragment extends Fragment{
                                 }
                                 break;
                             case 1:
-                                doDelete(listUsers.get(position).getIdMember());
+                                doDelete(filtered.get(position).getIdMember());
                                 break;
 
                         }
                     }
                 }).create().show();
-            }
-
-            @Override
-            public void onLongClick(View v, int position) {
-
             }
         }));
         this.setHasOptionsMenu(true);
@@ -155,13 +155,13 @@ public class MembersFragment extends Fragment{
                         if(response.code()==200){
                             if(response.body().getStatus().equals("success")){
                                 Toast.makeText(getContext(),"sukes update role",Toast.LENGTH_SHORT).show();
+                                loadData(getView());
                             }
                         }
                     }
 
                     @Override
                     public void onFailure(Call<PostData> call, Throwable t) {
-                        Toast.makeText(getContext(),"Cek koneksi Internet",Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -178,6 +178,7 @@ public class MembersFragment extends Fragment{
                 if(response.code()==200){
                     if(response.body().getStatus().equals("success")){
                         Toast.makeText(getContext(),"Sukses hapus member",Toast.LENGTH_SHORT).show();
+                        loadData(getView());
                     }
                 }
             }

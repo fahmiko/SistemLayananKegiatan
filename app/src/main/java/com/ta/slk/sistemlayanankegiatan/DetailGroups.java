@@ -1,5 +1,6 @@
 package com.ta.slk.sistemlayanankegiatan;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +14,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,6 +86,30 @@ public class DetailGroups extends AppCompatActivity {
                 .load(ApiClient.BASE_URL+"uploads/groups/"+getIntent().getStringExtra("picture"))
                 .into(imgGroup);
         loadData();
+        imgGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog=new Dialog(v.getContext(),R.style.ZoomImageDialog);
+                dialog.setContentView(R.layout.zoom_image);
+                final ImageView imageView = dialog.findViewById(R.id.zoom_image);
+                try {
+                    Glide.with(v.getContext()).load(ApiClient.BASE_URL+"uploads/groups/"+getIntent().getStringExtra("picture"))
+                            .into(imageView);
+                }catch (Exception e){
+
+                }
+
+                dialog.setCancelable(true);
+                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+            }
+        });
         action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

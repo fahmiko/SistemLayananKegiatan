@@ -7,18 +7,18 @@
     tools:context=".AdminContent">
 
     <android.support.v7.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/my_toolbar"
-        app:titleTextColor="@color/textSecondary"
-        android:layout_alignParentTop="true"
-        android:layout_height="wrap_content"
+        app:navigationIcon="@drawable/polinema_icon"
+        android:hapticFeedbackEnabled="true"
+        app:titleTextColor="@color/colorLight"
+        android:animateLayoutChanges="true"
+        app:subtitleTextColor="@color/colorLight"
+        android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
+        app:subtitle="Sistem layanan kegiatan"
         app:title="@string/app_name"
-        app:navigationIcon="@drawable/outline_supervised_user_circle_black_24"
-        android:background="@android:color/background_light"
-        app:theme="@style/PrimaryTheme"
-        />
+        android:background="@color/colorPrimary"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="4dp"
