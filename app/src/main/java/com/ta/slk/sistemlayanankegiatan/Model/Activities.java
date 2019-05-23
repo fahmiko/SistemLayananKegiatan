@@ -17,9 +17,9 @@ public class Activities {
     @SerializedName("place")
     @Expose
     private String place;
-    @SerializedName("contact_person")
+    @SerializedName("file")
     @Expose
-    private String contactPerson;
+    private String file;
     @SerializedName("description")
     @Expose
     private String description;
@@ -65,39 +65,6 @@ public class Activities {
     @SerializedName("comment_key")
     @Expose
     private String commentKey;
-    @SerializedName("subject")
-    @Expose
-    private String subject;
-    @SerializedName("created")
-    @Expose
-    private String created;
-    @SerializedName("date_created")
-    @Expose
-    private String dateCreated;
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getCreated() {
-        return created;
-    }
-
-    public void setCreated(String created) {
-        this.created = created;
-    }
-
-    public String getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-    }
 
     public String getIdActivity() {
         return idActivity;
@@ -107,45 +74,19 @@ public class Activities {
         return commentKey;
     }
 
-    public void setCommentKey(String commentKey) {
-        this.commentKey = commentKey;
-    }
-
-    public void setIdActivity(String idActivity) {
-        this.idActivity = idActivity;
-    }
-
     public String getCreatedBy() {
         return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
     }
 
     public String getNameActivities() {
         return nameActivities;
     }
 
-    public void setNameActivities(String nameActivities) {
-        this.nameActivities = nameActivities;
-    }
-
     public String getPlace() {
         return place;
     }
 
-    public void setPlace(String place) {
-        this.place = place;
-    }
-
-    public String getContactPerson() {
-        return contactPerson;
-    }
-
-    public void setContactPerson(String contactPerson) {
-        this.contactPerson = contactPerson;
-    }
+    public String getFile() { return file; }
 
     public String getDate() {
         return date;
@@ -167,26 +108,6 @@ public class Activities {
         return idMember;
     }
 
-    public void setIdMember(String idMember) {
-        this.idMember = idMember;
-    }
-
-    public String getIdEmployee() {
-        return idEmployee;
-    }
-
-    public void setIdEmployee(String idEmployee) {
-        this.idEmployee = idEmployee;
-    }
-
-    public String getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
-    }
-
     public String getName() {
         return name;
     }
@@ -195,52 +116,12 @@ public class Activities {
         this.name = name;
     }
 
-    public String getBirth() {
-        return birth;
-    }
-
-    public void setBirth(String birth) {
-        this.birth = birth;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPhotoProfile() {
-        return photoProfile;
-    }
-
-    public void setPhotoProfile(String photoProfile) {
-        this.photoProfile = photoProfile;
     }
 
     public String getStatus() {

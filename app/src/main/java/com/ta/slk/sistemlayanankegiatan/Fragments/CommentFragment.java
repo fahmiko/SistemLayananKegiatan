@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +43,6 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CommentFragment extends Fragment {
-    ProgressBar progressBar;
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
@@ -66,7 +64,6 @@ public class CommentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View view =  inflater.inflate(R.layout.fragment_comment,container,false);
-        progressBar = view.findViewById(R.id.progress_bar);
 
         SharedPreferences sf = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         name = sf.getString("name","");
@@ -116,7 +113,9 @@ public class CommentFragment extends Fragment {
                 commentList = refreshComment(dataSnapshot);
                 adapter = new CommentAdapter(commentList,view.getContext());
                 recyclerView.setAdapter(adapter);
-                progressBar.setVisibility(View.GONE);
+                if(commentList.size()==0){
+                    Toast.makeText(getContext(),"NO COMMENT",Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override

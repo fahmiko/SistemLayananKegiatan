@@ -1,5 +1,7 @@
 package com.ta.slk.sistemlayanankegiatan;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -79,8 +81,20 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
             Intent intent = new Intent(getApplicationContext(), ProfileUser.class);
             startActivity(intent);
         } else if (id == R.id.logout) {
-            Session session = Application.getSession();
-            session.logout(0);
+            AlertDialog.Builder builder = new AlertDialog.Builder(Menu.this);
+            builder.setTitle("Peringatan").setMessage("Yaking ingin logout");
+            builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Session session = Application.getSession();
+                    session.logout(0);
+                }
+            }).setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

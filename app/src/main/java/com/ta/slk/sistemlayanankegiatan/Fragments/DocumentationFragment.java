@@ -5,8 +5,9 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import net.gotev.uploadservice.MultipartUploadRequest;
+import net.gotev.uploadservice.UploadNotificationConfig;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -193,8 +194,7 @@ public class DocumentationFragment extends Fragment{
     private void doUpload(){
         MultipartBody.Part body = null;
         if (!imagePath.isEmpty()){
-//            File file = new File(originalFile.getPath());
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), fileCompressed);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileCompressed);
             body = MultipartBody.Part.createFormData("picture", fileCompressed.getName(),
                     requestFile);
         }
@@ -224,4 +224,6 @@ public class DocumentationFragment extends Fragment{
             }
         });
     }
+
+
 }

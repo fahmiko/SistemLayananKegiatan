@@ -106,7 +106,7 @@ public class DetailActivity extends AppCompatActivity {
         contact = findViewById(R.id.dt_contact);
         clock = findViewById(R.id.dt_clock);
         location = findViewById(R.id.dt_location);
-        contact.setText(activity.getString("contact"));
+        contact.setText(activity.getString("admin"));
         String[] dateTime = activity.getString("date").split(" ");
         date.setText(dateTime[0]);
         clock.setText(dateTime[1]);

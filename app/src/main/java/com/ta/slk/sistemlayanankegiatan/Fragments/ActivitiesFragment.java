@@ -95,8 +95,9 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
                 Intent intent = new Intent(v.getContext(), DetailActivity.class);
                 bundle.putString("id_activity",listActivities.get(position).getIdActivity());
                 bundle.putString("comment_key",listActivities.get(position).getCommentKey());
+                bundle.putString("admin",listActivities.get(position).getCreatedBy());
                 bundle.putString("name",listActivities.get(position).getNameActivities());
-                bundle.putString("contact",listActivities.get(position).getContactPerson());
+                bundle.putString("file",listActivities.get(position).getFile());
                 bundle.putString("date",listActivities.get(position).getDate());
                 bundle.putString("picture",listActivities.get(position).getPicture());
                 bundle.putString("place",listActivities.get(position).getPlace());
@@ -155,11 +156,10 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
             @Override
             public void onResponse(Call<PostData> call, Response<PostData> response) {
                 if(response.code()==200){
-                    if(response.body().getStatus().equals("success")){
                         Toast.makeText(getContext(),"Berhasil di hapus",Toast.LENGTH_SHORT).show();
                         loadData();
+                        mAdapter.notifyDataSetChanged();
                     }
-                }
             }
 
             @Override
@@ -178,8 +178,8 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
                 if(response.code()==200){
                     listActivities = response.body().getResult();
                     mAdapter = new ActivitiesAdapter(listActivities, getContext());
-                    mRecyclerView.setAdapter(mAdapter);
                     mRecyclerView.scheduleLayoutAnimation();
+                    mRecyclerView.setAdapter(mAdapter);
                     progressBar.setVisibility(View.GONE);
                     getDataGroups();
                     getDataUsers();
@@ -211,17 +211,20 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
 
     private MultiSelectDialog multiSelectShow(final String table){
         ArrayList<MultiSelectModel> listOfSelect= new ArrayList<>();
+        Session session = Application.getSession();
         if(table.equals("groups")){
             for(int i = 0; i < listGroups.size(); i++){
                 int idGroups = Integer.parseInt(listGroups.get(i).getIdGroup());
                 String nameGroups = listGroups.get(i).getName();
-                listOfSelect.add(new MultiSelectModel(idGroups,nameGroups));
+                listOfSelect.add(new MultiSelectModel(idGroups, nameGroups));
             }
         }else if (table.equals("members")){
             for(int i=0 ;i < listUsers.size();i++){
                 int idEmployee = Integer.parseInt(listUsers.get(i).getIdMember());
                 String nameEmployee = listUsers.get(i).getName();
-                listOfSelect.add(new MultiSelectModel(idEmployee,nameEmployee));
+                if(!listUsers.get(i).getIdMember().equals(session.getIdMember())) {
+                    listOfSelect.add(new MultiSelectModel(idEmployee, nameEmployee));
+                }
             }
         }
 
@@ -267,6 +270,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
 
             }
         });
+
     }
 
     private void getDataUsers(){

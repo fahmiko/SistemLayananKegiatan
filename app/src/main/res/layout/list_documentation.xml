@@ -10,6 +10,6 @@
         android:scaleType="fitXY"
         android:id="@+id/image_doc"
         android:layout_width="150dp"
-        android:layout_height="200dp"
+        android:layout_height="120dp"
         app:srcCompat="@drawable/polinema_logo" />
 </RelativeLayout>

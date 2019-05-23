@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.icu.util.ValueIterator;
@@ -258,6 +259,7 @@ public class GroupsFragment extends Fragment{
                     if(response.body().getStatus().equals("success")){
                         progressBar.setVisibility(View.VISIBLE);
                         loadData();
+                        adapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -272,7 +274,7 @@ public class GroupsFragment extends Fragment{
     private void doUpdate(String id){
         MultipartBody.Part body = null;
         if (!imagePath.isEmpty()){
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), fileCompressed);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileCompressed);
             body = MultipartBody.Part.createFormData("picture", fileCompressed.getName(),
                     requestFile);
         }
@@ -289,6 +291,8 @@ public class GroupsFragment extends Fragment{
             public void onResponse(Call<PostData> call, Response<PostData> response) {
                 if(response.code()==200){
                     Toast.makeText(getContext(),"SUKSES",Toast.LENGTH_SHORT).show();
+                    loadData();
+                    adapter.notifyDataSetChanged();
                 }
             }
 

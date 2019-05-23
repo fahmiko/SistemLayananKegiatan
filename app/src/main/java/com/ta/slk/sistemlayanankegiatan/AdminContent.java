@@ -115,10 +115,22 @@ public class AdminContent extends AppCompatActivity {
                         setSupportActionBar(toolbar);
                         return true;
                     case R.id.nav_admin_logout:
-                        finish();
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        intent.putExtra("message","logout");
-                        startActivity(intent);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(AdminContent.this);
+                        builder.setTitle("Peringatan").setMessage("Yaking ingin logout");
+                        builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                intent.putExtra("message","logout");
+                                startActivity(intent);
+                            }
+                        }).setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
                         return false;
                     case R.id.nav_admin_member:
                         setFragment(membersFragment);

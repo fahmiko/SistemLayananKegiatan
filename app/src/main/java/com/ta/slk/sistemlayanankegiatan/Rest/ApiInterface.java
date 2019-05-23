@@ -88,14 +88,10 @@ public interface ApiInterface {
     @POST("Rest_slkg/activity")
     Call<PostData> postActivity(
             @Part MultipartBody.Part file,
+            @Part MultipartBody.Part docs,
             @Part("name") RequestBody name,
-            @Part("created_by") RequestBody created_by,
             @Part("location") RequestBody location,
-            @Part("contact") RequestBody contact,
             @Part("date") RequestBody date,
-            @Part("subject") RequestBody subject,
-            @Part("created") RequestBody created,
-            @Part("date_created") RequestBody date_created,
             @Part("description") RequestBody description,
             @Part("comment_key") RequestBody key
     );

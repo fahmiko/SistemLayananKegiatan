@@ -48,6 +48,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DetailFragment extends Fragment {
+    CardView file,location;
     TextView detail;
     Bundle bundle;
     ImageButton place;
@@ -67,7 +68,8 @@ public class DetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_detail,container,false);
         detail = view.findViewById(R.id.dt_detail);
-        place = view.findViewById(R.id.btn_place);
+        location = view.findViewById(R.id.locDocs);
+        file = view.findViewById(R.id.fileDocs);
         recyclerView = view.findViewById(R.id.recycler_member);
         recyclerView2 = view.findViewById(R.id.recycler_pending);
         cardOption = view.findViewById(R.id.card_option);
@@ -79,13 +81,21 @@ public class DetailFragment extends Fragment {
         service = ApiClient.getClient().create(ApiMembers.class);
         loadDataMembers();
         loadDataPending();
-        place.setOnClickListener(new View.OnClickListener() {
+        location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Uri gmmIntentUri = Uri.parse("google.navigation:q="+bundle.getString("place"));
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
+            }
+        });
+        file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse( ApiClient.BASE_URL+"uploads/" + bundle.getString("file")), "text/html");
+                startActivity(intent);
             }
         });
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new ClickListenner() {

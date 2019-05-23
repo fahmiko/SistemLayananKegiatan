@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -77,7 +78,7 @@ public class UserInvitation extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(view.getContext(), recyclerView, new ClickListenner() {
             @Override
             public void onClick(View v, int position) {
-                showDialog(activitiesList.get(position).getIdActivity(),activitiesList.get(position).getNameActivities(),activitiesList.get(position).getPicture());
+                showDialog(activitiesList.get(position).getIdActivity(),activitiesList.get(position).getFile(),activitiesList.get(position).getPicture());
             }
 
             @Override
@@ -111,8 +112,8 @@ public class UserInvitation extends Fragment {
         });
     }
 
-    private void showDialog(final String id_activity, String name, final String picture){
-        CharSequence[] charSequence = {"Lihat Undangan","Terima","Tolak"};
+    private void showDialog(final String id_activity, final String name, final String picture){
+        CharSequence[] charSequence = {"Lihat Undangan","Download Undangan","Terima","Tolak"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Pilih Menu").setItems(charSequence, new DialogInterface.OnClickListener() {
             @Override
@@ -130,9 +131,14 @@ public class UserInvitation extends Fragment {
                         dialog1.show();
                         break;
                     case 1:
-                        getMessageDialog("join",id_activity);
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.parse( ApiClient.BASE_URL+"uploads/" + name), "text/html");
+                        startActivity(intent);
                         break;
                     case 2:
+                        getMessageDialog("join",id_activity);
+                        break;
+                    case 3:
                         getMessageDialog("rejected",id_activity);
                         break;
                 }

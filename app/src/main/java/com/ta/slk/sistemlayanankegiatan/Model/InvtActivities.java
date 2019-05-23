@@ -56,39 +56,10 @@ public class InvtActivities {
     @SerializedName("status")
     @Expose
     private String status;
-    @SerializedName("subject")
+    @SerializedName("file")
     @Expose
-    private String subject;
-    @SerializedName("created")
-    @Expose
-    private String created;
-    @SerializedName("date_created")
-    @Expose
-    private String dateCreated;
+    private String file;
 
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getCreated() {
-        return created;
-    }
-
-    public void setCreated(String created) {
-        this.created = created;
-    }
-
-    public String getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-    }
 
     public String getIdActivity() {
         return idActivity;
@@ -226,4 +197,5 @@ public class InvtActivities {
         this.status = status;
     }
 
+    public String getFile() { return file; }
 }

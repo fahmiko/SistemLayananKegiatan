@@ -69,7 +69,8 @@ public class UserActivity extends AppCompatActivity {
                 bundle.putString("id_activity",activitiesList.get(position).getIdActivity());
                 bundle.putString("comment_key",activitiesList.get(position).getCommentKey());
                 bundle.putString("name",activitiesList.get(position).getNameActivities());
-                bundle.putString("contact",activitiesList.get(position).getContactPerson());
+                bundle.putString("admin",activitiesList.get(position).getCreatedBy());
+                bundle.putString("file",activitiesList.get(position).getFile());
                 bundle.putString("date",activitiesList.get(position).getDate());
                 bundle.putString("picture",activitiesList.get(position).getPicture());
                 bundle.putString("place",activitiesList.get(position).getPlace());

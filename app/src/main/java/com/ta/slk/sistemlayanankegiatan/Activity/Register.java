@@ -137,7 +137,7 @@ public class Register extends AppCompatActivity {
 
             MultipartBody.Part body = null;
                 if (imagePath  != null) {
-                    RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpg"), fileCompressed);
+                    RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileCompressed);
                     body = MultipartBody.Part.createFormData("picture", fileCompressed.getName(),
                             requestFile);
                 }
