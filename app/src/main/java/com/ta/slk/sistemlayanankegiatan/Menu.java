@@ -82,7 +82,7 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(intent);
         } else if (id == R.id.logout) {
             AlertDialog.Builder builder = new AlertDialog.Builder(Menu.this);
-            builder.setTitle("Peringatan").setMessage("Yaking ingin logout");
+            builder.setTitle("Peringatan").setMessage("Yakin ingin logout");
             builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

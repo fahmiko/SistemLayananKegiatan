@@ -3,31 +3,22 @@ package com.ta.slk.sistemlayanankegiatan;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
+
 import android.support.design.widget.TextInputEditText;
-import android.support.v4.widget.ContentLoadingProgressBar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -36,7 +27,6 @@ import com.bumptech.glide.Glide;
 import com.dd.CircularProgressButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
 import com.ta.slk.sistemlayanankegiatan.Fragments.ActivitiesFragment;
 import com.ta.slk.sistemlayanankegiatan.Method.FilePath;
 import com.ta.slk.sistemlayanankegiatan.Method.FileUtil;
@@ -45,12 +35,9 @@ import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiInterface;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -66,28 +53,30 @@ public class AddInvitation extends AppCompatActivity {
     DatePickerDialog datePickerDialog;
     SimpleDateFormat simpleDateFormat;
     CircularProgressButton button;
-    String textDialog;
+    String action, idActivity;
     TextInputEditText name,contact,description,day,location,clock;
     TextInputEditText upload;
     File originalFile,fileCompressed,fileDocuments;
     Uri documentUri,selectedImage;
+    Toolbar toolbar;
     String imagePath = "";
+    Bundle activities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_invitation);
 
-
         initComponents();
-        button.setText("Tambah Kegiatan");
-        button.setIdleText("Tambah KEGIATAN");
+        if (activities != null) {
+            updateComponents();
+        }
+        button.setText("SUBMIT");
+        button.setIdleText("SUBMIT");
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String dateTime = day.getText().toString()+" "+clock.getText().toString();
-//                Toast.makeText(getApplicationContext(),dateTime,Toast.LENGTH_SHORT).show();
                 postData();
             }
         });
@@ -132,7 +121,12 @@ public class AddInvitation extends AppCompatActivity {
                                 dialog1.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
                                 dialog1.setContentView(R.layout.zoom_image);
                                 ImageView imageView = dialog1.findViewById(R.id.zoom_image);
-                                Glide.with(v.getContext()).load(new File(imagePath)).into(imageView);
+                                if (action == null) {
+                                    Glide.with(v.getContext()).load(new File(imagePath)).into(imageView);
+                                } else {
+                                    Glide.with(v.getContext()).load(ApiClient.BASE_URL + "uploads/" + upload.getText().toString()).into(imageView);
+                                }
+
                                 dialog1.show();
                                 break;
                             case 1:
@@ -148,6 +142,21 @@ public class AddInvitation extends AppCompatActivity {
                 }).create().show();
             }
         });
+    }
+
+    private void updateComponents() {
+        if (!activities.getString("action").equals("")) {
+            String[] date = activities.getString("date").split(" ");
+            idActivity = activities.getString("id_activity");
+            action = activities.getString("action");
+            upload.setText(activities.getString("picture"));
+            day.setText(date[0]);
+            clock.setText(date[1]);
+            name.setText(activities.getString("name"));
+            location.setText(activities.getString("location"));
+            description.setText(activities.getString("description"));
+            contact.setText(activities.getString("file"));
+        }
     }
 
     public void showDialog(){
@@ -213,6 +222,9 @@ public class AddInvitation extends AppCompatActivity {
                     fileCompressed = new Compressor(getApplicationContext())
                             .setMaxHeight(480).setMaxWidth(480).setQuality(75)
                             .compressToFile(originalFile);
+                    if (getContentResolver().getType(data.getData()).equals("image/png")) {
+                        fileCompressed = originalFile;
+                    }
                 }catch (Exception e){
 
                 }
@@ -224,6 +236,7 @@ public class AddInvitation extends AppCompatActivity {
     }
 
     private void initComponents(){
+        toolbar = findViewById(R.id.toolbar);
         day = findViewById(R.id.name_day);
         name = findViewById(R.id.name_act);
         location = findViewById(R.id.name_location);
@@ -232,6 +245,9 @@ public class AddInvitation extends AppCompatActivity {
         upload = findViewById(R.id.insert_image);
         button = findViewById(R.id.btn_add);
         clock = findViewById(R.id.name_clock);
+        action = null;
+        activities = getIntent().getExtras();
+        setSupportActionBar(toolbar);
     }
 
     private void postData(){
@@ -243,7 +259,7 @@ public class AddInvitation extends AppCompatActivity {
             clock.setError("jam kegiatan belum ter isi");
         }else if(TextUtils.isEmpty(description.getText().toString())){
             description.setError("deskripsi kegiatan belum ter isi");
-        }else if(imagePath.equals("")){
+        } else if (TextUtils.isEmpty(upload.getText().toString())) {
             upload.setError("gambar belum dipilih");
         }else {
             button.setIndeterminateProgressMode(true);
@@ -280,24 +296,29 @@ public class AddInvitation extends AppCompatActivity {
                     (location.getText().toString().isEmpty()) ? "" : location.getText().toString());
             RequestBody reqDesription = MultipartBody.create(MediaType.parse("multipart/form-data"),
                     (description.getText().toString().isEmpty()) ? "" : description.getText().toString());
-            RequestBody reqContact = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                    (contact.getText().toString().isEmpty()) ? "" : contact.getText().toString());
             RequestBody reqKey = MultipartBody.create(MediaType.parse("multipart/form-data"),
                     key);
 
             Call<PostData> mPostActivity;
             mPostActivity = mApiInterface.postActivity(body, files, reqName, reqLocation,reqDate, reqDesription, reqKey);
+            if (action != null) {
+                RequestBody reqId = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                        idActivity);
+                mPostActivity = mApiInterface.updateActivity(body, files, reqId, reqName, reqLocation, reqDate, reqDesription);
+            }
             mPostActivity.enqueue(new Callback<PostData>() {
                 @Override
                 public void onResponse(Call<PostData> call, Response<PostData> response) {
                     if(response.code()==200){
                         if (response.body().getStatus().equals("success")) {
-                            Toast.makeText(getApplicationContext(),"Data berhasil ditambahkan",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Data berhasil diperbarui", Toast.LENGTH_SHORT).show();
                             button.setProgress(100);
-                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                            Map<String, Object> map = new HashMap<>();
-                            map.put(key, "");
-                            reference.updateChildren(map);
+                            if (action != null) {
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                                Map<String, Object> map = new HashMap<>();
+                                map.put(key, "");
+                                reference.updateChildren(map);
+                            }
                             finish();
                             ((ActivitiesFragment) ActivitiesFragment.activityFragment).loadData();
                         }

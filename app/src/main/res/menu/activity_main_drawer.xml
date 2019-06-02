@@ -10,7 +10,7 @@
             android:title="Kegiatan Saya" />
         <item
             android:id="@+id/nav_group"
-            android:icon="@android:drawable/ic_menu_view"
+            android:icon="@drawable/group"
             android:title="Grup" />
         <item
             android:id="@+id/nav_invitation"
@@ -22,7 +22,7 @@
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_person_black_24dp"
                 android:title="Akun" />
             <item
                 android:id="@+id/logout"

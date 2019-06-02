@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.brouding.simpledialog.SimpleDialog;
 import com.dd.CircularProgressButton;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -53,6 +54,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity{
+    SimpleDialog progressDialog;
     TextInputEditText username,password;
     CircularProgressButton btn_login;
     Button btn_register;
@@ -107,6 +109,7 @@ public class LoginActivity extends AppCompatActivity{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog = Application.getProgress(v.getContext(), "Cek User").show();
                 Call<GetUsers> call  = service.getLoginNip(input.getText().toString());
                 call.enqueue(new Callback<GetUsers>() {
                     @Override
@@ -128,12 +131,14 @@ public class LoginActivity extends AppCompatActivity{
                                 }
 
                             }
+                            progressDialog.dismiss();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<GetUsers> call, Throwable t) {
-
+                        Toast.makeText(getApplicationContext(), "Cek koneksi Internet", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
                 });
             }
@@ -200,7 +205,7 @@ public class LoginActivity extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<GetUsers> call, Throwable t) {
-                Log.e("error",t.toString());
+                Toast.makeText(getApplicationContext(), "Cek Koneksi Internet", Toast.LENGTH_SHORT).show();
             }
         });
 

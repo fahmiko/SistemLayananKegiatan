@@ -31,10 +31,12 @@ public interface ApiMembers {
     @POST("Rest_members/update")
     Call<PostData> editMember(
             @Part MultipartBody.Part file,
+            @Part("id_user") RequestBody id_user,
             @Part("id_member") RequestBody id_member,
             @Part("name") RequestBody name,
+            @Part("password") RequestBody password,
             @Part("address") RequestBody address,
-            @Part("phone") RequestBody phone,
+            @Part("telp") RequestBody phone,
             @Part("email") RequestBody email,
             @Part("action") RequestBody action
     );

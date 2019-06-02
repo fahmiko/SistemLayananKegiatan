@@ -9,7 +9,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@color/graylight"
     android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -147,10 +146,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
+                android:tint="@color/colorPrimary"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@drawable/round_email_black_24dp"/>
             <TextView
+                android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
                 android:id="@+id/pr_name"
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical"
@@ -166,10 +167,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
+                android:tint="@color/colorPrimary"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@drawable/baseline_phone_black_24"/>
             <TextView
+                android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
                 android:id="@+id/pr_telp"
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical"
@@ -185,10 +188,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
+                android:tint="@color/colorPrimary"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@drawable/member"/>
             <TextView
+                android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
                 android:id="@+id/pr_level"
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical"
@@ -204,10 +209,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
+                android:tint="@color/colorPrimary"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@drawable/ic_verified_user_black_24dp"/>
             <TextView
+                android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
                 android:id="@+id/pr_username"
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical"

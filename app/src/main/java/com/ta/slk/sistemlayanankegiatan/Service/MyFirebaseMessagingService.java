@@ -23,9 +23,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         showNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+        Log.d("RemoteMessage", "onMessageReceived: " + remoteMessage.getNotification().getTitle());
+        Log.d("RemoteMessage2", "onMessageReceived: " + remoteMessage.getNotification().getBody());
     }
 
-    private void showNotification(String titile, String body){
+    private void showNotification(String title, String body) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHANNEL_ID = "com.ta.slk.sistemlayanankegiatan";
         Intent resultIntent = new Intent(getApplicationContext() , MainActivity.class);
@@ -47,7 +49,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.activity)
-                .setContentTitle(titile)
+                .setContentTitle(title)
                 .setContentIntent(resultPendingIntent);
         notificationManager.notify((int)System.currentTimeMillis(),builder.build());
     }

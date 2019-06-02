@@ -7,17 +7,14 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,8 +26,9 @@ import android.widget.SearchView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.brouding.simpledialog.SimpleDialog;
 import com.ta.slk.sistemlayanankegiatan.Adapter.*;
-import com.ta.slk.sistemlayanankegiatan.AdminContent;
+import com.ta.slk.sistemlayanankegiatan.Method.Application;
 import com.ta.slk.sistemlayanankegiatan.Method.ClickListenner;
 import com.ta.slk.sistemlayanankegiatan.Method.RecyclerTouchListener;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
@@ -50,16 +48,13 @@ import com.ta.slk.sistemlayanankegiatan.R;
  */
 public class MembersFragment extends Fragment{
     SwipeRefreshLayout refreshLayout;
+    SimpleDialog progressDialog;
     RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
-    RecyclerView.LayoutManager mLayoutManager;
     ProgressBar progressBar;
-    Fragment fragment;
-    List<Users> listUsers;
     MembersAdapter adapter;
-
-    private SearchView searchView;
-    String s = null;
+    List<Users> listUsers;
+    Fragment fragment;
+    SearchView searchView;
 
     public MembersFragment(){
         // Required empty public constructor
@@ -71,25 +66,7 @@ public class MembersFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_members, container, false);
-        mRecyclerView = view.findViewById(R.id.recycler_content);
-        progressBar = view.findViewById(R.id.progress_bar);
-        refreshLayout = view.findViewById(R.id.swipe_refresh);
-        listUsers = new ArrayList<>();
-        adapter = new MembersAdapter(listUsers,getContext());
-        mRecyclerView.setAdapter(adapter);
-        fragment = this;
-
-        mRecyclerView.addItemDecoration(new MyDividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL,36));
-        mRecyclerView.scheduleLayoutAnimation();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadData(view);
-                refreshLayout.setRefreshing(false);
-            }
-        });
+        initComponents(view);
 
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), mRecyclerView, new ClickListenner() {
             @Override
@@ -126,6 +103,26 @@ public class MembersFragment extends Fragment{
         this.setHasOptionsMenu(true);
         loadData(view);
         return view;
+    }
+
+    private void initComponents(final View view) {
+        mRecyclerView = view.findViewById(R.id.recycler_content);
+        progressBar = view.findViewById(R.id.progress_bar);
+        refreshLayout = view.findViewById(R.id.swipe_refresh);
+        listUsers = new ArrayList<>();
+        adapter = new MembersAdapter(listUsers, getContext());
+        mRecyclerView.setAdapter(adapter);
+        fragment = this;
+        mRecyclerView.addItemDecoration(new MyDividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL, 36));
+        mRecyclerView.scheduleLayoutAnimation();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData(view);
+                refreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     private void showSwitch(final String idMember, final String level) {
@@ -170,6 +167,7 @@ public class MembersFragment extends Fragment{
     }
 
     private void doDelete(String idUser) {
+        progressDialog = Application.getProgress(getContext(), "Hapus Member").show();
         ApiMembers members = ApiClient.getClient().create(ApiMembers.class);
         Call<PostData> call = members.deleteNip(idUser);
         call.enqueue(new Callback<PostData>() {
@@ -178,6 +176,7 @@ public class MembersFragment extends Fragment{
                 if(response.code()==200){
                     if(response.body().getStatus().equals("success")){
                         Toast.makeText(getContext(),"Sukses hapus member",Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                         loadData(getView());
                     }
                 }
@@ -186,6 +185,7 @@ public class MembersFragment extends Fragment{
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
                 Toast.makeText(getContext(),"Cek koneksi Internet",Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         });
     }

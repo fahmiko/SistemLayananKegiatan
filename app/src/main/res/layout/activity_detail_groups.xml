@@ -16,9 +16,10 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/back_detail"
             android:background="@color/colorPrimary"
             android:layout_width="match_parent"
-            android:layout_height="150dp" />
+            android:layout_height="120dp" />
 
         <ImageButton
             android:id="@+id/btn_back"
@@ -42,7 +43,7 @@
 
         <TextView
             android:id="@+id/group_title"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
             android:text="GROUP JTI POLINEMA"
             android:textColor="@color/colorLight"
             android:layout_centerHorizontal="true"
@@ -90,15 +91,16 @@
                 <TextView
                     android:id="@+id/lb_desc"
                     android:layout_margin="10dp"
+                    android:textStyle="bold"
                     android:textSize="16dp"
-                    android:textColor="@color/textPrimary"
                     android:text="Deskripsi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:layout_below="@id/lb_desc"
                     android:id="@+id/icon_desc"
-                    android:src="@drawable/group_description"
+                    android:tint="@color/colorPrimary"
+                    android:src="@drawable/baseline_description_black_48"
                     android:layout_width="60dp"
                     android:layout_height="60dp" />
                 <TextView
@@ -129,7 +131,7 @@
                     android:id="@+id/lb_name"
                     android:layout_margin="10dp"
                     android:textSize="16dp"
-                    android:textColor="@color/textPrimary"
+                    android:textStyle="bold"
                     android:text="Anggota"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />

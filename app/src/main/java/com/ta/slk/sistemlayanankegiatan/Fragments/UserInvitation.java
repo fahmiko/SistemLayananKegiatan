@@ -36,16 +36,19 @@ import com.ta.slk.sistemlayanankegiatan.R;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiInterface;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.senab.photoview.PhotoView;
 
 public class UserInvitation extends Fragment {
     SwipeRefreshLayout refreshLayout;
     ProgressBar progressBar;
+    ImageView noData;
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
@@ -63,6 +66,7 @@ public class UserInvitation extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_content);
         refreshLayout = view.findViewById(R.id.swipe_refresh);
         progressBar = view.findViewById(R.id.progress_bar);
+        noData = view.findViewById(R.id.no_data);
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -70,9 +74,12 @@ public class UserInvitation extends Fragment {
                 refreshData(view);
             }
         });
-
+        activitiesList = new ArrayList<>();
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
+        adapter = new InvitationAdapter(activitiesList, view.getContext());
+        recyclerView.setAdapter(adapter);
+
         refreshData(view);
 
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(view.getContext(), recyclerView, new ClickListenner() {
@@ -97,11 +104,17 @@ public class UserInvitation extends Fragment {
             @Override
             public void onResponse(Call<GetInvtActivities> call, Response<GetInvtActivities> response) {
                 if(response.code()==200){
-                    activitiesList = response.body().getResult();
-                    adapter = new InvitationAdapter(activitiesList,view.getContext());
-                    recyclerView.setAdapter(adapter);
+                    if (response.body().getResult().size() == 0) {
+                        activitiesList.clear();
+                        noData.setVisibility(View.VISIBLE);
+                    } else {
+                        noData.setVisibility(View.GONE);
+                        activitiesList.clear();
+                        activitiesList.addAll(response.body().getResult());
+                    }
                     progressBar.setVisibility(View.GONE);
                     refreshLayout.setRefreshing(false);
+                    adapter.notifyDataSetChanged();
                 }
             }
 
@@ -122,7 +135,7 @@ public class UserInvitation extends Fragment {
                     case 0:
                         final Dialog dialog1=new Dialog(getContext(),R.style.ZoomImageDialog);
                         dialog1.setContentView(R.layout.zoom_image);
-                        final ImageView imageView = dialog1.findViewById(R.id.zoom_image);
+                        final PhotoView imageView = dialog1.findViewById(R.id.zoom_image);
                         try {
                             Glide.with(getContext()).load(ApiClient.BASE_URL+"uploads/"+picture).into(imageView);
                         }catch (Exception e){
@@ -136,7 +149,8 @@ public class UserInvitation extends Fragment {
                         startActivity(intent);
                         break;
                     case 2:
-                        getMessageDialog("join",id_activity);
+                        confirmInvitation("join", id_activity, "");
+//                        getMessageDialog("join",id_activity);
                         break;
                     case 3:
                         getMessageDialog("rejected",id_activity);
@@ -153,7 +167,9 @@ public class UserInvitation extends Fragment {
         call.enqueue(new Callback<PostData>() {
             @Override
             public void onResponse(Call<PostData> call, Response<PostData> response) {
-                refreshData(getView());
+                if (response.body().getStatus().equals("success")) {
+                    refreshData(getView());
+                }
             }
 
             @Override

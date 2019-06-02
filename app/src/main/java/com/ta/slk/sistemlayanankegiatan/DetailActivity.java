@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.CpuUsageInfo;
@@ -30,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +42,7 @@ import com.ta.slk.sistemlayanankegiatan.Fragments.ActivitiesFragment;
 import com.ta.slk.sistemlayanankegiatan.Fragments.CommentFragment;
 import com.ta.slk.sistemlayanankegiatan.Fragments.DetailFragment;
 import com.ta.slk.sistemlayanankegiatan.Fragments.DocumentationFragment;
+import com.ta.slk.sistemlayanankegiatan.Method.Application;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiClient;
 
 import java.text.ParseException;
@@ -50,7 +53,7 @@ import java.util.GregorianCalendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -67,14 +70,13 @@ public class DetailActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
     private Bundle activity;
-    private TextView contact, location,date, clock, title;
     public static DetailActivity detail;
+    TextView contact, location, date, clock, title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
         detail = this;
         activity = getIntent().getBundleExtra("activity");
         initComponents();
@@ -93,57 +95,37 @@ public class DetailActivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-        CircleImageView imageView = findViewById(R.id.img_mini);
-
-        Glide.with(getApplicationContext()).load(ApiClient.BASE_URL+"uploads/"+activity.getString("picture")).into(imageView);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        CircleImageView toolbarImage = findViewById(R.id.toolbar_img);
+        Glide.with(getApplicationContext()).load(ApiClient.BASE_URL + "uploads/" + activity.getString("picture")).into(toolbarImage);
     }
 
     private void initComponents() {
         title = findViewById(R.id.dt_title);
         contact = findViewById(R.id.dt_contact);
-        date =findViewById(R.id.dt_date);
-        contact = findViewById(R.id.dt_contact);
+        date = findViewById(R.id.dt_date);
         clock = findViewById(R.id.dt_clock);
         location = findViewById(R.id.dt_location);
         contact.setText(activity.getString("admin"));
+        ImageButton btnBack = findViewById(R.id.btn_back);
         String[] dateTime = activity.getString("date").split(" ");
         date.setText(dateTime[0]);
         clock.setText(dateTime[1]);
         location.setText(activity.getString("place"));
         title.setText(activity.getString("name"));
+        ImageView imageView = findViewById(R.id.img_mini);
+        Glide.with(getApplicationContext()).load(ApiClient.BASE_URL + "uploads/" + activity.getString("picture")).into(imageView);
+        btnBack.setOnClickListener(this);
     }
 
-    private void getTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateStart = sdf.format(new Date());
-        String dateStop = "2019-04-30 00:00:00";
-        Date d1 = null;
-        Date d2 = null;
-        try {
-            d1 = sdf.parse(dateStart);
-            d2 = sdf.parse(dateStop);
-        } catch (ParseException e) {
-            e.printStackTrace();
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_back:
+                finish();
+                break;
         }
-        long diff = d2.getTime() - d1.getTime();
-        long diffSeconds = diff / 1000;
-        long diffMinutes = diff / (60 * 1000);
-        long diffHours = diff / (60 * 60 * 1000);
-
-
-        if(diffSeconds < 0){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Peringatan").setMessage("Acara Sudah Terlewati").create().show();
-        }else{
-            Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
-                intent.putExtra(AlarmClock.EXTRA_DAYS,20);
-                intent.putExtra(AlarmClock.EXTRA_IS_PM,true);
-//                intent.putExtra(AlarmClock.EXTRA_MINUTES, diffMinutes);
-                intent.putExtra(AlarmClock.EXTRA_MESSAGE,"ACARA");
-                startActivity(intent);
-        }
-
     }
 
 
@@ -241,5 +223,9 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void backButton(View view) {
+        finish();
     }
 }

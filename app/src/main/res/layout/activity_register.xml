@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 <RelativeLayout
-    android:background="@color/colorLight"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -86,6 +85,7 @@
             <android.support.design.widget.TextInputEditText
                 android:drawableLeft="@drawable/ic_assignment_ind_black_24dp"
                 android:drawablePadding="20dp"
+                android:drawableTint="@color/colorPrimary"
                 android:id="@+id/re_name"
                 android:inputType="text"
                 android:layout_width="match_parent"
@@ -102,6 +102,7 @@
             <android.support.design.widget.TextInputEditText
                 android:drawableLeft="@drawable/ic_account_circle_black_24dp"
                 android:drawablePadding="20dp"
+                android:drawableTint="@color/colorPrimary"
                 android:id="@+id/re_username"
                 android:inputType="text"
                 android:layout_width="match_parent"
@@ -117,6 +118,7 @@
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/re_password"
+                android:drawableTint="@color/colorPrimary"
                 android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -134,6 +136,7 @@
                 android:drawablePadding="20dp"
                 android:inputType="text"
                 android:id="@+id/re_address"
+                android:drawableTint="@color/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </android.support.design.widget.TextInputLayout>
@@ -149,6 +152,7 @@
                 android:drawableLeft="@drawable/baseline_phone_black_18"
                 android:drawablePadding="20dp"
                 android:inputType="phone"
+                android:drawableTint="@color/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </android.support.design.widget.TextInputLayout>
@@ -164,6 +168,7 @@
                 android:drawablePadding="20dp"
                 android:id="@+id/re_email"
                 android:inputType="textEmailAddress"
+                android:drawableTint="@color/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </android.support.design.widget.TextInputLayout>

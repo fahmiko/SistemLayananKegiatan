@@ -3,10 +3,18 @@ package com.ta.slk.sistemlayanankegiatan;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -46,13 +54,20 @@ public class DetailGroups extends AppCompatActivity {
     CardView cardOption;
     RecyclerView recyclerView;
     ImageButton back;
+    ImageView main, iconMember, iconDesc;
     Session session;
+    int newColor;
+    Drawable oldColor;
+    Runnable runnable;
     ApiGroups apiGroups;
     List<Users> usersList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_groups);
+        main = findViewById(R.id.back_detail);
+        iconMember = findViewById(R.id.icon_name);
+        iconDesc = findViewById(R.id.icon_desc);
 
         apiGroups = ApiClient.getClient().create(ApiGroups.class);
         title = findViewById(R.id.group_title);
@@ -67,14 +82,12 @@ public class DetailGroups extends AppCompatActivity {
         if(session.isAdmin()){
             cardOption.setVisibility(View.GONE);
         }
-
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
 
         admin.setText("Admin :"+getIntent().getStringExtra("admin"));
         title.setText(getIntent().getStringExtra("name"));
@@ -130,6 +143,29 @@ public class DetailGroups extends AppCompatActivity {
                 builder.show();
             }
         });
+
+        oldColor = new ColorDrawable(getResources().getColor(R.color.colorPrimary));
+        final Handler handler = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                newColor = ((int) (Math.random() * 16777215)) | (0xFF << 24);
+                Drawable colorDrawable = new ColorDrawable(newColor);
+                Drawable bottomDrawable = new ColorDrawable(ContextCompat.getColor(getBaseContext(), android.R.color.transparent));
+                LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
+                TransitionDrawable transitionDrawable = new TransitionDrawable(new Drawable[]{oldColor, layerDrawable});
+                main.setBackground(transitionDrawable);
+                iconMember.setImageTintList(ColorStateList.valueOf(newColor));
+                iconDesc.setImageTintList(ColorStateList.valueOf(newColor));
+                main.invalidate();
+                iconMember.invalidate();
+                iconDesc.invalidate();
+                transitionDrawable.startTransition(500);
+                oldColor = new ColorDrawable(newColor);
+                handler.postDelayed(runnable, 8000);
+            }
+        };
+        handler.postDelayed(runnable, 3000);
     }
 
     private void loadData() {

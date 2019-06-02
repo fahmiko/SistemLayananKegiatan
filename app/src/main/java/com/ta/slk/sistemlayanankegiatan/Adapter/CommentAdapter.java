@@ -72,7 +72,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
         if(myList.get(position).getId().equals(session.getIdMember())){
             holder.lay_in.setVisibility(View.GONE);
             holder.lay_out.setVisibility(View.VISIBLE);
-            holder.comment2.setText(myList.get(position).getComment());
+            holder.comment2.setText(Application.getTimeAgo(myList.get(position).getComment()));
             holder.date2.setText(myList.get(position).getDate());
             holder.name2.setText(myList.get(position).getName());
             Glide.with(holder.itemView.getContext()).load(ApiClient.BASE_URL+"uploads/members/"+myList.get
@@ -81,7 +81,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
         }else{
             holder.lay_in.setVisibility(View.VISIBLE);
             holder.lay_out.setVisibility(View.INVISIBLE);
-            holder.comment.setText(myList.get(position).getComment());
+            holder.comment.setText(Application.getTimeAgo(myList.get(position).getComment()));
             holder.date.setText(myList.get(position).getDate());
             holder.name.setText(myList.get(position).getName());
             Glide.with(holder.itemView.getContext()).load(ApiClient.BASE_URL+"uploads/members/"+myList.get

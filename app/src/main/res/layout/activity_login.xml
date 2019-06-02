@@ -5,8 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorLight"
-    >
+    android:background="@color/colorLight">
 
     <LinearLayout
         android:orientation="vertical"
@@ -50,8 +49,7 @@
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/username"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableRight="@drawable/outline_supervised_user_circle_black_24" />
+                android:layout_height="wrap_content" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -88,6 +86,16 @@
             android:text="REGISTER"
             android:textAllCaps="false"
             android:textColor="#FFF" />
+
+        <TextView
+            android:id="@+id/forgot_pass"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="right"
+            android:layout_marginTop="5dp"
+            android:text="Lupa kata sandi ?"
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <ImageView

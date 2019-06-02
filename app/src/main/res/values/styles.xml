@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionBarItemBackground">@color/colorLight</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -17,11 +18,24 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.ActionBar" />
 
-    <style name="PrimaryTheme" parent="AppTheme" />
+    <style name="PrimaryTheme" parent="Theme.AppCompat.DayNight" />
 
-    <style name="PrimaryTheme.NoActionBar">
-        <item name="android:windowEnterAnimation">@anim/fadein</item>
-        <item name="android:windowExitAnimation">@anim/fadeout</item>
+    <style name="PrimaryThemeLight" parent="AppTheme" />
+
+    <style name="PrimaryTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowEnterAnimation">@anim/down_to_up</item>
+        <item name="android:windowExitAnimation">@anim/left_to_right</item>
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionBarItemBackground">@color/colorLight</item>
+    </style>
+
+    <style name="PrimaryThemeLight.NoActionBar" parent="AppTheme">
+        <item name="android:windowEnterAnimation">@anim/down_to_up</item>
+        <item name="android:windowExitAnimation">@anim/left_to_right</item>
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -34,7 +48,11 @@
 
     <style name="PrimaryTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="ZoomImageDialog">
+    <style name="ZoomImageDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@color/colorDark</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowEnterAnimation">@anim/fadein</item>
         <item name="android:windowExitAnimation">@anim/fadeout</item>
     </style>
@@ -48,6 +66,11 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="DialogAnimation_downUp">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_bottom</item>
     </style>
 
 </resources>

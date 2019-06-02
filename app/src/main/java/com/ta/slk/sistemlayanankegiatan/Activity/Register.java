@@ -20,7 +20,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dd.CircularProgressButton;
+import com.ta.slk.sistemlayanankegiatan.Method.Application;
 import com.ta.slk.sistemlayanankegiatan.Method.FileUtil;
+import com.ta.slk.sistemlayanankegiatan.Method.Session;
 import com.ta.slk.sistemlayanankegiatan.Model.GetUsers;
 import com.ta.slk.sistemlayanankegiatan.Model.PostData;
 import com.ta.slk.sistemlayanankegiatan.Model.Users;
@@ -46,7 +48,7 @@ public class Register extends AppCompatActivity {
     CircleImageView upload;
     CircularProgressButton button;
     File originalFile,fileCompressed;
-    public static Register register;
+    public Register register;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,24 +161,31 @@ public class Register extends AppCompatActivity {
                         action);
 
                 ApiMembers members = ApiClient.getAuth().create(ApiMembers.class);
+            Call<PostData> call;
+            call = members.registerMember(body, reqId, reqName, reqUsername, reqPassword, reqAddress, reqContact, reqEmail, Reqaction);
+            if (action.equals("Update")) {
+                Session session = Application.getSession();
+                RequestBody idUser = MultipartBody.create(MediaType.parse("multipart/form-data"),
+                        session.getidUser());
+                call = members.editMember(body, idUser, reqId, reqName, reqPassword, reqAddress, reqContact, reqEmail, Reqaction);
+            }
 
-                members.registerMember(body, reqId, reqName, reqUsername, reqPassword, reqAddress, reqContact, reqEmail, Reqaction)
-                        .enqueue(new Callback<PostData>() {
+            call.enqueue(new Callback<PostData>() {
                     @Override
                     public void onResponse(Call<PostData> call, Response<PostData> response) {
-                        if (response.isSuccessful()) {
-                            if (response.body().getStatus().equals("success")) {
+                        if (response.body().getStatus().equals("success")) {
                                 button.setProgress(100);
-                                button.setProgress(0);
                                 finish();
+                            if (action.equals("Update")) {
                                 Toast.makeText(getApplicationContext(), "Update sukses,Silahkan login kembali", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                                intent.putExtra("message","logout");
+                                intent.putExtra("message", "logout");
                                 startActivity(intent);
+                            }
                             }else{
+                            Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 errorButton();
                             }
-                        }
                     }
 
                     @Override
@@ -233,8 +242,9 @@ public class Register extends AppCompatActivity {
             public void onResponse(Call<GetUsers> call, Response<GetUsers> response) {
                 if(response.code()==200){
                     if(response.body().getStatus().equals("success")){
-                        txt_username.setVisibility(View.GONE);
-                        txt_password.setVisibility(View.GONE);
+                        Session session = Application.getSession();
+                        txt_username.setText(session.getUsername());
+                        txt_username.setEnabled(false);
                         txt_name.setText(response.body().getResult().get(0).getName());
                         txt_address.setText(response.body().getResult().get(0).getAddress());
                         txt_email.setText(response.body().getResult().get(0).getEmail());

@@ -2,6 +2,7 @@ package com.ta.slk.sistemlayanankegiatan.Fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -31,6 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.brouding.simpledialog.SimpleDialog;
 import com.bumptech.glide.Glide;
 import com.ta.slk.sistemlayanankegiatan.Adapter.DoctAdapter;
 import com.ta.slk.sistemlayanankegiatan.Method.*;
@@ -43,6 +45,7 @@ import com.ta.slk.sistemlayanankegiatan.Rest.ApiDocumentation;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import id.zelory.compressor.Compressor;
@@ -57,10 +60,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DocumentationFragment extends Fragment{
+    SimpleDialog progressDialog;
     ProgressBar progressBar;
     Bundle bundle;
     FloatingActionButton upload;
     SwipeRefreshLayout refreshLayout;
+    DoctAdapter mAdapter;
     RecyclerView recyclerView;
     TextView status;
     private String imagePath;
@@ -78,10 +83,14 @@ public class DocumentationFragment extends Fragment{
         progressBar = view.findViewById(R.id.progress_bar);
         status = view.findViewById(R.id.txt_status);
         upload = view.findViewById(R.id.btn_upload);
+        upload.show();
         refreshLayout = view.findViewById(R.id.swipe_refresh);
         fragment = this;
+        list = new ArrayList<>();
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),4));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        mAdapter = new DoctAdapter(getContext(), list);
+        recyclerView.setAdapter(mAdapter);
         service = ApiClient.getClient().create(ApiDocumentation.class);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -110,18 +119,21 @@ public class DocumentationFragment extends Fragment{
         service.getDocumentation(bundle.get("id_activity").toString()).enqueue(new Callback<GetDocumentation>() {
             @Override
             public void onResponse(Call<GetDocumentation> call, Response<GetDocumentation> response) {
-                refreshLayout.setRefreshing(false);
-                progressBar.setVisibility(View.GONE);
                 if(response.code()==200){
-                    progressBar.setVisibility(View.GONE);
-                    list = response.body().getResult();
-                    if(list.size()==0){
+                    if (response.body().getResult().size() == 0) {
+                        list.clear();
                         status.setVisibility(View.VISIBLE);
                     }else{
-                        recyclerView.setAdapter(new DoctAdapter(getContext(),list));
+                        list.clear();
+                        list.addAll(response.body().getResult());
+                        status.setVisibility(View.GONE);
                     }
+                    mAdapter.notifyDataSetChanged();
+                    refreshLayout.setRefreshing(false);
+                    progressBar.setVisibility(View.GONE);
                 }
             }
+
 
             @Override
             public void onFailure(Call<GetDocumentation> call, Throwable t) {
@@ -174,24 +186,27 @@ public class DocumentationFragment extends Fragment{
     }
 
     private void doDelete(String id){
+        progressDialog = Application.getProgress(getContext(), "Sedang mengahpus").show();
         service.del_docs(id).enqueue(new Callback<PostData>() {
             @Override
             public void onResponse(Call<PostData> call, Response<PostData> response) {
                 if(response.code()==200){
                     if(response.body().getStatus().equals("success")){
                         Toast.makeText(getContext(),"Berhasil di Hapus",Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
-
+                progressDialog.dismiss();
             }
         });
     }
 
     private void doUpload(){
+        progressDialog = Application.getProgress(getContext(), "Sedang mengupload").show();
         MultipartBody.Part body = null;
         if (!imagePath.isEmpty()){
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileCompressed);
@@ -206,7 +221,6 @@ public class DocumentationFragment extends Fragment{
             public void onResponse(Call<PostData> call, final Response<PostData> response) {
                 if(response.code()==200){
                     if(response.body().getStatus().equals("success")){
-                        loadData();
                         Snackbar.make(getView(),"Berhasil di upload ",Snackbar.LENGTH_LONG).setAction("undo", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -214,13 +228,16 @@ public class DocumentationFragment extends Fragment{
                                 loadData();
                             }
                         }).show();
+                        loadData();
                     }
+                    progressDialog.dismiss();
                 }
             }
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
                 Snackbar.make(getView(),"Cek Koneksi Internet",Snackbar.LENGTH_LONG).show();
+                progressDialog.dismiss();
             }
         });
     }

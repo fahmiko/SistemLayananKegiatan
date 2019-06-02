@@ -5,26 +5,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.abdeveloper.library.MultiSelectDialog;
 import com.abdeveloper.library.MultiSelectModel;
+import com.brouding.simpledialog.SimpleDialog;
 import com.ta.slk.sistemlayanankegiatan.Adapter.*;
-import com.ta.slk.sistemlayanankegiatan.AdminContent;
+import com.ta.slk.sistemlayanankegiatan.AddInvitation;
 import com.ta.slk.sistemlayanankegiatan.DetailActivity;
 import com.ta.slk.sistemlayanankegiatan.Model.*;
 import com.ta.slk.sistemlayanankegiatan.Rest.*;
@@ -42,14 +39,14 @@ import com.ta.slk.sistemlayanankegiatan.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class ActivitiesFragment extends Fragment {
+    SimpleDialog progress;
+    MultiSelectDialog multiSelectDialog;
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
-    RecyclerView.LayoutManager mLayoutManager;
     SwipeRefreshLayout refreshLayout;
     ProgressBar progressBar;
-    FloatingActionButton floatingActionButton;
-    MultiSelectDialog multiSelectDialog;
+    ImageView noData;
     View v;
     private String id_activity;
     public static Fragment activityFragment;
@@ -68,24 +65,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_activities, container, false);
-        this.v = view;
-        mRecyclerView = view.findViewById(R.id.recycler_content);
-        progressBar = view.findViewById(R.id.progress_bar);
-        refreshLayout = view.findViewById(R.id.swipe_refresh);
-        refreshLayout.setOnRefreshListener(this);
-        activityFragment = this;
-//        refreshLayout.setColorSchemeResources(R.color.colorAccent,
-//                android.R.color.holo_green_dark,
-//                android.R.color.holo_orange_dark,
-//                android.R.color.holo_blue_dark);
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                onRefresh();
-            }
-        });
-//        mLayoutManager = new LinearLayoutManager(view.getContext());
-//        mRecyclerView.setLayoutManager(mLayoutManager);
+        initComponents(view);
 
         loadData();
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), mRecyclerView, new ClickListenner() {
@@ -125,7 +105,16 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
                                 dialog2.show(getFragmentManager(),"Testing");
                                 break;
                             case 3:
-
+                                Bundle activities = new Bundle();
+                                activities.putString("action", "update");
+                                activities.putString("date", listActivities.get(position).getDate());
+                                activities.putString("id_activity", listActivities.get(position).getIdActivity());
+                                activities.putString("picture", listActivities.get(position).getPicture());
+                                activities.putString("name", listActivities.get(position).getNameActivities());
+                                activities.putString("location", listActivities.get(position).getPlace());
+                                activities.putString("description", listActivities.get(position).getDescription());
+                                activities.putString("file", listActivities.get(position).getFile());
+                                startActivity(new Intent(getContext(), AddInvitation.class).putExtras(activities));
                                 break;
                             case 4:
                                 deleteActivity(listActivities.get(position).getIdActivity());
@@ -136,6 +125,24 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
             }
         }));
         return view;
+    }
+
+    private void initComponents(View view) {
+        mRecyclerView = view.findViewById(R.id.recycler_content);
+        progressBar = view.findViewById(R.id.progress_bar);
+        refreshLayout = view.findViewById(R.id.swipe_refresh);
+        noData = view.findViewById(R.id.no_data);
+        activityFragment = this;
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+            }
+        });
+        listActivities = new ArrayList<>();
+        mAdapter = new ActivitiesAdapter(listActivities, getContext());
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.scheduleLayoutAnimation();
     }
 
     private void deleteActivity(final String idActivity) {
@@ -150,6 +157,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     private void doDelete(String idActivity) {
+        progress = Application.getProgress(getContext(), "Sedanga menghapus data").show();
         ApiInterface service = ApiClient.getClient().create(ApiInterface.class);
         Call<PostData> call = service.deleteActivities(idActivity);
         call.enqueue(new Callback<PostData>() {
@@ -159,7 +167,8 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
                         Toast.makeText(getContext(),"Berhasil di hapus",Toast.LENGTH_SHORT).show();
                         loadData();
                         mAdapter.notifyDataSetChanged();
-                    }
+                }
+                progress.dismiss();
             }
 
             @Override
@@ -176,11 +185,20 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
             @Override
             public void onResponse(Call<GetActivities> call, Response<GetActivities> response) {
                 if(response.code()==200){
-                    listActivities = response.body().getResult();
-                    mAdapter = new ActivitiesAdapter(listActivities, getContext());
-                    mRecyclerView.scheduleLayoutAnimation();
-                    mRecyclerView.setAdapter(mAdapter);
-                    progressBar.setVisibility(View.GONE);
+                    if (response.body().getResult().size() == 0) {
+                        listActivities.clear();
+                        noData.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                        refreshLayout.setRefreshing(false);
+                    } else {
+                        noData.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
+                        refreshLayout.setRefreshing(false);
+                        listActivities.clear();
+                        listActivities.addAll(response.body().getResult());
+                    }
+                    mAdapter.notifyDataSetChanged();
+                    refreshLayout.setRefreshing(false);
                     getDataGroups();
                     getDataUsers();
                 }else{
@@ -198,13 +216,17 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
             @Override
             public void onFailure(Call<GetActivities> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
-                Snackbar.make(v,"Cek koneksi Internet",Snackbar.LENGTH_LONG).setAction("retry", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        progressBar.setVisibility(View.VISIBLE);
-                        loadData();
-                    }
-                }).show();
+                try {
+                    Snackbar.make(activityFragment.getView(), "Cek koneksi Internet", Snackbar.LENGTH_LONG).setAction("retry", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            loadData();
+                        }
+                    }).show();
+                } catch (Exception e) {
+
+                }
             }
         });
     }
@@ -292,6 +314,7 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     private void sendInvitation(ArrayList<Integer> list, String action){
+        progress = Application.getProgress(getContext(), "Sedang mengirim undangan").show();
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<PostData> postDataCall = apiInterface.sendInvitation(list,id_activity,action);
         postDataCall.enqueue(new Callback<PostData>() {
@@ -302,16 +325,19 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
                         Toast.makeText(getContext(),"Undangan Berhasil dikirimkan",Toast.LENGTH_SHORT).show();
                     }
                 }
+                progress.dismiss();
             }
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
 //                Toast.makeText(getContext(),"Cek koneksi interner",Toast.LENGTH_SHORT).show();
+                progress.dismiss();
             }
         });
     }
 
     private void sendGroup(ArrayList<Integer> list){
+        progress = Application.getProgress(getContext(), "Sedang mengirimkan undangan").show();
         ApiGroups apiGroups = ApiClient.getClient().create(ApiGroups.class);
         Call<PostData> call = apiGroups.sendGroup(list,id_activity);
         call.enqueue(new Callback<PostData>() {
@@ -322,18 +348,14 @@ public class ActivitiesFragment extends Fragment implements SwipeRefreshLayout.O
                         Toast.makeText(getContext(),"Undangan Berhasil dikirimkan",Toast.LENGTH_SHORT).show();
                     }
                 }
+                progress.dismiss();
             }
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
-                Toast.makeText(getContext(),"Cek koneksi internet",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(),"Cek koneksi internet",Toast.LENGTH_SHORT).show();
+                progress.dismiss();
             }
         });
-    }
-
-    @Override
-    public void onRefresh() {
-        loadData();
-        refreshLayout.setRefreshing(false);
     }
 }

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -25,6 +26,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.List;
+
+import uk.co.senab.photoview.PhotoView;
 
 public class DoctAdapter extends RecyclerView.Adapter<DoctAdapter.MyViewHolder>{
     private Context context;
@@ -54,10 +57,11 @@ public class DoctAdapter extends RecyclerView.Adapter<DoctAdapter.MyViewHolder>{
         holder.imageDoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog=new Dialog(context,R.style.ZoomImageDialog);
+                final Dialog dialog = new Dialog(v.getContext(), R.style.ZoomImageDialog);
                 dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//                dialog.getWindow().getAttributes().windowAnimations = R.style.ZoomImageDialog;
                 dialog.setContentView(R.layout.zoom_image);
-                final ImageView imageView = dialog.findViewById(R.id.zoom_image);
+                final PhotoView imageView = dialog.findViewById(R.id.zoom_image);
 //                ImageButton btnSave = dialog.findViewById(R.id.btn_save_image);
                 try {
                     Glide.with(v.getContext()).load(ApiClient.BASE_URL+"uploads/documentation/"+documentationList.get

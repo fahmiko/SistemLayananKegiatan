@@ -25,6 +25,14 @@ public class Session {
         return preferences.getString("id_member",null);
     }
 
+    public String getUsername() {
+        return preferences.getString("username", null);
+    }
+
+    public String getidUser() {
+        return preferences.getString("id_user", null);
+    }
+
     public void saveDeviceToken(String token){
         SharedPreferences sf = context.getSharedPreferences("device_token",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sf.edit();
@@ -65,11 +73,6 @@ public class Session {
         SharedPreferences.Editor editor = sf.edit();
         editor.clear().apply();
         Intent intent = new Intent(context, LoginActivity.class);
-        if (condition == 1){
-//            intent.putExtra("message","Berhasil Logout");
-        }else{
-//            intent.putExtra("message","SESI ANDA SUDAH HABIS");
-        }
         context.startActivity(intent);
 
     }

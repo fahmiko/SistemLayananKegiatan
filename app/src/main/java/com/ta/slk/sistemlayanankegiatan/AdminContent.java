@@ -1,5 +1,6 @@
 package com.ta.slk.sistemlayanankegiatan;
 
+import com.brouding.simpledialog.SimpleDialog;
 import com.ta.slk.sistemlayanankegiatan.Activity.LoginActivity;
 import com.ta.slk.sistemlayanankegiatan.Fragments.*;
 import com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitation;
@@ -53,6 +54,7 @@ import retrofit2.http.POST;
 
 public class AdminContent extends AppCompatActivity {
     private BottomNavigationView mNavigationView;
+    SimpleDialog progressDialog;
     private FrameLayout mFrameLayout;
     private Toolbar toolbar;
     private ActivitiesFragment activitiesFragment;
@@ -61,11 +63,8 @@ public class AdminContent extends AppCompatActivity {
     private ProfileFragment profileFragment;
     public static AdminContent adminContent;
     BottomNavigationView navigationView;
-    private com.ta.slk.sistemlayanankegiatan.Fragments.UserInvitation userInvitation;
-    String TAG = "checking";
     String imagePath = "";
     TextInputEditText title, description, image;
-    Button save, close;
     Boolean isSuccess;
     File originalFile,fileCompressed;
 
@@ -82,7 +81,7 @@ public class AdminContent extends AppCompatActivity {
         groupsFragment = new GroupsFragment();
         membersFragment = new MembersFragment();
         profileFragment = new ProfileFragment();
-
+        activitiesFragment.loadData();
         setFragment(activitiesFragment);
 //        getTimeAgo();
 
@@ -116,7 +115,7 @@ public class AdminContent extends AppCompatActivity {
                         return true;
                     case R.id.nav_admin_logout:
                         AlertDialog.Builder builder = new AlertDialog.Builder(AdminContent.this);
-                        builder.setTitle("Peringatan").setMessage("Yaking ingin logout");
+                        builder.setTitle("Peringatan").setMessage("Yakin ingin logout");
                         builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -176,7 +175,7 @@ public class AdminContent extends AppCompatActivity {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(AdminContent.this);
                 LayoutInflater inflater = getLayoutInflater();
                 final View dialog = inflater.inflate(R.layout.manage_groups,null);
-                builder.setView(dialog).setTitle("Tambah Group").setIcon(R.drawable.group);
+                builder.setView(dialog).setTitle("Tambah Group");
                 title = dialog.findViewById(R.id.mg_title_text);
                 description = dialog.findViewById(R.id.mg_desc_text);
                 image = dialog.findViewById(R.id.mg_img_text);
@@ -195,6 +194,7 @@ public class AdminContent extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         insertGroup();
+                        progressDialog = Application.getProgress(AdminContent.this, "Sedang menambahkan grup").show();
                         dialog.dismiss();
                     }
 
@@ -211,7 +211,7 @@ public class AdminContent extends AppCompatActivity {
                 final AlertDialog.Builder builder2 = new AlertDialog.Builder(AdminContent.this);
                 LayoutInflater inflater2 = getLayoutInflater();
                 final View dialog2 = inflater2.inflate(R.layout.popup_manage_member,null);
-                builder2.setView(dialog2).setTitle("Tambah Member").setIcon(R.drawable.ic_assignment_ind_black_24dp);
+                builder2.setView(dialog2).setTitle("Tambah Member");
                 final TextInputEditText nip = dialog2.findViewById(R.id.mb_nip);
                 final TextInputEditText name = dialog2.findViewById(R.id.mb_name);
 
@@ -219,6 +219,7 @@ public class AdminContent extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         insertMember(nip.getText().toString(),name.getText().toString());
+                        progressDialog = Application.getProgress(AdminContent.this, "Silahkan menunggu").show();
                         dialog.dismiss();
                     }
 
@@ -245,28 +246,15 @@ public class AdminContent extends AppCompatActivity {
                 if(response.code()==200){
                     Toast.makeText(getApplicationContext(),"Data berhasil ditambahkan",Toast.LENGTH_SHORT).show();
                 }
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
                 Toast.makeText(getApplicationContext(),"Cek Koneksi Interner",Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         });
-    }
-
-    private void getTimeAgo() {
-        String input = "1970-01-09 17:11:23.104";
-        SimpleDateFormat parser = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy");
-        Date date = null;
-        try {
-            date = parser.parse(input);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = formatter.format(date);
-
-        Log.d("date", formattedDate.toString());
     }
 
     private void insertGroup() {
@@ -293,11 +281,12 @@ public class AdminContent extends AppCompatActivity {
                     isSuccess = false;
                     Toast.makeText(getApplicationContext(),"Data Gagal Ditambahkan",Toast.LENGTH_SHORT).show();
                 }
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
-
+                progressDialog.dismiss();
             }
         });
     }

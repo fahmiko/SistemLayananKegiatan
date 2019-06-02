@@ -14,6 +14,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 public interface ApiInterface {
     @GET("Rest_slkg/activities")
@@ -94,6 +95,18 @@ public interface ApiInterface {
             @Part("date") RequestBody date,
             @Part("description") RequestBody description,
             @Part("comment_key") RequestBody key
+    );
+
+    @Multipart
+    @POST("Rest_activities/update")
+    Call<PostData> updateActivity(
+            @Part MultipartBody.Part file,
+            @Part MultipartBody.Part docs,
+            @Part("id_activity") RequestBody id,
+            @Part("name") RequestBody name,
+            @Part("location") RequestBody location,
+            @Part("date") RequestBody date,
+            @Part("description") RequestBody description
     );
 
     @FormUrlEncoded

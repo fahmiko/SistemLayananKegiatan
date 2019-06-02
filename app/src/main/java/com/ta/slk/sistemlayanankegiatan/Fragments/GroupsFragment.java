@@ -25,11 +25,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.abdeveloper.library.MultiSelectDialog;
 import com.abdeveloper.library.MultiSelectModel;
+import com.brouding.simpledialog.SimpleDialog;
 import com.ta.slk.sistemlayanankegiatan.Adapter.GroupsAdapter;
 import com.ta.slk.sistemlayanankegiatan.AdminContent;
 import com.ta.slk.sistemlayanankegiatan.DetailGroups;
@@ -65,14 +67,15 @@ import retrofit2.Response;
  */
 public class GroupsFragment extends Fragment{
     RecyclerView recyclerView;
+    SimpleDialog progress;
     SwipeRefreshLayout refreshLayout;
     ProgressBar progressBar;
     RecyclerView.Adapter adapter;
     MultiSelectDialog multiSelectDialog;
+    ImageView noData;
 
     ApiGroups service;
     private String imagePath;
-    Context myContext;
     Fragment fragment;
     TextInputEditText title, description, image;
 
@@ -91,13 +94,7 @@ public class GroupsFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_groups,container,false);
-        recyclerView = view.findViewById(R.id.recycler_content);
-        refreshLayout = view.findViewById(R.id.swipe_refresh);
-        progressBar = view.findViewById(R.id.progress_bar);
-        service = ApiClient.getClient().create(ApiGroups.class);
-        myContext = view.getContext();
-        fragment = this;
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        initComponents(view);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -143,6 +140,21 @@ public class GroupsFragment extends Fragment{
         return view;
     }
 
+    private void initComponents(View view) {
+        fragment = this;
+        recyclerView = view.findViewById(R.id.recycler_content);
+        refreshLayout = view.findViewById(R.id.swipe_refresh);
+        progressBar = view.findViewById(R.id.progress_bar);
+        noData = view.findViewById(R.id.no_data);
+
+        groupsList = new ArrayList<>();
+        service = ApiClient.getClient().create(ApiGroups.class);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.scheduleLayoutAnimation();
+        adapter = new GroupsAdapter(groupsList, getContext());
+        recyclerView.setAdapter(adapter);
+    }
+
     private MultiSelectDialog inviteGroup(final int position) {
         ArrayList<MultiSelectModel> listOfSelect= new ArrayList<>();
         for(int i=0 ;i < usersList.size();i++) {
@@ -173,6 +185,7 @@ public class GroupsFragment extends Fragment{
     }
 
     private void sendInvitationGroup(ArrayList<Integer> arrayList, String idGroup) {
+        progress = Application.getProgress(getContext(), "Menambahka anggota").show();
         Call<PostData> call = service.inviteGroup(arrayList,idGroup);
         call.enqueue(new Callback<PostData>() {
             @Override
@@ -183,11 +196,13 @@ public class GroupsFragment extends Fragment{
                         loadData();
                     }
                 }
+                progress.dismiss();
             }
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
-//                Snackbar.make(getView(), "Cek Koneksi internet",Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(getView(), "Cek Koneksi internet", Snackbar.LENGTH_SHORT).show();
+                progress.dismiss();
             }
         });
     }
@@ -200,18 +215,21 @@ public class GroupsFragment extends Fragment{
             @Override
             public void onResponse(Call<GetGroups> call, Response<GetGroups> response) {
                 if(response.code()==200){
-                    groupsList = response.body().getResult();
-                    adapter = new GroupsAdapter(groupsList,getContext());
-                    recyclerView.scheduleLayoutAnimation();
-                    recyclerView.setAdapter(adapter);
+                    if (response.body().getResult().size() == 0) {
+                        noData.setVisibility(View.VISIBLE);
+                        groupsList.clear();
+                    } else {
+                        noData.setVisibility(View.GONE);
+                        groupsList.clear();
+                        groupsList.addAll(response.body().getResult());
+                    }
+                    adapter.notifyDataSetChanged();
                     progressBar.setVisibility(View.GONE);
                     refreshLayout.setRefreshing(false);
                 }else{
-                    progressBar.setVisibility(View.GONE);
-                    Snackbar.make(getView(),"Cek koneksi Internet",Snackbar.LENGTH_LONG).setAction("retry", new View.OnClickListener() {
+                    Snackbar.make(getView(), "Cek Koneksi Internet ", Snackbar.LENGTH_LONG).setAction("retry", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            progressBar.setVisibility(View.VISIBLE);
                             loadData();
                         }
                     }).show();
@@ -251,6 +269,7 @@ public class GroupsFragment extends Fragment{
     }
 
     private void deleteData(String id){
+        progress = Application.getProgress(getContext(), "Sedanga menghapus data").show();
         Call<PostData> call = service.del_group(id);
         call.enqueue(new Callback<PostData>() {
             @Override
@@ -262,11 +281,12 @@ public class GroupsFragment extends Fragment{
                         adapter.notifyDataSetChanged();
                     }
                 }
+                progress.dismiss();
             }
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
-
+                progress.dismiss();
             }
         });
     }
@@ -294,11 +314,12 @@ public class GroupsFragment extends Fragment{
                     loadData();
                     adapter.notifyDataSetChanged();
                 }
+                progress.dismiss();
             }
 
             @Override
             public void onFailure(Call<PostData> call, Throwable t) {
-
+                progress.dismiss();
             }
         });
 
@@ -330,6 +351,7 @@ public class GroupsFragment extends Fragment{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 doUpdate(groupsList.get(position).getIdGroup());
+                progress = Application.getProgress(getContext(), "Sedang memperbarui data").show();
             }
         });
         builder.show();

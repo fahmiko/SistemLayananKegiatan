@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.github.siyamed.shapeimageview.RoundedImageView;
@@ -41,6 +43,7 @@ import com.ta.slk.sistemlayanankegiatan.Rest.ApiGroups;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiInterface;
 import com.ta.slk.sistemlayanankegiatan.Rest.ApiMembers;
 
+import java.io.File;
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,16 +51,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DetailFragment extends Fragment {
-    CardView file,location;
-    TextView detail;
+    CardView file, location, layAccept, layPending, layRejected;
+    TextView detail, c1, c2, c3;
     Bundle bundle;
-    ImageButton place;
     CardView cardOption;
     Button exit;
     Session session;
-    RecyclerView recyclerView,recyclerView2;
-    RecyclerView.Adapter adapter,adapter2;
-    List<Users> usersList,usersList2;
+    RecyclerView recyclerView, recyclerView2, recyclerView3;
+    RecyclerView.Adapter adapter, adapter2, adapter3;
+    List<Users> usersList, usersList2, usersList3;
     ApiMembers service;
     public DetailFragment() {
 
@@ -67,20 +69,15 @@ public class DetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_detail,container,false);
-        detail = view.findViewById(R.id.dt_detail);
-        location = view.findViewById(R.id.locDocs);
-        file = view.findViewById(R.id.fileDocs);
-        recyclerView = view.findViewById(R.id.recycler_member);
-        recyclerView2 = view.findViewById(R.id.recycler_pending);
-        cardOption = view.findViewById(R.id.card_option);
-        exit = view.findViewById(R.id.action_activity);
-        session = Application.getSession();
-        recyclerView2.setLayoutManager(new LinearLayoutManager(getContext()));
         bundle = getArguments();
+        initComponents(view);
+        recyclerView2.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView3.setLayoutManager(new LinearLayoutManager(getContext()));
         detail.setText(bundle.getString("description"));
         service = ApiClient.getClient().create(ApiMembers.class);
         loadDataMembers();
         loadDataPending();
+        loadDataRejected();
         location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,16 +90,20 @@ public class DetailFragment extends Fragment {
         file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse( ApiClient.BASE_URL+"uploads/" + bundle.getString("file")), "text/html");
-                startActivity(intent);
+                if (!bundle.getString("file").equals("")) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse(ApiClient.BASE_URL + "uploads/" + bundle.getString("file")), "text/html");
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(v.getContext(), "File tidak ditemukan", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new ClickListenner() {
+        recyclerView3.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new ClickListenner() {
             @Override
             public void onClick(View v, int position) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Pesan").setMessage(usersList.get(position).getMessage());
+                builder.setTitle("Pesan").setMessage(usersList3.get(position).getMessage());
                 builder.setIcon(R.drawable.round_announcement_black_18dp).create().show();
             }
 
@@ -113,6 +114,8 @@ public class DetailFragment extends Fragment {
         }));
         if(session.isAdmin()){
             cardOption.setVisibility(View.GONE);
+            layPending.setVisibility(View.VISIBLE);
+            layRejected.setVisibility(View.VISIBLE);
         }
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +139,24 @@ public class DetailFragment extends Fragment {
         return view;
     }
 
+    private void initComponents(View view) {
+        recyclerView = view.findViewById(R.id.recycler_member);
+        recyclerView2 = view.findViewById(R.id.recycler_pending);
+        recyclerView3 = view.findViewById(R.id.recycler_rejected);
+        layAccept = view.findViewById(R.id.lay_accept);
+        layPending = view.findViewById(R.id.lay_pending);
+        layRejected = view.findViewById(R.id.lay_rejected);
+        detail = view.findViewById(R.id.dt_detail);
+        location = view.findViewById(R.id.locDocs);
+        file = view.findViewById(R.id.fileDocs);
+        c1 = view.findViewById(R.id.c_accept);
+        c2 = view.findViewById(R.id.c_pending);
+        c3 = view.findViewById(R.id.c_rejected);
+        cardOption = view.findViewById(R.id.card_option);
+        exit = view.findViewById(R.id.action_activity);
+        session = Application.getSession();
+    }
+
     private void loadDataPending() {
         Call<GetUsers> call = service.getUserActivities(bundle.getString("id_activity", null),"pending");
         call.enqueue(new Callback<GetUsers>() {
@@ -146,6 +167,7 @@ public class DetailFragment extends Fragment {
                         usersList2 = response.body().getResult();
                         adapter2 = new MembersAdapter(usersList2,getContext());
                         recyclerView2.setAdapter(adapter2);
+                        c2.setText(usersList2.size() + " Anggota");
                     }
                 }
             }
@@ -168,6 +190,29 @@ public class DetailFragment extends Fragment {
                         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                         adapter = new MembersAdapter(usersList,getContext());
                         recyclerView.setAdapter(adapter);
+                        c1.setText(usersList.size() + " Anggota");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetUsers> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void loadDataRejected() {
+        Call<GetUsers> call = service.getUserActivities(bundle.getString("id_activity", null), "rejected");
+        call.enqueue(new Callback<GetUsers>() {
+            @Override
+            public void onResponse(Call<GetUsers> call, Response<GetUsers> response) {
+                if (response.code() == 200) {
+                    if (response.body().getResult().size() != 0) {
+                        usersList3 = response.body().getResult();
+                        adapter3 = new MembersAdapter(usersList3, getContext());
+                        recyclerView3.setAdapter(adapter3);
+                        c3.setText(usersList3.size() + " Anggota");
                     }
                 }
             }

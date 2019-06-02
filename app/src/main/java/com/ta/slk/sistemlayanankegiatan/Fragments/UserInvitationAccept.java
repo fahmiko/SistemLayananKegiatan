@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class UserInvitationAccept extends Fragment {
     SwipeRefreshLayout refreshLayout;
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
+    ImageView noData;
     RecyclerView.LayoutManager layoutManager;
     List<InvtActivities> activitiesList;
     @Nullable
@@ -44,6 +46,7 @@ public class UserInvitationAccept extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_content);
         progressBar = view.findViewById(R.id.progress_bar);
         refreshLayout = view.findViewById(R.id.swipe_refresh);
+        noData = view.findViewById(R.id.no_data);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -65,8 +68,11 @@ public class UserInvitationAccept extends Fragment {
             public void onResponse(Call<GetInvtActivities> call, Response<GetInvtActivities> response) {
                 if(response.code()==200){
                     if(response.body().getResult().size()==0){
-                        Toast.makeText(getContext(),"NO DATA",Toast.LENGTH_SHORT).show();
+                        refreshLayout.setRefreshing(false);
+                        progressBar.setVisibility(View.GONE);
+                        noData.setVisibility(View.VISIBLE);
                     }else{
+                        noData.setVisibility(View.GONE);
                         activitiesList = response.body().getResult();
                         adapter = new InvitationAdapter(activitiesList,view.getContext());
                         recyclerView.setAdapter(adapter);

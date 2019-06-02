@@ -25,7 +25,9 @@
                 android:layout_height="100dp"
                 android:background="@drawable/cercleshape"
                 android:src="@drawable/polinema_logo"
-                android:padding="5dp"/>
+                android:padding="2dp" />
+
+
             <TextView
                 android:id="@+id/name_group"
                 android:layout_width="wrap_content"

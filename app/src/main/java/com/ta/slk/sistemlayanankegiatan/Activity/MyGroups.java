@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,7 @@ public class MyGroups extends AppCompatActivity{
     ProgressBar progressBar;
     WaveSwipeRefreshLayout refreshLayout;
     public static MyGroups myGroups;
+    ImageView noData;
     Toolbar toolbar;
     ApiInterface service;
     List<Groups> groupsList;
@@ -51,6 +53,7 @@ public class MyGroups extends AppCompatActivity{
         refreshLayout = findViewById(R.id.swipe_refresh);
         refreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorLight));
         refreshLayout.setWaveColor(getResources().getColor(R.color.colorPrimary));
+        noData = findViewById(R.id.no_data);
         progressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.recycler_content);
         toolbar = findViewById(R.id.toolbar);
@@ -98,6 +101,7 @@ public class MyGroups extends AppCompatActivity{
             public void onResponse(Call<GetGroups> call, Response<GetGroups> response) {
                 if(response.code()==200){
                     if(response.body().getResult().size()!=0){
+                        noData.setVisibility(View.GONE);
                         refreshLayout.setRefreshing(false);
                         progressBar.setVisibility(View.GONE);
                         groupsList = response.body().getResult();
@@ -106,7 +110,7 @@ public class MyGroups extends AppCompatActivity{
                     }else{
                         progressBar.setVisibility(View.GONE);
                         refreshLayout.setRefreshing(false);
-                        Toast.makeText(getApplicationContext(), "NO DATA",Toast.LENGTH_SHORT).show();
+                        noData.setVisibility(View.VISIBLE);
                     }
                 }
             }

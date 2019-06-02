@@ -17,6 +17,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.MyViewHolder> {
     private Context context;
     private List<Activities> myActivity;
@@ -78,14 +80,17 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
         }
         long diff = d2.getTime() - d1.getTime();
         long diffHours = diff / (60 * 60 * 1000);
-        long datediff = d2.getDate() - d1.getDate();
-        if(datediff <=7 && datediff >=0){
+        long datediff = TimeUnit.MILLISECONDS.toDays(d2.getTime() - d1.getTime());
+        if (datediff == 0) {
             holder.status.setBackgroundResource(R.drawable.shape_orange);
-            holder.status.setText(datediff+" DAYS");
+            holder.status.setText("SEKARANG");
+        } else if (datediff <= 7 && datediff > 0) {
+            holder.status.setBackgroundResource(R.drawable.shape_orange);
+            holder.status.setText(datediff + " HARI");
         }else if(diffHours < 0){
             if(diffHours <= -24){
                 holder.status.setBackgroundResource(R.drawable.shape_green);
-                holder.status.setText("FINISH");
+                holder.status.setText("SELESAI");
             }
         }else{
             holder.status.setText(datediff+" DAYS");

@@ -36,7 +36,8 @@
             android:theme="@style/CustomToolbar" />
         <activity
             android:name=".Activity.Register"
-            android:theme="@style/PrimaryTheme.NoActionBar" />
+            android:theme="@style/PrimaryTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -63,6 +64,7 @@
             android:theme="@style/PrimaryTheme.NoActionBar" />
         <activity
             android:name=".AddInvitation"
+            android:theme="@style/PrimaryThemeLight.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
         <service
@@ -80,7 +82,7 @@
         <activity
             android:name=".Activity.LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/PrimaryTheme.NoActionBar" />
+            android:theme="@style/PrimaryThemeLight.NoActionBar" />
         <activity
             android:name=".Activity.MyGroups"
             android:label="Groups"
