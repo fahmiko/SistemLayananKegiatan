@@ -126,6 +126,9 @@ public class Register extends AppCompatActivity {
                 if (TextUtils.isEmpty(txt_username.getText().toString())) {
                     txt_username.setError("username tidak valid");
                     errorButton();
+                } else if (!txt_username.toString().matches("[a-zA-Z]*")) {
+                    txt_username.setError("username tidak valid");
+                    errorButton();
                 } else if (TextUtils.isEmpty(txt_password.getText().toString())) {
                     txt_password.setError("");
                     errorButton();
@@ -148,7 +151,7 @@ public class Register extends AppCompatActivity {
                 RequestBody reqId = MultipartBody.create(MediaType.parse("multipart/form-data"),
                         id_member);
                 RequestBody reqUsername = MultipartBody.create(MediaType.parse("multipart/form-data"),
-                        (TextUtils.isEmpty(txt_username.getText().toString())) ? "" :txt_username.getText().toString());
+                        (TextUtils.isEmpty(txt_username.getText().toString())) ? "" : txt_username.getText().toString().toLowerCase());
                 RequestBody reqPassword = MultipartBody.create(MediaType.parse("multipart/form-data"),
                         (TextUtils.isEmpty(txt_password.getText().toString())) ? "" :txt_password.getText().toString());
                 RequestBody reqAddress = MultipartBody.create(MediaType.parse("multipart/form-data"),

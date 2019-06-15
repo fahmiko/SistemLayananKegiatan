@@ -15,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ta.slk.sistemlayanankegiatan.Activity.Guide;
+import com.ta.slk.sistemlayanankegiatan.Activity.MyGroups;
+import com.ta.slk.sistemlayanankegiatan.Activity.UserActivity;
 import com.ta.slk.sistemlayanankegiatan.Adapter.DoctAdapter;
 import com.ta.slk.sistemlayanankegiatan.Method.Application;
 import com.ta.slk.sistemlayanankegiatan.Method.Session;
@@ -30,8 +33,8 @@ import retrofit2.Response;
 public class MainActivity extends Menu implements View.OnClickListener {
     Session session;
     ApiMembers service;
-    TextView invitation, activities, documentation,groups;
-    LinearLayout invitation_ly, activity_ly, group_ly, gallery_ly;
+    TextView invitation, activities, documentation, groups;
+    LinearLayout invitation_ly, activity_ly, group_ly, gallery_ly, help_ly;
     String[] dataServer;
 
     @Override
@@ -86,6 +89,7 @@ public class MainActivity extends Menu implements View.OnClickListener {
         activity_ly = findViewById(R.id.activity_main);
         gallery_ly = findViewById(R.id.gallery_main);
         group_ly = findViewById(R.id.group_main);
+        help_ly = findViewById(R.id.help_main);
         invitation_ly = findViewById(R.id.invitation_main);
         // Instansiasi Service
         service = ApiClient.getClient().create(ApiMembers.class);
@@ -94,6 +98,7 @@ public class MainActivity extends Menu implements View.OnClickListener {
         gallery_ly.setOnClickListener(this);
         group_ly.setOnClickListener(this);
         invitation_ly.setOnClickListener(this);
+        help_ly.setOnClickListener(this);
     }
 
     @Override
@@ -109,6 +114,18 @@ public class MainActivity extends Menu implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.gallery_main:
                 showGallery();
+                break;
+            case R.id.group_main:
+                startActivity(new Intent(v.getContext(), MyGroups.class));
+                break;
+            case R.id.activity_main:
+                startActivity(new Intent(v.getContext(), UserActivity.class));
+                break;
+            case R.id.invitation_main:
+                startActivity(new Intent(v.getContext(), UserInvitation.class));
+                break;
+            case R.id.help_main:
+                startActivity(new Intent(v.getContext(), Guide.class).putExtra("user_guide", "user"));
                 break;
         }
     }

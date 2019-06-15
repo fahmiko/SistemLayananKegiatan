@@ -18,6 +18,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 import com.ta.slk.sistemlayanankegiatan.Activity.MyGroups;
 import com.ta.slk.sistemlayanankegiatan.Activity.ProfileUser;
@@ -28,7 +29,6 @@ import com.ta.slk.sistemlayanankegiatan.Model.Groups;
 
 public class Menu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public void getMenu(){
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarid);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -47,7 +47,6 @@ public class Menu extends AppCompatActivity implements NavigationView.OnNavigati
                 else navDrawer.closeDrawer(Gravity.END);
             }
         });
-
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);

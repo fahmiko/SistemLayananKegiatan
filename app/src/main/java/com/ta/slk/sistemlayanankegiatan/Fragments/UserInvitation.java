@@ -17,6 +17,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -53,6 +56,7 @@ public class UserInvitation extends Fragment {
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
     List<InvtActivities> activitiesList;
+    public static Fragment invitation;
 
     public UserInvitation(){
 
@@ -67,11 +71,12 @@ public class UserInvitation extends Fragment {
         refreshLayout = view.findViewById(R.id.swipe_refresh);
         progressBar = view.findViewById(R.id.progress_bar);
         noData = view.findViewById(R.id.no_data);
+        invitation = this;
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshData(view);
+                refreshData();
             }
         });
         activitiesList = new ArrayList<>();
@@ -80,7 +85,7 @@ public class UserInvitation extends Fragment {
         adapter = new InvitationAdapter(activitiesList, view.getContext());
         recyclerView.setAdapter(adapter);
 
-        refreshData(view);
+        refreshData();
 
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(view.getContext(), recyclerView, new ClickListenner() {
             @Override
@@ -96,8 +101,8 @@ public class UserInvitation extends Fragment {
         return view;
     }
 
-    private void refreshData(final View view){
-        SharedPreferences sf = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+    public void refreshData() {
+        SharedPreferences sf = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         ApiInterface apiClient = ApiClient.getClient().create(ApiInterface.class);
         Call<GetInvtActivities> call = apiClient.getActivityStatus(sf.getString("id_member",""),"pending");
         call.enqueue(new Callback<GetInvtActivities>() {
@@ -120,7 +125,7 @@ public class UserInvitation extends Fragment {
 
             @Override
             public void onFailure(Call<GetInvtActivities> call, Throwable t) {
-                Snackbar.make(view,"Cek Koneksi Internet",Snackbar.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Cek koneksi internet", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -168,7 +173,9 @@ public class UserInvitation extends Fragment {
             @Override
             public void onResponse(Call<PostData> call, Response<PostData> response) {
                 if (response.body().getStatus().equals("success")) {
-                    refreshData(getView());
+                    refreshData();
+                    ((UserInvitationAccept) UserInvitationAccept.userInvitation).refreshData();
+                    ((UserInvitationRejected) UserInvitationRejected.userRejected).refreshData();
                 }
             }
 

@@ -199,11 +199,4 @@ public class UserInvitation extends AppCompatActivity {
         finish();
         return true;
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.user_menu,menu);
-        return true;
-    }
 }

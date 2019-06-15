@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -38,6 +39,7 @@ public class UserInvitationRejected extends Fragment{
     RecyclerView.LayoutManager layoutManager;
     ProgressBar progressBar;
     List<InvtActivities> activitiesList;
+    public static Fragment userRejected;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -48,18 +50,19 @@ public class UserInvitationRejected extends Fragment{
         progressBar = view.findViewById(R.id.progress_bar);
         noData = view.findViewById(R.id.no_data);
         recyclerView.setLayoutManager(layoutManager);
+        userRejected = this;
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshData(view);
+                refreshData();
             }
         });
-        refreshData(view);
+        refreshData();
         return view;
     }
 
-    private void refreshData(final View view){
-        SharedPreferences sf = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+    public void refreshData() {
+        SharedPreferences sf = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         ApiInterface apiClient = ApiClient.getClient().create(ApiInterface.class);
         Call<GetInvtActivities> call = apiClient.getActivityStatus(sf.getString("id_member",""),"rejected");
         call.enqueue(new Callback<GetInvtActivities>() {
@@ -68,7 +71,7 @@ public class UserInvitationRejected extends Fragment{
                 if(response.code()==200){
                     if(response.body().getResult().size()!=0){
                         activitiesList = response.body().getResult();
-                        adapter = new InvitationAdapter(activitiesList,view.getContext());
+                        adapter = new InvitationAdapter(activitiesList, getContext());
                         recyclerView.setAdapter(adapter);
                         refreshLayout.setRefreshing(false);
                         progressBar.setVisibility(View.GONE);
@@ -81,7 +84,7 @@ public class UserInvitationRejected extends Fragment{
             }
             @Override
             public void onFailure(Call<GetInvtActivities> call, Throwable t) {
-                Snackbar.make(view,"Cek Koneksi Internet",Snackbar.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Cek koneksi internet", Toast.LENGTH_SHORT).show();
             }
         });
     }

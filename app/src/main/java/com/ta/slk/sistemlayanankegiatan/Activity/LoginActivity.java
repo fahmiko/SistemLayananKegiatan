@@ -169,6 +169,7 @@ public class LoginActivity extends AppCompatActivity{
                     if(response.body().getStatus().equals("success")){
                         btn_login.setProgress(100);
                         btn_login.setCompleteText("Success");
+                        btn_login.setProgress(0);
                         Session session = Application.getSession();
                         String id_user = response.body().getResult().get(0).getIdUser();
                         String username = response.body().getResult().get(0).getUsername();
@@ -206,6 +207,8 @@ public class LoginActivity extends AppCompatActivity{
             @Override
             public void onFailure(Call<GetUsers> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Cek Koneksi Internet", Toast.LENGTH_SHORT).show();
+                btn_login.setProgress(-1);
+                btn_login.setProgress(0);
             }
         });
 

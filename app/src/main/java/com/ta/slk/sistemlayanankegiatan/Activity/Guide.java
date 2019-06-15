@@ -41,8 +41,8 @@ public class Guide extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-
     public static Guide guide;
+    public static String option;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,10 @@ public class Guide extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
+        option = "login";
+        if (getIntent().getStringExtra("user_guide") != null) {
+            option = "user";
+        }
     }
 
     /**
@@ -89,8 +92,14 @@ public class Guide extends AppCompatActivity {
             if(bundle.getInt(ARG_SECTION_NUMBER) == 1){
                 rootView = inflater.inflate(R.layout.user_guide1,container,false);
                 return rootView;
+            } else if (bundle.getInt(ARG_SECTION_NUMBER) == 2) {
+                rootView = inflater.inflate(R.layout.user_guide2, container, false);
+                return rootView;
+            } else if (bundle.getInt(ARG_SECTION_NUMBER) == 3) {
+                rootView = inflater.inflate(R.layout.user_guide3, container, false);
+                return rootView;
             }else{
-                rootView = inflater.inflate(R.layout.user_guide2,container,false);
+                rootView = inflater.inflate(R.layout.user_guide4, container, false);
                 Button button = rootView.findViewById(R.id.btn_next);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -98,7 +107,9 @@ public class Guide extends AppCompatActivity {
                         Session session = Application.getSession();
                         session.saveGuide();
                         Guide.guide.finish();
-                        startActivity(new Intent(getContext(),LoginActivity.class));
+                        if (Guide.option.equals("login")) {
+                            startActivity(new Intent(getContext(), LoginActivity.class));
+                        }
                     }
                 });
                 return rootView;
@@ -126,7 +137,7 @@ public class Guide extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
+            return 4;
         }
     }
 

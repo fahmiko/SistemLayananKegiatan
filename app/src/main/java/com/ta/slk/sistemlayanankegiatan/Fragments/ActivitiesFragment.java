@@ -47,7 +47,6 @@ public class ActivitiesFragment extends Fragment {
     SwipeRefreshLayout refreshLayout;
     ProgressBar progressBar;
     ImageView noData;
-    View v;
     private String id_activity;
     public static Fragment activityFragment;
 

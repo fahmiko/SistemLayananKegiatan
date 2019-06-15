@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -39,10 +40,12 @@ public class UserInvitationAccept extends Fragment {
     ImageView noData;
     RecyclerView.LayoutManager layoutManager;
     List<InvtActivities> activitiesList;
+    public static Fragment userInvitation;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_user_invitation,container,false);
+        userInvitation = this;
         recyclerView = view.findViewById(R.id.recycler_content);
         progressBar = view.findViewById(R.id.progress_bar);
         refreshLayout = view.findViewById(R.id.swipe_refresh);
@@ -50,17 +53,17 @@ public class UserInvitationAccept extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshData(view);
+                refreshData();
             }
         });
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
-        refreshData(view);
+        refreshData();
         return view;
     }
 
-    private void refreshData(final View view){
-        SharedPreferences sf = view.getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+    public void refreshData() {
+        SharedPreferences sf = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         ApiInterface apiClient = ApiClient.getClient().create(ApiInterface.class);
         Call<GetInvtActivities> call = apiClient.getActivityStatus(sf.getString("id_member",""),"join");
         call.enqueue(new Callback<GetInvtActivities>() {
@@ -74,7 +77,7 @@ public class UserInvitationAccept extends Fragment {
                     }else{
                         noData.setVisibility(View.GONE);
                         activitiesList = response.body().getResult();
-                        adapter = new InvitationAdapter(activitiesList,view.getContext());
+                        adapter = new InvitationAdapter(activitiesList, getContext());
                         recyclerView.setAdapter(adapter);
                         refreshLayout.setRefreshing(false);
                         progressBar.setVisibility(View.GONE);
@@ -85,7 +88,7 @@ public class UserInvitationAccept extends Fragment {
 
             @Override
             public void onFailure(Call<GetInvtActivities> call, Throwable t) {
-                Snackbar.make(view,"Cek Koneksi Internet",Snackbar.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Cek koneksi internet", Toast.LENGTH_SHORT).show();
             }
         });
     }
